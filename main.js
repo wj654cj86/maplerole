@@ -10,6 +10,7 @@ var role = {
 	h: 0
 };
 var nullcard;
+var crossicon;
 role.loadimg = function () {
 	generator(function* () {
 		for (let i = 0; i < role.len; i++) {
@@ -55,7 +56,34 @@ role.loadimg = function () {
 		layout.style.height = role.h + 'px';
 		for (let i = 0; i < hostfile.files.length; i++) {
 			for (let j = 0; j < 4; j++) {
-				role.ref[cnt] = card.style(i, j);
+				let span = document.createElement('span');
+				let icon = copyxml(crossicon).getElementsByTagName('img')[0];
+				icon.onclick = function () {
+					let mp = getclickpoint(event, layout);
+					let nowid = -1;
+					for (let i = 0; i < role.len; i++) {
+						let cp = { x: role.addr[i].left, y: role.addr[i].top };
+						if (mp.x >= cp.x
+							&& mp.x < cp.x + carddata.size.w
+							&& mp.y >= cp.y
+							&& mp.y < cp.y + carddata.size.h) {
+							nowid = i;
+							break;
+						}
+					}
+					if (nowid == -1) return;
+					role.ref[role.id[nowid]].style.opacity = 0;
+					role.refuse[role.id[nowid]] = false;
+				};
+				icon.onmouseenter = function () {
+					icon.style.opacity = 1;
+				};
+				icon.onmouseout = function () {
+					icon.style.opacity = 0.3;
+				}
+				span.appendChild(icon);
+				span.appendChild(card.style(i, j));
+				role.ref[cnt] = span;
 				role.ref[cnt].style.left = role.addr[cnt].left + 'px';
 				role.ref[cnt].style.top = role.addr[cnt].top + 'px';
 				layout.appendChild(role.ref[cnt]);
@@ -147,7 +175,7 @@ role.download = function () {
 	for (let i = 0; i < role.len; i++) {
 		if (role.refuse[role.id[i]]) {
 			ctx.drawImage(
-				role.ref[role.id[i]],
+				role.ref[role.id[i]].getElementsByTagName('canvas')[0],
 				role.addr[i].left,
 				role.addr[i].top,
 				carddata.size.w,
@@ -170,20 +198,21 @@ window.onload = function () {
 			array2url(geturl);
 		}
 		yield {
-			nextfunc: card.initial,
-			cbfunc: function () { }
-		};
-		let loadnull = function (callback) {
-			nullcard = new Image();
-			nullcard.onload = function () {
-				callback();
-			};
-			nullcard.src = 'img/null.png';
+			nextfunc: loadimg,
+			argsfront: ['img/null.png'],
+			cbfunc: function (img) {
+				nullcard = img;
+			}
 		};
 		yield {
-			nextfunc: loadnull,
-			cbfunc: function () { }
+			nextfunc: loadimg,
+			argsfront: ['img/cross.svg'],
+			cbfunc: function (img) {
+				crossicon = img;
+			}
 		};
+		crossicon.style.left = carddata.size.w - 20 + 'px';
+		crossicon.style.top = '0px';
 
 		layout.ondragstart = function () {
 			return false;

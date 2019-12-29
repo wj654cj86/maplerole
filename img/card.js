@@ -10,16 +10,8 @@ var carddata = {
 };
 
 var card = {
-	text: {},
 	refreg: [],
 	reg: {},
-	file: 'img/style.svg',
-	initial: function (callback) {
-		openfiletotext(card.file, function (text) {
-			card.text = text;
-			callback();
-		});
-	},
 	loadimg: function (callback) {
 		generator(function* () {
 			for (let i = 0; i < hostfile.files.length; i++) {

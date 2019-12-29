@@ -123,6 +123,15 @@ function getimgsize(imgsrc, callback) {
 	};
 	a.src = imgsrc;
 }
+
+function loadimg(imgsrc, callback) {
+	let img = new Image();
+	img.onload = function () {
+		callback(img);
+	};
+	img.src = imgsrc;
+}
+
 function loadsound(src, callback) {
 	let xhr = new XMLHttpRequest();
 	xhr.open('GET', src);
@@ -183,7 +192,7 @@ function getCursorPosition(event) {
 	return { x: posx, y: posy };
 }
 
-function startDownload(url,name) {
+function startDownload(url, name) {
 	let download = document.createElement('a');
 	download.href = url;
 	download.download = name;
