@@ -1,5 +1,4 @@
 var carddata = {
-	w: 8,
 	size: { w: 116, h: 177 },
 	seat: [
 		{ x: 241, y: 563 },

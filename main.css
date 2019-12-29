@@ -11,14 +11,12 @@ body {
 	position: absolute;
 	left: 10px;
 	top: 10px;
-	z-index: 1;
 }
 
 #loadbtn {
 	position: absolute;
 	left: 300px;
 	top: 10px;
-	z-index: 1;
 }
 
 #downloadname {
@@ -26,20 +24,32 @@ body {
 	left: 10px;
 	top: 40px;
 	width: 250px;
-	z-index: 1;
 }
 
 #downloadbtn {
 	position: absolute;
 	left: 300px;
 	top: 40px;
-	z-index: 1;
+}
+
+#cardlinelenspan {
+	position: absolute;
+	left: 10px;
+	top: 70px;
+	width: 120px;
+}
+
+#cardlinelen {
+	position: absolute;
+	left: 130px;
+	top: 70px;
+	width: 50px;
 }
 
 #layout {
 	position: absolute;
 	left: 10px;
-	top: 80px;
+	top: 100px;
 	z-index: 3;
 }
 
@@ -69,20 +79,4 @@ body {
 	position: absolute;
 	transition: all 300ms;
 	z-index: 2;
-}
-
-#puzzlediv {
-	position: absolute;
-	opacity: 0;
-	z-index: -10;
-}
-
-#refpiece {
-	position: absolute;
-	z-index: -10;
-}
-
-#refpiece svg {
-	position: absolute;
-	z-index: -10;
 }

@@ -1,5 +1,6 @@
 var geturl = url2array();
 var role = {
+	line: 8,
 	id: [],
 	addr: [],
 	nullref: [],
@@ -24,18 +25,21 @@ role.loadimg = function () {
 			}
 		}
 
+		role.line = Number(cardlinelen.value);
+		if (typeof role.line != 'number') role.line = 8;
+
 		yield {
 			nextfunc: card.loadimg,
 			cbfunc: function () { }
 		};
 
 		let cnt = 0;
-		let line = Math.ceil(hostfile.files.length * 4 / carddata.w);
+		let line = Math.ceil(hostfile.files.length * 4 / role.line);
 		role.id = [];
 		role.addr = [];
 		role.nullref = [];
 		for (let i = 0; i < line; i++) {
-			for (let j = 0; j < carddata.w; j++) {
+			for (let j = 0; j < role.line; j++) {
 				role.id[cnt] = cnt;
 				role.addr[cnt] = { left: j * carddata.size.w, top: i * carddata.size.h };
 				role.nullref[cnt] = copyxml(nullcard).getElementsByTagName('img')[0];
@@ -50,7 +54,7 @@ role.loadimg = function () {
 		cnt = 0;
 		role.ref = [];
 		role.refuse = [];
-		role.w = carddata.w * carddata.size.w;
+		role.w = role.line * carddata.size.w;
 		role.h = line * carddata.size.h;
 		layout.style.width = role.w + 'px';
 		layout.style.height = role.h + 'px';
