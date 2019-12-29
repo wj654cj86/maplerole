@@ -24,13 +24,13 @@ body {
 	position: absolute;
 	left: 10px;
 	top: 40px;
-	width: 50px;
+	width: 80px;
 }
 #downloadname {
 	position: absolute;
-	left: 60px;
+	left: 90px;
 	top: 40px;
-	width: 150px;
+	width: 120px;
 }
 
 #downloadbtn {
@@ -54,13 +54,13 @@ body {
 
 #movemod {
 	position: absolute;
-	left: 280px;
+	left: 310px;
 	top: 10px;
 }
 
 #sortcard {
 	position: absolute;
-	left: 380px;
+	left: 450px;
 	top: 10px;
 }
 
