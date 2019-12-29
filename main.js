@@ -137,12 +137,34 @@ role.loadimg = function () {
 						&& sp.x < cp.x + carddata.size.w / 2
 						&& sp.y >= cp.y - carddata.size.h / 2
 						&& sp.y < cp.y + carddata.size.h / 2) {
-						let tmp = role.id[nowid];
-						role.id[nowid] = role.id[i];
-						role.id[i] = tmp;
-						role.ref[role.id[nowid]].style.left = role.addr[nowid].left + 'px';
-						role.ref[role.id[nowid]].style.top = role.addr[nowid].top + 'px';
-						nowid = i;
+						if (movemod[0].checked) {
+							if (i < nowid) {
+								let tmp = role.id[nowid];
+								for (let j = nowid; j > i; j--) {
+									role.id[j] = role.id[j - 1];
+									role.ref[role.id[j]].style.left = role.addr[j].left + 'px';
+									role.ref[role.id[j]].style.top = role.addr[j].top + 'px';
+								}
+								role.id[i] = tmp;
+								nowid = i;
+							} else {
+								let tmp = role.id[nowid];
+								for (let j = nowid; j < i; j++) {
+									role.id[j] = role.id[j + 1];
+									role.ref[role.id[j]].style.left = role.addr[j].left + 'px';
+									role.ref[role.id[j]].style.top = role.addr[j].top + 'px';
+								}
+								role.id[i] = tmp;
+								nowid = i;
+							}
+						} else {
+							let tmp = role.id[nowid];
+							role.id[nowid] = role.id[i];
+							role.id[i] = tmp;
+							role.ref[role.id[nowid]].style.left = role.addr[nowid].left + 'px';
+							role.ref[role.id[nowid]].style.top = role.addr[nowid].top + 'px';
+							nowid = i;
+						}
 						break;
 					}
 				}

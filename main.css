@@ -46,10 +46,16 @@ body {
 	width: 50px;
 }
 
-#layout {
+#movemod {
 	position: absolute;
 	left: 10px;
 	top: 100px;
+}
+
+#layout {
+	position: absolute;
+	left: 10px;
+	top: 170px;
 	z-index: 3;
 }
 
