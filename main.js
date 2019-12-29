@@ -216,7 +216,34 @@ role.download = function () {
 		if (name.indexOf('.png') == -1) name += '.png';
 		startDownload(url, name);
 	}, 'image/png');
-}
+};
+role.sort = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.refuse[role.id[i]] == false) {
+			if ((function () {
+				for (let j = i; j < role.len; j++) {
+					if (role.refuse[role.id[j]]) {
+						return false;
+					}
+				}
+				return true;
+			})()) {
+				return;
+			}
+			let tmp = role.id[i];
+			for (let j = i; j < role.len - 1; j++) {
+				role.id[j] = role.id[j + 1];
+				role.ref[role.id[j]].style.left = role.addr[j].left + 'px';
+				role.ref[role.id[j]].style.top = role.addr[j].top + 'px';
+			}
+			let k = role.len - 1;
+			role.id[k] = tmp;
+			role.ref[role.id[k]].style.left = role.addr[k].left + 'px';
+			role.ref[role.id[k]].style.top = role.addr[k].top + 'px';
+			i--;
+		}
+	}
+};
 window.onload = function () {
 	generator(function* () {
 		if (typeof geturl['fbclid'] != 'undefined') {
@@ -245,5 +272,6 @@ window.onload = function () {
 		};
 		loadbtn.onclick = role.loadimg;
 		downloadbtn.onclick = role.download;
+		sortcard.onclick = role.sort;
 	});
 };

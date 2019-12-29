@@ -1,11 +1,31 @@
 var carddata = {
 	size: { w: 116, h: 177 },
-	seat: [
-		{ x: 241, y: 563 },
-		{ x: 363, y: 563 },
-		{ x: 485, y: 563 },
-		{ x: 607, y: 563 }
-	]
+	seat: {
+		'1024x768': [
+			{ x: 70, y: 563 },
+			{ x: 192, y: 563 },
+			{ x: 314, y: 563 },
+			{ x: 436, y: 563 }
+		],
+		'1280x720': [
+			{ x: 198, y: 539 },
+			{ x: 320, y: 539 },
+			{ x: 442, y: 539 },
+			{ x: 564, y: 539 }
+		],
+		'1366x768': [
+			{ x: 241, y: 563 },
+			{ x: 363, y: 563 },
+			{ x: 485, y: 563 },
+			{ x: 607, y: 563 }
+		],
+		'1920x1080': [
+			{ x: 518, y: 719 },
+			{ x: 640, y: 719 },
+			{ x: 762, y: 719 },
+			{ x: 884, y: 719 }
+		]
+	}
 };
 
 var card = {
@@ -50,10 +70,11 @@ var card = {
 		let ctx = canvas.getContext('2d');
 		canvas.setAttribute('width', carddata.size.w);
 		canvas.setAttribute('height', carddata.size.h);
+		let imgsize = card.refreg[x].naturalWidth + 'x' + card.refreg[x].naturalHeight;
 		ctx.drawImage(
 			card.refreg[x],
-			carddata.seat[y].x,
-			carddata.seat[y].y,
+			carddata.seat[imgsize][y].x,
+			carddata.seat[imgsize][y].y,
 			carddata.size.w,
 			carddata.size.h,
 			0,

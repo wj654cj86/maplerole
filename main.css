@@ -11,24 +11,31 @@ body {
 	position: absolute;
 	left: 10px;
 	top: 10px;
+	width: 200px;
 }
 
 #loadbtn {
 	position: absolute;
-	left: 300px;
+	left: 220px;
 	top: 10px;
 }
 
-#downloadname {
+#downloadnamespan {
 	position: absolute;
 	left: 10px;
 	top: 40px;
-	width: 250px;
+	width: 50px;
+}
+#downloadname {
+	position: absolute;
+	left: 60px;
+	top: 40px;
+	width: 150px;
 }
 
 #downloadbtn {
 	position: absolute;
-	left: 300px;
+	left: 220px;
 	top: 40px;
 }
 
@@ -38,7 +45,6 @@ body {
 	top: 70px;
 	width: 120px;
 }
-
 #cardlinelen {
 	position: absolute;
 	left: 130px;
@@ -48,14 +54,20 @@ body {
 
 #movemod {
 	position: absolute;
-	left: 10px;
-	top: 100px;
+	left: 280px;
+	top: 10px;
+}
+
+#sortcard {
+	position: absolute;
+	left: 380px;
+	top: 10px;
 }
 
 #layout {
 	position: absolute;
 	left: 10px;
-	top: 170px;
+	top: 100px;
 	z-index: 3;
 }
 
