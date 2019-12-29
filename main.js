@@ -10,8 +10,7 @@ var role = {
 	w: 0,
 	h: 0
 };
-var nullcard;
-var crossicon;
+
 role.loadimg = function () {
 	generator(function* () {
 		for (let i = 0; i < role.len; i++) {
@@ -42,7 +41,7 @@ role.loadimg = function () {
 			for (let j = 0; j < role.line; j++) {
 				role.id[cnt] = cnt;
 				role.addr[cnt] = { left: j * carddata.size.w, top: i * carddata.size.h };
-				role.nullref[cnt] = copyxml(nullcard).getElementsByTagName('img')[0];
+				role.nullref[cnt] = copyxml(card.nullcard).getElementsByTagName('img')[0];
 				role.nullref[cnt].style.left = role.addr[cnt].left + 'px';
 				role.nullref[cnt].style.top = role.addr[cnt].top + 'px';
 				layout.appendChild(role.nullref[cnt]);
@@ -61,7 +60,7 @@ role.loadimg = function () {
 		for (let i = 0; i < hostfile.files.length; i++) {
 			for (let j = 0; j < 4; j++) {
 				let span = document.createElement('span');
-				let icon = copyxml(crossicon).getElementsByTagName('img')[0];
+				let icon = copyxml(card.crossicon).getElementsByTagName('img')[0];
 				icon.onclick = function () {
 					let mp = getclickpoint(event, layout);
 					let nowid = -1;
@@ -191,7 +190,7 @@ role.download = function () {
 	canvas.setAttribute('height', role.h);
 	for (let i = 0; i < role.len; i++) {
 		ctx.drawImage(
-			nullcard,
+			card.nullcard,
 			role.addr[i].left,
 			role.addr[i].top,
 			carddata.size.w,
@@ -251,21 +250,24 @@ window.onload = function () {
 			array2url(geturl);
 		}
 		yield {
-			nextfunc: loadimg,
-			argsfront: ['img/null.png'],
-			cbfunc: function (img) {
-				nullcard = img;
+			nextfunc: language.initial,
+			argsfront: [geturl['lang']],
+			cbfunc: function () {
+				document.title = language.reg.title;
+				loadbtn.value = language.reg.loadfile;
+				downloadnamespan.innerHTML = language.reg.downloadname;
+				downloadbtn.value = language.reg.download;
+				cardlinelenspan.innerHTML = language.reg.cardlinelen;
+				movemodespan.innerHTML = language.reg.movemode;
+				sortmovespan.innerHTML = language.reg.sortmove;
+				swapmovespan.innerHTML = language.reg.swapmove;
+				sortcard.value = language.reg.sortcard;
 			}
 		};
 		yield {
-			nextfunc: loadimg,
-			argsfront: ['img/cross.svg'],
-			cbfunc: function (img) {
-				crossicon = img;
-			}
+			nextfunc: card.initial,
+			cbfunc: function () { }
 		};
-		crossicon.style.left = carddata.size.w - 20 + 'px';
-		crossicon.style.top = '0px';
 
 		layout.ondragstart = function () {
 			return false;

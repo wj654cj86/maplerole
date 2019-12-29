@@ -6,9 +6,10 @@
 		content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<title>角色排序</title>
+	<title></title>
 	<link href="MapleStory.ico" rel="icon">
 	<script type="text/javascript" src="mylibrary.js"></script>
+	<script type="text/javascript" src="language/language.js"></script>
 	<script type="text/javascript" src="img/card.js"></script>
 	<script type="text/javascript" src="main.js"></script>
 	<link rel="stylesheet" type="text/css" href="main.css">
@@ -16,20 +17,20 @@
 
 <body>
 	<input id="hostfile" type="file" accept="image/*" multiple="multiple" />
-	<input id="loadbtn" type="button" value="載入" />
-	<span id="downloadnamespan">檔名：</span>
+	<input id="loadbtn" type="button" />
+	<span id="downloadnamespan"></span>
 	<input id="downloadname" type="text" />
-	<input id="downloadbtn" type="button" value="下載" />
-	<span id="cardlinelenspan">每行角色數量：</span>
+	<input id="downloadbtn" type="button" />
+	<span id="cardlinelenspan"></span>
 	<input id="cardlinelen" type="text" value="8" />
 	<form id="movemod">
-		<span id="movemodespan">移動模式</span>
+		<span id="movemodespan"></span>
 		<br>
-		<input type="radio" name="movemod" checked /> <span id="sortmovespan">序列移動</span>
+		<input type="radio" name="movemod" checked /> <span id="sortmovespan"></span>
 		<br>
-		<input type="radio" name="movemod" /> <span id="swapmovespan">交換移動</span>
+		<input type="radio" name="movemod" /> <span id="swapmovespan"></span>
 	</form id="movemodespan">
-	<input id="sortcard" type="button" value="向前排序" />
+	<input id="sortcard" type="button" />
 	<span id="layout">
 	</span>
 </body>

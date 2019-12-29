@@ -1,0 +1,16 @@
+{
+	"language": "English",
+	"title": "Role table editor",
+	"spanauthor": "Author:",
+	"author": "Tu-Tu",
+	"spanprovider": "Language Provider:",
+	"provider": "Tu-Tu",
+	"loadfile": "Load file",
+	"downloadname": "File name: ",
+	"download": "Download",
+	"cardlinelen": "Roles per line: ",
+	"movemode": "Move mode",
+	"sortmove": "Sort move",
+	"swapmove": "Swap move",
+	"sortcard": "Sort roles"
+}

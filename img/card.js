@@ -31,6 +31,29 @@ var carddata = {
 var card = {
 	refreg: [],
 	reg: {},
+	nullcard: {},
+	crossicon: {},
+	initial: function (callback) {
+		generator(function* () {
+			yield {
+				nextfunc: loadimg,
+				argsfront: ['img/null.png'],
+				cbfunc: function (img) {
+					card.nullcard = img;
+				}
+			};
+			yield {
+				nextfunc: loadimg,
+				argsfront: ['img/cross.svg'],
+				cbfunc: function (img) {
+					card.crossicon = img;
+				}
+			};
+			card.crossicon.style.left = carddata.size.w - 20 + 'px';
+			card.crossicon.style.top = '0px';
+			callback();
+		});
+	},
 	loadimg: function (callback) {
 		generator(function* () {
 			for (let i = 0; i < hostfile.files.length; i++) {
