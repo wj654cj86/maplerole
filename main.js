@@ -252,16 +252,17 @@ window.onload = function () {
 		yield {
 			nextfunc: language.initial,
 			argsfront: [geturl['lang']],
-			cbfunc: function () {
-				document.title = language.reg.title;
-				loadbtn.value = language.reg.loadfile;
-				downloadnamespan.innerHTML = language.reg.downloadname;
-				downloadbtn.value = language.reg.download;
-				cardlinelenspan.innerHTML = language.reg.cardlinelen;
-				movemodespan.innerHTML = language.reg.movemode;
-				sortmovespan.innerHTML = language.reg.sortmove;
-				swapmovespan.innerHTML = language.reg.swapmove;
-				sortcard.value = language.reg.sortcard;
+			cbfunc: function (data) {
+				document.getElementsByTagName('html')[0].lang = language.mod;
+				document.title = data.title;
+				loadbtn.value = data.loadfile;
+				downloadnamespan.innerHTML = data.downloadname;
+				downloadbtn.value = data.download;
+				cardlinelenspan.innerHTML = data.cardlinelen;
+				movemodespan.innerHTML = data.movemode;
+				sortmovespan.innerHTML = data.sortmove;
+				swapmovespan.innerHTML = data.swapmove;
+				sortcard.value = data.sortcard;
 			}
 		};
 		yield {

@@ -5,21 +5,24 @@ var languagelist = {
 };
 
 var language = {
+	mod: 'zh-Hant',
 	reg: {},
 	initial: function (languagename, callback) {
 		generator(function* () {
-			if (!(languagename in languagelist)) {
-				languagename = 'zh-Hant';
+			if (languagename in languagelist) {
+				language.mod = languagename;
+			} else {
+				language.mod = 'zh-Hant';
 			}
-			let languagefilepath = 'language/' + languagename + '.json';
+			let languagefilepath = 'language/' + language.mod + '.json';
 			yield {
 				nextfunc: openfile,
 				argsfront: [languagefilepath],
 				cbfunc: function (str) {
-					language.reg = JSON.parse(str);
+					language.reg[language.mod] = JSON.parse(str);
 				}
 			};
-			callback();
+			callback(language.reg[language.mod]);
 		});
 	}
 }
