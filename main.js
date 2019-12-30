@@ -116,15 +116,6 @@ role.loadimg = function () {
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
 			role.ref[role.id[nowid]].style.transition = 'all 0s';
 			role.ref[role.id[nowid]].style.zIndex = 10;
-			let stopmove = function () {
-				role.ref[role.id[nowid]].style.left = role.addr[nowid].left + 'px';
-				role.ref[role.id[nowid]].style.top = role.addr[nowid].top + 'px';
-				role.ref[role.id[nowid]].style.transition = 'all 300ms';
-				role.ref[role.id[nowid]].style.zIndex = 3;
-				layout.onmousemove = function () { };
-				window.onmouseup = function () { };
-				window.onmouseout = function () { };
-			};
 			layout.onmousemove = function (event) {
 				let mp = getclickpoint(event, layout);
 				let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
@@ -169,13 +160,13 @@ role.loadimg = function () {
 				role.ref[role.id[nowid]].style.left = mp.x - dp.x + 'px';
 				role.ref[role.id[nowid]].style.top = mp.y - dp.y + 'px';
 			}
-			window.onmouseup = stopmove;
-			window.onmouseout = function (event) {
-				let mp = getCursorPosition(event);
-				if (mp.x <= 0 || mp.x > window.innerWidth || mp.y <= 0 || mp.y > window.innerHeight) {
-					stopmove();
-					return;
-				}
+			window.onmouseup = function () {
+				role.ref[role.id[nowid]].style.left = role.addr[nowid].left + 'px';
+				role.ref[role.id[nowid]].style.top = role.addr[nowid].top + 'px';
+				role.ref[role.id[nowid]].style.transition = 'all 300ms';
+				role.ref[role.id[nowid]].style.zIndex = 3;
+				layout.onmousemove = function () { };
+				window.onmouseup = function () { };
 			};
 		};
 	});
