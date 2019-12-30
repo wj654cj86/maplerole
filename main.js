@@ -251,6 +251,10 @@ window.onload = function () {
 		}
 		yield {
 			nextfunc: language.initial,
+			cbfunc: function () { }
+		};
+		yield {
+			nextfunc: language.setting,
 			argsfront: [geturl['lang']],
 			cbfunc: function (data) {
 				document.getElementsByTagName('html')[0].lang = language.mod;

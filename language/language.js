@@ -7,7 +7,10 @@ var languagelist = {
 var language = {
 	mod: 'zh-Hant',
 	reg: {},
-	initial: function (languagename, callback) {
+	initial: function (callback) {
+		language.setting('zh-Hant', callback);
+	},
+	setting: function (languagename, callback) {
 		generator(function* () {
 			if (languagename in languagelist) {
 				language.mod = languagename;
@@ -19,7 +22,8 @@ var language = {
 				nextfunc: openfile,
 				argsfront: [languagefilepath],
 				cbfunc: function (str) {
-					language.reg[language.mod] = JSON.parse(str);
+					language.reg[language.mod] = {};
+					Object.assign(language.reg[language.mod], language.reg['zh-Hant'], JSON.parse(str));
 				}
 			};
 			callback(language.reg[language.mod]);
