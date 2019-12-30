@@ -122,7 +122,6 @@ role.loadimg = function () {
 				role.ref[role.id[nowid]].style.transition = 'all 300ms';
 				role.ref[role.id[nowid]].style.zIndex = 3;
 				layout.onmousemove = function () { };
-				layout.onmouseup = function () { };
 				window.onmouseup = function () { };
 				window.onmouseout = function () { };
 			};
@@ -170,7 +169,6 @@ role.loadimg = function () {
 				role.ref[role.id[nowid]].style.left = mp.x - dp.x + 'px';
 				role.ref[role.id[nowid]].style.top = mp.y - dp.y + 'px';
 			}
-			layout.onmouseup = stopmove;
 			window.onmouseup = stopmove;
 			window.onmouseout = function (event) {
 				let mp = getCursorPosition(event);
