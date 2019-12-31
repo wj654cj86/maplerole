@@ -174,12 +174,12 @@ role.loadimg = function () {
 		};
 	});
 };
-role.download = function () {
+role.mergeimg = function () {
 	if (role.len == 0) return;
-	let canvas = document.createElement('canvas');
-	let ctx = canvas.getContext('2d');
-	canvas.setAttribute('width', role.w);
-	canvas.setAttribute('height', role.h);
+	let canvas = mergeimg;
+	let ctx = mergeimg.getContext('2d');
+	mergeimg.setAttribute('width', role.w);
+	mergeimg.setAttribute('height', role.h);
 	for (let i = 0; i < role.len; i++) {
 		ctx.drawImage(
 			card.nullcard,
@@ -200,14 +200,19 @@ role.download = function () {
 			);
 		}
 	}
-	canvas.toBlob(function (blob) {
-		let url = URL.createObjectURL(blob);
-		let name = downloadname.value;
-		if (name == '') name = 'card.png';
-		if (name.indexOf('.png') == -1) name += '.png';
-		startDownload(url, name);
-	}, 'image/png');
+	mergeimg.style.zIndex = 10;
+	mergeimg.style.opacity = 1;
+	mergeimgbtn.onclick = role.cancelmergeimg;
+	mergeimgbtn.value = language.reg[language.mod].cancelmergeimg;
 };
+role.cancelmergeimg = function () {
+	mergeimg.setAttribute('width', 0);
+	mergeimg.setAttribute('height', 0);
+	mergeimg.style.zIndex = 0;
+	mergeimg.style.opacity = 0;
+	mergeimgbtn.onclick = role.mergeimg;
+	mergeimgbtn.value = language.reg[language.mod].mergeimg;
+}
 role.sort = function () {
 	for (let i = 0; i < role.len; i++) {
 		if (role.refuse[role.id[i]] == false) {
@@ -252,8 +257,7 @@ window.onload = function () {
 				document.getElementsByTagName('html')[0].lang = language.mod;
 				document.title = data.title;
 				loadbtn.value = data.loadfile;
-				downloadnamespan.innerHTML = data.downloadname;
-				downloadbtn.value = data.download;
+				mergeimgbtn.value = data.mergeimg;
 				cardlinelenspan.innerHTML = data.cardlinelen;
 				movemodespan.innerHTML = data.movemode;
 				sortmovespan.innerHTML = data.sortmove;
@@ -270,7 +274,7 @@ window.onload = function () {
 			return false;
 		};
 		loadbtn.onclick = role.loadimg;
-		downloadbtn.onclick = role.download;
 		sortcard.onclick = role.sort;
+		mergeimgbtn.onclick = role.mergeimg;
 	});
 };
