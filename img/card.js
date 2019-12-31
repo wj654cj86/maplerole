@@ -14,6 +14,7 @@ var card = {
 	refreg: [],
 	reg: {},
 	nullcard: {},
+	maskcard: {},
 	crossicon: {},
 	setcardangle: function (ctx, arr) {
 		let u8arr = new Uint8ClampedArray(arr);
@@ -44,6 +45,29 @@ var card = {
 			};
 			yield {
 				nextfunc: loadimg,
+				argsfront: ['img/card.png'],
+				cbfunc: function (img) {
+					let canvas = document.createElement('canvas');
+					let ctx = canvas.getContext('2d');
+					canvas.setAttribute('width', carddata.size.w);
+					canvas.setAttribute('height', carddata.size.h);
+					ctx.drawImage(
+						img,
+						25,
+						150,
+						carddata.size.w - 25 - 5,
+						carddata.size.h - 150 - 5,
+						25,
+						150,
+						carddata.size.w - 25 - 5,
+						carddata.size.h - 150 - 5
+					);
+					card.setcardangle(ctx, [0, 0, 0, 0]);
+					card.maskcard = canvas;
+				}
+			};
+			yield {
+				nextfunc: loadimg,
 				argsfront: ['img/cross.svg'],
 				cbfunc: function (img) {
 					card.crossicon = img;
@@ -60,6 +84,14 @@ var card = {
 		canvas.setAttribute('width', carddata.size.w);
 		canvas.setAttribute('height', carddata.size.h);
 		ctx.drawImage(card.nullcard, 0, 0);
+		return canvas;
+	},
+	newmaskcard: function () {
+		let canvas = document.createElement('canvas');
+		let ctx = canvas.getContext('2d');
+		canvas.setAttribute('width', carddata.size.w);
+		canvas.setAttribute('height', carddata.size.h);
+		ctx.drawImage(card.maskcard, 0, 0);
 		return canvas;
 	},
 	loadimg: function (callback) {

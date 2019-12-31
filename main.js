@@ -32,6 +32,9 @@ role.loadimg = function () {
 
 		role.line = Number(cardlinelen.value);
 		if (typeof role.line != 'number') role.line = 8;
+		role.line = Math.floor(role.line);
+		if (role.line < 1) role.line = 1;
+		if (role.line > 20) role.line = 20;
 
 		yield {
 			nextfunc: card.loadimg,
@@ -91,8 +94,10 @@ role.loadimg = function () {
 					icon.style.opacity = 0.3;
 				}
 				span.appendChild(icon);
-				let div = document.createElement('div');
-				span.appendChild(div);
+				let maskcard = card.newmaskcard();
+				maskcard.style.zIndex = 4;
+				maskcard.style.opacity = 0;
+				span.appendChild(maskcard);
 				span.appendChild(card.style(i, j));
 				spanmain.appendChild(span);
 				role.ref[cnt] = spanmain;
@@ -192,8 +197,8 @@ role.sort = function () {
 };
 role.maskid = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].getElementsByTagName('div')[0])
-			role.ref[i].getElementsByTagName('div')[0].style.opacity = 1;
+		if (role.ref[i].getElementsByTagName('canvas')[1])
+			role.ref[i].getElementsByTagName('canvas')[1].style.opacity = 1;
 	}
 	role.mask = true;
 	if (role.merge) {
@@ -204,8 +209,8 @@ role.maskid = function () {
 };
 role.cancelmaskid = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].getElementsByTagName('div')[0])
-			role.ref[i].getElementsByTagName('div')[0].style.opacity = 0;
+		if (role.ref[i].getElementsByTagName('canvas')[1])
+			role.ref[i].getElementsByTagName('canvas')[1].style.opacity = 0;
 	}
 	role.mask = false;
 	if (role.merge) {
@@ -224,7 +229,7 @@ role.mergeimg = function () {
 	for (let i = 0; i < role.len; i++) {
 		let cardimg;
 		if (role.refuse[role.id[i]]) {
-			cardimg = role.ref[role.id[i]].getElementsByTagName('canvas')[1];
+			cardimg = role.ref[role.id[i]].getElementsByTagName('canvas')[2];
 		} else {
 			cardimg = card.nullcard;
 		}
@@ -236,11 +241,12 @@ role.mergeimg = function () {
 			carddata.size.h
 		);
 		if (role.refuse[role.id[i]] && role.mask) {
-			ctx.fillRect(
-				role.addr[i].left + 25,
-				role.addr[i].top + 150,
-				79,
-				15
+			ctx.drawImage(
+				role.ref[i].getElementsByTagName('canvas')[1],
+				role.addr[i].left,
+				role.addr[i].top,
+				carddata.size.w,
+				carddata.size.h
 			);
 		}
 	}
