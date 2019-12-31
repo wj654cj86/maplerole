@@ -1,31 +1,13 @@
 var carddata = {
 	size: { w: 116, h: 177 },
+	spacing: 122,
 	seat: {
-		'1024x768': [
-			{ x: 70, y: 563 },
-			{ x: 192, y: 563 },
-			{ x: 314, y: 563 },
-			{ x: 436, y: 563 }
-		],
-		'1280x720': [
-			{ x: 198, y: 539 },
-			{ x: 320, y: 539 },
-			{ x: 442, y: 539 },
-			{ x: 564, y: 539 }
-		],
-		'1366x768': [
-			{ x: 241, y: 563 },
-			{ x: 363, y: 563 },
-			{ x: 485, y: 563 },
-			{ x: 607, y: 563 }
-		],
-		'1920x1080': [
-			{ x: 518, y: 719 },
-			{ x: 640, y: 719 },
-			{ x: 762, y: 719 },
-			{ x: 884, y: 719 }
-		]
-	}
+		'1024x768': { x: 70, y: 563 },
+		'1280x720': { x: 198, y: 539 },
+		'1366x768': { x: 241, y: 563 },
+		'1920x1080': { x: 518, y: 719 }
+	},
+	angle: [5, 3, 2, 1, 1]
 };
 
 var card = {
@@ -33,13 +15,31 @@ var card = {
 	reg: {},
 	nullcard: {},
 	crossicon: {},
+	setcardangle: function (ctx, arr) {
+		let u8arr = new Uint8ClampedArray(arr);
+		let imageData = new ImageData(u8arr, 1, 1);
+		for (let i = 0; i < carddata.angle.length; i++) {
+			for (let j = 0; j < carddata.angle[i]; j++) {
+				ctx.putImageData(imageData, i, j);
+				ctx.putImageData(imageData, carddata.size.w - 1 - i, carddata.size.h - 1 - j);
+				ctx.putImageData(imageData, i, carddata.size.h - 1 - j);
+				ctx.putImageData(imageData, carddata.size.w - 1 - i, j);
+			}
+		}
+	},
 	initial: function (callback) {
 		generator(function* () {
 			yield {
 				nextfunc: loadimg,
 				argsfront: ['img/null.png'],
 				cbfunc: function (img) {
-					card.nullcard = img;
+					let canvas = document.createElement('canvas');
+					let ctx = canvas.getContext('2d');
+					canvas.setAttribute('width', carddata.size.w);
+					canvas.setAttribute('height', carddata.size.h);
+					ctx.drawImage(img, 0, 0);
+					card.setcardangle(ctx, [64, 64, 64, 255]);
+					card.nullcard = canvas;
 				}
 			};
 			yield {
@@ -53,6 +53,14 @@ var card = {
 			card.crossicon.style.top = '0px';
 			callback();
 		});
+	},
+	newnullcard: function () {
+		let canvas = document.createElement('canvas');
+		let ctx = canvas.getContext('2d');
+		canvas.setAttribute('width', carddata.size.w);
+		canvas.setAttribute('height', carddata.size.h);
+		ctx.drawImage(card.nullcard, 0, 0);
+		return canvas;
 	},
 	loadimg: function (callback) {
 		generator(function* () {
@@ -96,8 +104,8 @@ var card = {
 		let imgsize = card.refreg[x].naturalWidth + 'x' + card.refreg[x].naturalHeight;
 		ctx.drawImage(
 			card.refreg[x],
-			carddata.seat[imgsize][y].x,
-			carddata.seat[imgsize][y].y,
+			carddata.seat[imgsize].x + carddata.spacing * y,
+			carddata.seat[imgsize].y,
 			carddata.size.w,
 			carddata.size.h,
 			0,
@@ -105,7 +113,7 @@ var card = {
 			carddata.size.w,
 			carddata.size.h
 		);
-
+		card.setcardangle(ctx, [0, 0, 0, 0]);
 		card.reg[x][y] = canvas;
 		return card.reg[x][y];
 	}

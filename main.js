@@ -41,7 +41,9 @@ role.loadimg = function () {
 			for (let j = 0; j < role.line; j++) {
 				role.id[cnt] = cnt;
 				role.addr[cnt] = { left: j * carddata.size.w, top: i * carddata.size.h };
-				role.nullref[cnt] = copyxml(card.nullcard).getElementsByTagName('img')[0];
+				let span = document.createElement('span');
+				span.appendChild(card.newnullcard());
+				role.nullref[cnt] = span;
 				role.nullref[cnt].style.left = role.addr[cnt].left + 'px';
 				role.nullref[cnt].style.top = role.addr[cnt].top + 'px';
 				layout.appendChild(role.nullref[cnt]);
@@ -113,6 +115,7 @@ role.loadimg = function () {
 				}
 			}
 			if (nowid == -1) return;
+			// if (!role.refuse[role.id[nowid]]) return;
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
 			role.ref[role.id[nowid]].style.transition = 'all 0s';
 			role.ref[role.id[nowid]].style.zIndex = 10;
