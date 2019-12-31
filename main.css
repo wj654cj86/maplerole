@@ -21,7 +21,7 @@ input[type="button"] {
 
 #loadbtn {
 	position: absolute;
-	left: 220px;
+	left: 230px;
 	top: 10px;
 }
 
@@ -51,9 +51,15 @@ input[type="button"] {
 	top: 40px;
 }
 
-#mergeimgbtn {
+#maskid {
 	position: absolute;
 	left: 120px;
+	top: 40px;
+}
+
+#mergeimgbtn {
+	position: absolute;
+	left: 230px;
 	top: 40px;
 }
 
@@ -77,6 +83,17 @@ input[type="button"] {
 	left: 0px;
 	top: 0px;
 	z-index: 3;
+}
+
+#layout span div{
+	position: absolute;
+	background: #444;
+	left: 25px;
+	top: 150px;
+	width: 79px;
+	height: 15px;
+	opacity: 0;
+	z-index: 4;
 }
 
 #layout span img {

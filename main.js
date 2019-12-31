@@ -7,7 +7,9 @@ var role = {
 	refuse: [],
 	len: 0,
 	w: 0,
-	h: 0
+	h: 0,
+	mask: false,
+	merge: false
 };
 role.setseat = function (i) {
 	role.ref[role.id[i]].style.left = role.addr[i].left + 'px';
@@ -15,6 +17,12 @@ role.setseat = function (i) {
 };
 role.loadimg = function () {
 	generator(function* () {
+		if (role.merge) {
+			role.cancelmergeimg();
+		}
+		if (role.mask) {
+			role.cancelmaskid();
+		}
 		for (let i = 0; i < role.len; i++) {
 			let node = role.ref[i];
 			if (node.parentNode) {
@@ -83,6 +91,8 @@ role.loadimg = function () {
 					icon.style.opacity = 0.3;
 				}
 				span.appendChild(icon);
+				let div = document.createElement('div');
+				span.appendChild(div);
 				span.appendChild(card.style(i, j));
 				spanmain.appendChild(span);
 				role.ref[cnt] = spanmain;
@@ -120,7 +130,7 @@ role.loadimg = function () {
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
 			role.ref[role.id[nowid]].style.transition = 'all 0s';
 			role.ref[role.id[nowid]].style.zIndex = 10;
-			layout.onmousemove = function (event) {
+			window.onmousemove = function (event) {
 				let mp = getclickpoint(event, layout);
 				let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
 				for (let i = 0; i < role.len; i++) {
@@ -159,11 +169,50 @@ role.loadimg = function () {
 				role.setseat(nowid);
 				role.ref[role.id[nowid]].style.transition = 'all 300ms';
 				role.ref[role.id[nowid]].style.zIndex = 3;
-				layout.onmousemove = function () { };
+				window.onmousemove = function () { };
 				window.onmouseup = function () { };
 			};
 		};
 	});
+};
+role.sort = function () {
+	let used = [];
+	let unused = [];
+	for (let i = 0; i < role.len; i++) {
+		if (role.refuse[role.id[i]]) {
+			used.push(role.id[i]);
+		} else {
+			unused.push(role.id[i]);
+		}
+	}
+	role.id = used.concat(unused);
+	for (let i = 0; i < role.len; i++) {
+		role.setseat(i);
+	}
+};
+role.maskid = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].getElementsByTagName('div')[0])
+			role.ref[i].getElementsByTagName('div')[0].style.opacity = 1;
+	}
+	role.mask = true;
+	if (role.merge) {
+		role.mergeimg();
+	}
+	maskid.onclick = role.cancelmaskid;
+	maskid.value = language.reg[language.mod].cancelmaskid;
+};
+role.cancelmaskid = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].getElementsByTagName('div')[0])
+			role.ref[i].getElementsByTagName('div')[0].style.opacity = 0;
+	}
+	role.mask = false;
+	if (role.merge) {
+		role.mergeimg();
+	}
+	maskid.onclick = role.maskid;
+	maskid.value = language.reg[language.mod].maskid;
 };
 role.mergeimg = function () {
 	if (role.len == 0) return;
@@ -186,10 +235,18 @@ role.mergeimg = function () {
 			carddata.size.w,
 			carddata.size.h
 		);
-
+		if (role.refuse[role.id[i]] && role.mask) {
+			ctx.fillRect(
+				role.addr[i].left + 25,
+				role.addr[i].top + 150,
+				79,
+				15
+			);
+		}
 	}
 	mergeimg.style.zIndex = 10;
 	mergeimg.style.opacity = 1;
+	role.merge = true;
 	mergeimgbtn.onclick = role.cancelmergeimg;
 	mergeimgbtn.value = language.reg[language.mod].cancelmergeimg;
 };
@@ -198,24 +255,10 @@ role.cancelmergeimg = function () {
 	mergeimg.setAttribute('height', 0);
 	mergeimg.style.zIndex = 0;
 	mergeimg.style.opacity = 0;
+	role.merge = false;
 	mergeimgbtn.onclick = role.mergeimg;
 	mergeimgbtn.value = language.reg[language.mod].mergeimg;
 }
-role.sort = function () {
-	let used = [];
-	let unused = [];
-	for (let i = 0; i < role.len; i++) {
-		if (role.refuse[role.id[i]]) {
-			used.push(role.id[i]);
-		} else {
-			unused.push(role.id[i]);
-		}
-	}
-	role.id = used.concat(unused);
-	for (let i = 0; i < role.len; i++) {
-		role.setseat(i);
-	}
-};
 window.onload = function () {
 	generator(function* () {
 		if (typeof geturl['fbclid'] != 'undefined') {
@@ -233,12 +276,13 @@ window.onload = function () {
 				document.getElementsByTagName('html')[0].lang = language.mod;
 				document.title = data.title;
 				loadbtn.value = data.loadfile;
+				sortcard.value = data.sortcard;
+				maskid.value = data.maskid;
 				mergeimgbtn.value = data.mergeimg;
 				cardlinelenspan.innerHTML = data.cardlinelen;
 				movemodespan.innerHTML = data.movemode;
 				sortmovespan.innerHTML = data.sortmove;
 				swapmovespan.innerHTML = data.swapmove;
-				sortcard.value = data.sortcard;
 			}
 		};
 		yield {
@@ -251,6 +295,7 @@ window.onload = function () {
 		};
 		loadbtn.onclick = role.loadimg;
 		sortcard.onclick = role.sort;
+		maskid.onclick = role.maskid;
 		mergeimgbtn.onclick = role.mergeimg;
 	});
 };

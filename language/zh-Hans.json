@@ -1,16 +1,17 @@
 {
 	"language": "简体中文",
-	"title": "角色卡表图片编辑器",
-	"spanauthor": "程式作者：",
+	"title": "角色卡表图像编辑器",
+	"spanauthor": "程序作者：",
 	"author": "屠屠",
 	"spanprovider": "翻译提供：",
 	"provider": "屠屠",
 	"loadfile": "载入",
-	"mergeimg": "合并图片",
+	"sortcard": "向前排列",
+	"maskid": "遮住名称",
+	"mergeimg": "合并图像",
 	"cancelmergeimg": "取消合并",
 	"cardlinelen": "每行角色数量：",
 	"movemode": "移动模式",
 	"sortmove": "序列移动",
-	"swapmove": "交换移动",
-	"sortcard": "向前排序"
+	"swapmove": "交换移动"
 }

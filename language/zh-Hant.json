@@ -6,11 +6,13 @@
 	"spanprovider": "翻譯提供：",
 	"provider": "屠屠",
 	"loadfile": "載入",
+	"sortcard": "向前排列",
+	"maskid": "遮住名稱",
+	"cancelmaskid": "取消遮住",
 	"mergeimg": "合併圖片",
 	"cancelmergeimg": "取消合併",
 	"cardlinelen": "每行角色數量：",
 	"movemode": "移動模式",
 	"sortmove": "序列移動",
-	"swapmove": "交換移動",
-	"sortcard": "向前排序"
+	"swapmove": "交換移動"
 }

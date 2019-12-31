@@ -6,11 +6,12 @@
 	"spanprovider": "Language Provider:",
 	"provider": "Tu-Tu",
 	"loadfile": "Load file",
+	"sortcard": "Sort roles",
+	"maskid": "Mask name",
 	"mergeimg": "Merge image",
 	"cancelmergeimg": "Cancel merge",
 	"cardlinelen": "Roles per line: ",
 	"movemode": "Move mode",
 	"sortmove": "Sort move",
-	"swapmove": "Swap move",
-	"sortcard": "Sort roles"
+	"swapmove": "Swap move"
 }
