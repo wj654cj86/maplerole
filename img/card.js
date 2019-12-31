@@ -38,7 +38,7 @@ var card = {
 					canvas.setAttribute('width', carddata.size.w);
 					canvas.setAttribute('height', carddata.size.h);
 					ctx.drawImage(img, 0, 0);
-					card.setcardangle(ctx, [64, 64, 64, 255]);
+					card.setcardangle(ctx, [0, 0, 0, 0]);
 					card.nullcard = canvas;
 				}
 			};

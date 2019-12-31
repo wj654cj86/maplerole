@@ -59,6 +59,7 @@ input[type="button"] {
 
 #layout {
 	position: absolute;
+	background: #444;
 	left: 10px;
 	top: 110px;
 	z-index: 3;
@@ -72,6 +73,7 @@ input[type="button"] {
 
 #layout span canvas {
 	position: absolute;
+	transition: all 300ms;
 	left: 0px;
 	top: 0px;
 	z-index: 3;
@@ -84,12 +86,6 @@ input[type="button"] {
 	left: 0px;
 	top: 0px;
 	z-index: 4;
-}
-
-#layout img {
-	position: absolute;
-	transition: all 300ms;
-	z-index: 2;
 }
 
 #mergeimg {
