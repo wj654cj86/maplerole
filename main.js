@@ -7,7 +7,8 @@ var role = {
 	len: 0,
 	w: 0,
 	h: 0,
-	mask: false,
+	damage: false,
+	name: false,
 	merge: false
 };
 role.setseat = function (i) {
@@ -19,8 +20,11 @@ role.loadimg = function () {
 		if (role.merge) {
 			role.cancelmergeimg();
 		}
-		if (role.mask) {
-			role.cancelmaskid();
+		if (role.damage) {
+			role.showdamage();
+		}
+		if (role.name) {
+			role.showname();
 		}
 		for (let i = 0; i < role.len; i++) {
 			let node = role.ref[i].main;
@@ -153,33 +157,64 @@ role.sort = function () {
 		role.setseat(i);
 	}
 };
-role.maskid = function () {
+
+role.maskdamage = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].mask) {
-			role.ref[i].mask.style.zIndex = 4;
-			role.ref[i].jobicon.style.zIndex = 5;
+		if (role.ref[i].damage) {
+			if (role.ref[i].jobname != 'labss')
+				role.ref[i].damage.style.zIndex = 5;
+			role.ref[i].damagemask = true;
 		}
 	}
-	role.mask = true;
+	role.damage = true;
 	if (role.merge) {
 		role.mergeimg();
 	}
-	maskid.onclick = role.cancelmaskid;
-	maskid.value = language.reg[language.mod].cancelmaskid;
+	maskdamage.onclick = role.showdamage;
+	maskdamage.value = language.reg[language.mod].showdamage;
 };
-role.cancelmaskid = function () {
+role.showdamage = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].mask) {
-			role.ref[i].mask.style.zIndex = 2;
+		if (role.ref[i].damage) {
+			role.ref[i].damage.style.zIndex = 2;
+			role.ref[i].damagemask = false;
+		}
+	}
+	role.damage = false;
+	if (role.merge) {
+		role.mergeimg();
+	}
+	maskdamage.onclick = role.maskdamage;
+	maskdamage.value = language.reg[language.mod].maskdamage;
+};
+
+role.maskname = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].name) {
+			role.ref[i].name.style.zIndex = 4;
+			role.ref[i].jobicon.style.zIndex = 6;
+		}
+	}
+	role.name = true;
+	if (role.merge) {
+		role.mergeimg();
+	}
+	maskname.onclick = role.showname;
+	maskname.value = language.reg[language.mod].showname;
+};
+role.showname = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].name) {
+			role.ref[i].name.style.zIndex = 2;
 			role.ref[i].jobicon.style.zIndex = 2;
 		}
 	}
-	role.mask = false;
+	role.name = false;
 	if (role.merge) {
 		role.mergeimg();
 	}
-	maskid.onclick = role.maskid;
-	maskid.value = language.reg[language.mod].maskid;
+	maskname.onclick = role.maskname;
+	maskname.value = language.reg[language.mod].maskname;
 };
 role.mergeimg = function () {
 	if (role.len == 0) return;
@@ -189,34 +224,38 @@ role.mergeimg = function () {
 	ctx.fillStyle = "#444";
 	ctx.fillRect(0, 0, role.w, role.h);
 	for (let i = 0; i < role.len; i++) {
+		let ref = role.ref[role.id[i]];
 		let cardimg;
-		if (role.ref[role.id[i]].use) {
-			cardimg = role.ref[role.id[i]].card;
+		if (ref.use) {
+			cardimg = ref.card;
 		} else {
 			cardimg = card.nullcard;
 		}
 		ctx.drawImage(
 			cardimg,
 			role.addr[i].left,
-			role.addr[i].top,
-			carddata.size.w,
-			carddata.size.h
+			role.addr[i].top
 		);
-		if (role.ref[role.id[i]].use && role.mask) {
-			ctx.drawImage(
-				role.ref[role.id[i]].mask,
-				role.addr[i].left,
-				role.addr[i].top,
-				carddata.size.w,
-				carddata.size.h
-			);
-			ctx.drawImage(
-				role.ref[role.id[i]].jobicon,
-				role.addr[i].left + 14,
-				role.addr[i].top + 151,
-				14,
-				14
-			);
+		if (ref.use) {
+			if (role.name) {
+				ctx.drawImage(
+					ref.name,
+					role.addr[i].left,
+					role.addr[i].top
+				);
+				ctx.drawImage(
+					ref.jobicon,
+					role.addr[i].left + 14,
+					role.addr[i].top + 151
+				);
+			}
+			if (ref.jobname != 'labss' && role.damage) {
+				ctx.drawImage(
+					ref.damage,
+					role.addr[i].left,
+					role.addr[i].top
+				);
+			}
 		}
 	}
 	mergeimg.style.zIndex = 10;
@@ -251,8 +290,9 @@ window.onload = function () {
 				document.getElementsByTagName('html')[0].lang = language.mod;
 				document.title = data.title;
 				loadbtn.value = data.loadfile;
+				maskdamage.value = data.maskdamage;
+				maskname.value = data.maskname;
 				sortcard.value = data.sortcard;
-				maskid.value = data.maskid;
 				mergeimgbtn.value = data.mergeimg;
 				cardlinelenspan.innerHTML = data.cardlinelen;
 				movemodespan.innerHTML = data.movemode;
@@ -269,8 +309,9 @@ window.onload = function () {
 			return false;
 		};
 		loadbtn.onclick = role.loadimg;
+		maskdamage.onclick = role.maskdamage;
+		maskname.onclick = role.maskname;
 		sortcard.onclick = role.sort;
-		maskid.onclick = role.maskid;
 		mergeimgbtn.onclick = role.mergeimg;
 	});
 };

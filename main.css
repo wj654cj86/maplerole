@@ -45,22 +45,28 @@ input[type="button"] {
 	top: 40px;
 }
 
-#sortcard {
+#maskdamage {
 	position: absolute;
 	left: 10px;
 	top: 40px;
 }
 
-#maskid {
+#maskname {
 	position: absolute;
 	left: 120px;
 	top: 40px;
 }
 
+#sortcard {
+	position: absolute;
+	left: 10px;
+	top: 70px;
+}
+
 #mergeimgbtn {
 	position: absolute;
-	left: 230px;
-	top: 40px;
+	left: 120px;
+	top: 70px;
 }
 
 #layout {

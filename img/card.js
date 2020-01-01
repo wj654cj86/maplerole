@@ -20,7 +20,6 @@ var carddata = {
 		'pirate',
 		'xenon',
 		'labss',
-		'labsss',
 		'mobile'
 	]
 };
@@ -141,7 +140,7 @@ var card = {
 		ref.span = span;
 		let icon = copyxml(card.crossicon).getElementsByTagName('img')[0];
 		ref.icon = icon;
-		icon.style.zIndex = 6;
+		icon.style.zIndex = 7;
 		icon.onclick = function () {
 			span.style.opacity = 0;
 			ref.use = false;
@@ -175,13 +174,33 @@ var card = {
 		canvas.style.zIndex = 3;
 		span.appendChild(canvas);
 
+		ref.damagemask = false;
+		let damage = document.createElement('canvas');
+		ref.damage = damage;
+		let damagectx = damage.getContext('2d');
+		damage.setAttribute('width', carddata.size.w);
+		damage.setAttribute('height', carddata.size.h);
+		damagectx.drawImage(
+			card.cardcard,
+			10,
+			130,
+			carddata.size.w - 10 - 10,
+			17,
+			10,
+			130,
+			carddata.size.w - 10 - 10,
+			17,
+		);
+		damage.style.zIndex = 2;
+		span.appendChild(damage);
+
 		let canvasjob = ctx.getImageData(15, 152, 10, 12);
-		let maskcard = document.createElement('canvas');
-		ref.mask = maskcard;
-		let maskctx = maskcard.getContext('2d');
-		maskcard.setAttribute('width', carddata.size.w);
-		maskcard.setAttribute('height', carddata.size.h);
-		maskctx.drawImage(
+		let name = document.createElement('canvas');
+		ref.name = name;
+		let namectx = name.getContext('2d');
+		name.setAttribute('width', carddata.size.w);
+		name.setAttribute('height', carddata.size.h);
+		namectx.drawImage(
 			card.cardcard,
 			10,
 			147,
@@ -226,6 +245,11 @@ var card = {
 						14,
 						14
 					);
+					if (ref.jobname != 'labss' && ref.damagemask) {
+						damage.style.zIndex = 5;
+					} else {
+						damage.style.zIndex = 2;
+					}
 					break;
 				case 2:
 					ref.jobname = 'null';
@@ -242,6 +266,7 @@ var card = {
 						14,
 						14
 					);
+					damage.style.zIndex = 5;
 					break;
 				default:
 					break;
@@ -269,7 +294,7 @@ var card = {
 				return true;
 			})()) {
 				ref.jobname = carddata.jobname[i];
-				maskctx.drawImage(
+				namectx.drawImage(
 					refcanvas,
 					10,
 					147,
@@ -283,8 +308,8 @@ var card = {
 				break;
 			}
 		}
-		maskcard.style.zIndex = 2;
-		span.appendChild(maskcard);
+		name.style.zIndex = 2;
+		span.appendChild(name);
 
 		spanmain.appendChild(span);
 		card.reg[x][y] = ref;
