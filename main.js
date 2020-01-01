@@ -4,7 +4,6 @@ var role = {
 	id: [],
 	addr: [],
 	ref: [],
-	refuse: [],
 	len: 0,
 	w: 0,
 	h: 0,
@@ -12,8 +11,8 @@ var role = {
 	merge: false
 };
 role.setseat = function (i) {
-	role.ref[role.id[i]].style.left = role.addr[i].left + 'px';
-	role.ref[role.id[i]].style.top = role.addr[i].top + 'px';
+	role.ref[role.id[i]].main.style.left = role.addr[i].left + 'px';
+	role.ref[role.id[i]].main.style.top = role.addr[i].top + 'px';
 };
 role.loadimg = function () {
 	generator(function* () {
@@ -24,7 +23,7 @@ role.loadimg = function () {
 			role.cancelmaskid();
 		}
 		for (let i = 0; i < role.len; i++) {
-			let node = role.ref[i];
+			let node = role.ref[i].main;
 			if (node.parentNode) {
 				node.parentNode.removeChild(node);
 			}
@@ -57,65 +56,24 @@ role.loadimg = function () {
 
 		cnt = 0;
 		role.ref = [];
-		role.refuse = [];
 		role.w = role.line * carddata.size.w;
 		role.h = line * carddata.size.h;
 		layout.style.width = role.w + 'px';
 		layout.style.height = role.h + 'px';
 		for (let i = 0; i < hostfile.files.length; i++) {
 			for (let j = 0; j < 4; j++) {
-				let spanmain = document.createElement('span');
-				let nullcard = card.newnullcard();
-				nullcard.style.zIndex = 2;
-				spanmain.appendChild(nullcard);
-				let span = document.createElement('span');
-				let icon = copyxml(card.crossicon).getElementsByTagName('img')[0];
-				icon.onclick = function () {
-					let mp = getclickpoint(event, layout);
-					let nowid = -1;
-					for (let i = 0; i < role.len; i++) {
-						let cp = { x: role.addr[i].left, y: role.addr[i].top };
-						if (mp.x >= cp.x
-							&& mp.x < cp.x + carddata.size.w
-							&& mp.y >= cp.y
-							&& mp.y < cp.y + carddata.size.h) {
-							nowid = i;
-							break;
-						}
-					}
-					if (nowid == -1) return;
-					span.style.opacity = 0;
-					role.refuse[role.id[nowid]] = false;
-				};
-				icon.onmouseenter = function () {
-					icon.style.opacity = 1;
-				};
-				icon.onmouseout = function () {
-					icon.style.opacity = 0.3;
-				}
-				span.appendChild(icon);
-				let maskcard = card.newmaskcard();
-				maskcard.style.zIndex = 4;
-				maskcard.style.opacity = 0;
-				span.appendChild(maskcard);
-				span.appendChild(card.style(i, j));
-				spanmain.appendChild(span);
-				role.ref[cnt] = spanmain;
+				let ref = card.style(i, j);
+				role.ref[cnt] = ref;
 				role.setseat(cnt);
-				layout.appendChild(role.ref[cnt]);
-				role.refuse[cnt] = true;
+				layout.appendChild(role.ref[cnt].main);
 				cnt++;
 			}
 		}
 		for (; cnt < role.len; cnt++) {
-			let spanmain = document.createElement('span');
-			let nullcard = card.newnullcard();
-			nullcard.style.zIndex = 2;
-			spanmain.appendChild(nullcard);
-			role.ref[cnt] = spanmain;
+			let ref = card.newnullstyle();
+			role.ref[cnt] = ref;
 			role.setseat(cnt);
-			layout.appendChild(role.ref[cnt]);
-			role.refuse[cnt] = false;
+			layout.appendChild(role.ref[cnt].main);
 		}
 
 		layout.onmousedown = function (event) {
@@ -133,8 +91,8 @@ role.loadimg = function () {
 			}
 			if (nowid == -1) return;
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
-			role.ref[role.id[nowid]].style.transition = 'all 0s';
-			role.ref[role.id[nowid]].style.zIndex = 10;
+			role.ref[role.id[nowid]].main.style.transition = 'all 0s';
+			role.ref[role.id[nowid]].main.style.zIndex = 10;
 			window.onmousemove = function (event) {
 				let mp = getclickpoint(event, layout);
 				let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
@@ -167,13 +125,13 @@ role.loadimg = function () {
 						break;
 					}
 				}
-				role.ref[role.id[nowid]].style.left = mp.x - dp.x + 'px';
-				role.ref[role.id[nowid]].style.top = mp.y - dp.y + 'px';
+				role.ref[role.id[nowid]].main.style.left = mp.x - dp.x + 'px';
+				role.ref[role.id[nowid]].main.style.top = mp.y - dp.y + 'px';
 			}
 			window.onmouseup = function () {
 				role.setseat(nowid);
-				role.ref[role.id[nowid]].style.transition = 'all 300ms';
-				role.ref[role.id[nowid]].style.zIndex = 3;
+				role.ref[role.id[nowid]].main.style.transition = 'all 300ms';
+				role.ref[role.id[nowid]].main.style.zIndex = 3;
 				window.onmousemove = function () { };
 				window.onmouseup = function () { };
 			};
@@ -184,7 +142,7 @@ role.sort = function () {
 	let used = [];
 	let unused = [];
 	for (let i = 0; i < role.len; i++) {
-		if (role.refuse[role.id[i]]) {
+		if (role.ref[role.id[i]].use) {
 			used.push(role.id[i]);
 		} else {
 			unused.push(role.id[i]);
@@ -197,8 +155,10 @@ role.sort = function () {
 };
 role.maskid = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].getElementsByTagName('canvas')[1])
-			role.ref[i].getElementsByTagName('canvas')[1].style.opacity = 1;
+		if (role.ref[i].mask) {
+			role.ref[i].mask.style.zIndex = 4;
+			role.ref[i].jobicon.style.zIndex = 5;
+		}
 	}
 	role.mask = true;
 	if (role.merge) {
@@ -209,8 +169,10 @@ role.maskid = function () {
 };
 role.cancelmaskid = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].getElementsByTagName('canvas')[1])
-			role.ref[i].getElementsByTagName('canvas')[1].style.opacity = 0;
+		if (role.ref[i].mask) {
+			role.ref[i].mask.style.zIndex = 2;
+			role.ref[i].jobicon.style.zIndex = 2;
+		}
 	}
 	role.mask = false;
 	if (role.merge) {
@@ -228,8 +190,8 @@ role.mergeimg = function () {
 	ctx.fillRect(0, 0, role.w, role.h);
 	for (let i = 0; i < role.len; i++) {
 		let cardimg;
-		if (role.refuse[role.id[i]]) {
-			cardimg = role.ref[role.id[i]].getElementsByTagName('canvas')[2];
+		if (role.ref[role.id[i]].use) {
+			cardimg = role.ref[role.id[i]].card;
 		} else {
 			cardimg = card.nullcard;
 		}
@@ -240,13 +202,20 @@ role.mergeimg = function () {
 			carddata.size.w,
 			carddata.size.h
 		);
-		if (role.refuse[role.id[i]] && role.mask) {
+		if (role.ref[role.id[i]].use && role.mask) {
 			ctx.drawImage(
-				role.ref[i].getElementsByTagName('canvas')[1],
+				role.ref[role.id[i]].mask,
 				role.addr[i].left,
 				role.addr[i].top,
 				carddata.size.w,
 				carddata.size.h
+			);
+			ctx.drawImage(
+				role.ref[role.id[i]].jobicon,
+				role.addr[i].left + 14,
+				role.addr[i].top + 151,
+				14,
+				14
 			);
 		}
 	}
