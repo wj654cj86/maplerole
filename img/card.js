@@ -27,7 +27,6 @@ var carddata = {
 var card = {
 	refreg: [],
 	reg: {},
-	crossicon: {},
 	setcardangle: function (ctx, arr) {
 		let u8arr = new Uint8ClampedArray(arr);
 		let imageData = new ImageData(u8arr, 1, 1);
@@ -81,6 +80,16 @@ var card = {
 			};
 			card.crossicon.style.left = carddata.size.w - 20 + 'px';
 			card.crossicon.style.top = '0px';
+
+			yield {
+				nextfunc: loadimg,
+				argsfront: ['img/download.svg'],
+				cbfunc: function (img) {
+					card.downloadicon = img;
+				}
+			};
+			card.downloadicon.style.left = carddata.size.w - 45 + 'px';
+			card.downloadicon.style.top = '0px';
 			callback();
 		});
 	},
@@ -138,20 +147,57 @@ var card = {
 
 		let span = document.createElement('span');
 		ref.span = span;
-		let icon = copyxml(card.crossicon).getElementsByTagName('img')[0];
-		ref.icon = icon;
-		icon.style.zIndex = 7;
-		icon.onclick = function () {
+		let cross = copyxml(card.crossicon).getElementsByTagName('img')[0];
+		ref.cross = cross;
+		cross.style.zIndex = 7;
+		cross.onclick = function () {
 			span.style.opacity = 0;
 			ref.use = false;
 		};
-		icon.onmouseenter = function () {
-			icon.style.opacity = 1;
+		cross.onmouseenter = function () {
+			cross.style.opacity = 1;
 		};
-		icon.onmouseout = function () {
-			icon.style.opacity = 0.3;
+		cross.onmouseout = function () {
+			cross.style.opacity = 0.3;
 		}
-		span.appendChild(icon);
+		span.appendChild(cross);
+
+		let download = copyxml(card.downloadicon).getElementsByTagName('img')[0];
+		ref.download = download;
+		download.style.zIndex = 7;
+		download.onclick = function () {
+			let canvas = document.createElement('canvas');
+			let ctx = canvas.getContext('2d');
+			canvas.setAttribute('width', carddata.size.w);
+			canvas.setAttribute('height', carddata.size.h);
+			let cardimg;
+			if (ref.use) {
+				cardimg = ref.card;
+			} else {
+				cardimg = card.nullcard;
+			}
+			ctx.drawImage(cardimg, 0, 0);
+			if (ref.use) {
+				if (ref.namemask) {
+					ctx.drawImage(ref.name, 0, 0);
+					ctx.drawImage(ref.jobicon, 14, 151);
+				}
+				if (ref.jobname != 'labss' && ref.damagemask) {
+					ctx.drawImage(ref.damage, 0, 0);
+				}
+			}
+			canvas.toBlob(function (blob) {
+				let url = URL.createObjectURL(blob);
+				startDownload(url, 'role.png');
+			});
+		};
+		download.onmouseenter = function () {
+			download.style.opacity = 1;
+		};
+		download.onmouseout = function () {
+			download.style.opacity = 0.3;
+		}
+		span.appendChild(download);
 
 		let canvas = document.createElement('canvas');
 		ref.card = canvas;
@@ -195,6 +241,8 @@ var card = {
 		span.appendChild(damage);
 
 		let canvasjob = ctx.getImageData(15, 152, 10, 12);
+
+		ref.namemask = false;
 		let name = document.createElement('canvas');
 		ref.name = name;
 		let namectx = name.getContext('2d');

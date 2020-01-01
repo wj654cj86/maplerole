@@ -193,6 +193,7 @@ role.maskname = function () {
 		if (role.ref[i].name) {
 			role.ref[i].name.style.zIndex = 4;
 			role.ref[i].jobicon.style.zIndex = 6;
+			role.ref[i].namemask = true;
 		}
 	}
 	role.name = true;
@@ -207,6 +208,7 @@ role.showname = function () {
 		if (role.ref[i].name) {
 			role.ref[i].name.style.zIndex = 2;
 			role.ref[i].jobicon.style.zIndex = 2;
+			role.ref[i].namemask = false;
 		}
 	}
 	role.name = false;
