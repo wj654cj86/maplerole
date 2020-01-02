@@ -161,7 +161,7 @@ role.sort = function () {
 role.maskdamage = function () {
 	for (let i = 0; i < role.len; i++) {
 		if (role.ref[i].damage) {
-			if (role.ref[i].jobname != 'labss')
+			if (role.ref[i].jobname != 'lab')
 				role.ref[i].damage.style.zIndex = 5;
 			role.ref[i].damagemask = true;
 		}
@@ -231,7 +231,7 @@ role.mergeimg = function () {
 		if (ref.use) {
 			cardimg = ref.card;
 		} else {
-			cardimg = card.nullcard;
+			cardimg = card.card['null'];
 		}
 		ctx.drawImage(
 			cardimg,
@@ -251,7 +251,7 @@ role.mergeimg = function () {
 					role.addr[i].top + 151
 				);
 			}
-			if (ref.jobname != 'labss' && role.damage) {
+			if (ref.jobname != 'lab' && role.damage) {
 				ctx.drawImage(
 					ref.damage,
 					role.addr[i].left,

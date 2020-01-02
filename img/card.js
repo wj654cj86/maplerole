@@ -19,7 +19,7 @@ var carddata = {
 		'thief',
 		'pirate',
 		'xenon',
-		'labss',
+		'lab',
 		'mobile'
 	]
 };
@@ -27,6 +27,8 @@ var carddata = {
 var card = {
 	refreg: [],
 	reg: {},
+	card: {},
+	icon: {},
 	setcardangle: function (ctx, arr) {
 		let u8arr = new Uint8ClampedArray(arr);
 		let imageData = new ImageData(u8arr, 1, 1);
@@ -39,12 +41,39 @@ var card = {
 			}
 		}
 	},
+	findjob: function (canvas) {
+		let ctx = canvas.getContext('2d');
+		let canvasjob = ctx.getImageData(15, 152, 10, 12);
+		for (let i = 0; i < carddata.jobname.length; i++) {
+			let refcanvas = card.card[carddata.jobname[i]];
+			let refctx = refcanvas.getContext('2d');
+			let refjob = refctx.getImageData(15, 152, 10, 12);
+			if ((function () {
+				let arr = {};
+				for (let j = 0; j < refjob.data.length; j += 4) {
+					arr[j] = Math.abs(canvasjob.data[j] - refjob.data[j]);
+					arr[j + 1] = Math.abs(canvasjob.data[j + 1] - refjob.data[j + 1]);
+					arr[j + 2] = Math.abs(canvasjob.data[j + 2] - refjob.data[j + 2]);
+
+					if (Math.abs(canvasjob.data[j] - refjob.data[j]) > 100
+						|| Math.abs(canvasjob.data[j + 1] - refjob.data[j + 1]) > 100
+						|| Math.abs(canvasjob.data[j + 2] - refjob.data[j + 2]) > 100) {
+						return false;
+					};
+				}
+				return true;
+			})()) {
+				return carddata.jobname[i];
+			}
+		}
+		return 'card';
+	},
 	initial: function (callback) {
 		generator(function* () {
 			for (let i = 0; i < carddata.name.length; i++) {
 				yield {
 					nextfunc: loadimg,
-					argsfront: ['img/' + carddata.name[i] + '.png'],
+					argsfront: ['img/card/' + carddata.name[i] + '.png'],
 					cbfunc: function (img) {
 						let canvas = document.createElement('canvas');
 						let ctx = canvas.getContext('2d');
@@ -52,14 +81,14 @@ var card = {
 						canvas.setAttribute('height', carddata.size.h);
 						ctx.drawImage(img, 0, 0);
 						card.setcardangle(ctx, [0, 0, 0, 0]);
-						card[carddata.name[i] + 'card'] = canvas;
+						card.card[carddata.name[i]] = canvas;
 					}
 				};
 			}
 			for (let i = 0; i < carddata.jobname.length; i++) {
 				yield {
 					nextfunc: loadimg,
-					argsfront: ['img/' + carddata.jobname[i] + '.png'],
+					argsfront: ['img/card/' + carddata.jobname[i] + '.png'],
 					cbfunc: function (img) {
 						let canvas = document.createElement('canvas');
 						let ctx = canvas.getContext('2d');
@@ -67,7 +96,36 @@ var card = {
 						canvas.setAttribute('height', carddata.size.h);
 						ctx.drawImage(img, 0, 0);
 						card.setcardangle(ctx, [0, 0, 0, 0]);
-						card[carddata.jobname[i] + 'card'] = canvas;
+						card.card[carddata.jobname[i]] = canvas;
+					}
+				};
+			}
+			for (let i = 0; i < carddata.name.length; i++) {
+				yield {
+					nextfunc: loadimg,
+					argsfront: ['img/icon/' + carddata.name[i] + '.png'],
+					cbfunc: function (img) {
+						let canvas = document.createElement('canvas');
+						let ctx = canvas.getContext('2d');
+						canvas.setAttribute('width', carddata.size.w);
+						canvas.setAttribute('height', carddata.size.h);
+						ctx.drawImage(img, 0, 0);
+						card.setcardangle(ctx, [0, 0, 0, 0]);
+						card.icon[carddata.name[i]] = canvas;
+					}
+				};
+			}
+			for (let i = 0; i < carddata.jobname.length; i++) {
+				yield {
+					nextfunc: loadimg,
+					argsfront: ['img/icon/' + carddata.jobname[i] + '.png'],
+					cbfunc: function (img) {
+						let canvas = document.createElement('canvas');
+						let ctx = canvas.getContext('2d');
+						canvas.setAttribute('width', 20);
+						canvas.setAttribute('height', 20);
+						ctx.drawImage(img, 0, 0);
+						card.icon[carddata.jobname[i]] = canvas;
 					}
 				};
 			}
@@ -98,7 +156,7 @@ var card = {
 		let ctx = canvas.getContext('2d');
 		canvas.setAttribute('width', carddata.size.w);
 		canvas.setAttribute('height', carddata.size.h);
-		ctx.drawImage(card.nullcard, 0, 0);
+		ctx.drawImage(card.card['null'], 0, 0);
 		return canvas;
 	},
 	loadimg: function (callback) {
@@ -174,7 +232,7 @@ var card = {
 			if (ref.use) {
 				cardimg = ref.card;
 			} else {
-				cardimg = card.nullcard;
+				cardimg = card.card['null'];
 			}
 			ctx.drawImage(cardimg, 0, 0);
 			if (ref.use) {
@@ -182,7 +240,7 @@ var card = {
 					ctx.drawImage(ref.name, 0, 0);
 					ctx.drawImage(ref.jobicon, 14, 151);
 				}
-				if (ref.jobname != 'labss' && ref.damagemask) {
+				if (ref.jobname != 'lab' && ref.damagemask) {
 					ctx.drawImage(ref.damage, 0, 0);
 				}
 			}
@@ -227,7 +285,7 @@ var card = {
 		damage.setAttribute('width', carddata.size.w);
 		damage.setAttribute('height', carddata.size.h);
 		damagectx.drawImage(
-			card.cardcard,
+			card.card['card'],
 			10,
 			130,
 			carddata.size.w - 10 - 10,
@@ -240,8 +298,6 @@ var card = {
 		damage.style.zIndex = 2;
 		span.appendChild(damage);
 
-		let canvasjob = ctx.getImageData(15, 152, 10, 12);
-
 		ref.namemask = false;
 		let name = document.createElement('canvas');
 		ref.name = name;
@@ -249,7 +305,7 @@ var card = {
 		name.setAttribute('width', carddata.size.w);
 		name.setAttribute('height', carddata.size.h);
 		namectx.drawImage(
-			card.cardcard,
+			card.card['card'],
 			10,
 			147,
 			carddata.size.w - 10 - 10,
@@ -259,105 +315,83 @@ var card = {
 			carddata.size.w - 10 - 10,
 			carddata.size.h - 147 - 10,
 		);
-		ref.jobname = 'null';
+		name.style.zIndex = 2;
+		span.appendChild(name);
+
+		ref.jobname = 'card';
 		let jobicon = document.createElement('canvas');
 		ref.jobicon = jobicon;
+		let jobiconctx = jobicon.getContext('2d');
 		jobicon.setAttribute('width', 14);
 		jobicon.setAttribute('height', 14);
 		jobicon.style.zIndex = 2;
 		jobicon.style.left = 14 + 'px';
 		jobicon.style.top = 151 + 'px';
-		jobicon.oncontextmenu = function () {
+
+		let jobchange = document.createElement('canvas');
+		ref.jobchange = jobchange;
+		let jobchangectx = jobchange.getContext('2d');
+		jobchange.setAttribute('width', 20);
+		jobchange.setAttribute('height', 20);
+		jobchange.style.zIndex = 7;
+		jobchange.style.left = carddata.size.w - 70 + 'px';
+		jobchange.style.top = '0px';
+		jobchange.style.opacity = 0.3;
+		jobchange.style.transition = 'all 300ms';
+		jobchange.oncontextmenu = function () {
 			return false;
 		};
-		jobicon.onmousedown = function (event) {
+		jobchange.onmouseenter = function () {
+			jobchange.style.opacity = 1;
+		};
+		jobchange.onmouseout = function () {
+			jobchange.style.opacity = 0.3;
+		}
+		let changejob = function (jobname) {
+			ref.jobname = jobname;
+			jobiconctx.drawImage(
+				card.card[jobname],
+				14,
+				151,
+				14,
+				14,
+				0,
+				0,
+				14,
+				14
+			);
+			jobchangectx.drawImage(card.icon[jobname], 0, 0);
+		};
+		jobchange.onmousedown = function (event) {
 			let i;
-			let ctx;
-			let refcanvas;
 			switch (event.button) {
 				case 0:
 					i = carddata.jobname.indexOf(ref.jobname);
 					i++;
 					if (i >= carddata.jobname.length) i = 0;
-					ref.jobname = carddata.jobname[i];
-					ctx = ref.jobicon.getContext('2d');
-					refcanvas = card[carddata.jobname[i] + 'card'];
-					ctx.drawImage(
-						refcanvas,
-						14,
-						151,
-						14,
-						14,
-						0,
-						0,
-						14,
-						14
-					);
-					if (ref.jobname != 'labss' && ref.damagemask) {
+					changejob(carddata.jobname[i]);
+					if (ref.jobname != 'lab' && ref.damagemask) {
 						damage.style.zIndex = 5;
 					} else {
 						damage.style.zIndex = 2;
 					}
 					break;
 				case 2:
-					ref.jobname = 'null';
-					ctx = ref.jobicon.getContext('2d');
-					refcanvas = card.cardcard;
-					ctx.drawImage(
-						refcanvas,
-						14,
-						151,
-						14,
-						14,
-						0,
-						0,
-						14,
-						14
-					);
-					damage.style.zIndex = 5;
+					changejob('card');
+					if (ref.jobname != 'lab' && ref.damagemask) {
+						damage.style.zIndex = 5;
+					} else {
+						damage.style.zIndex = 2;
+					}
 					break;
 				default:
 					break;
 			}
 		};
+		changejob(card.findjob(canvas));
+
+		span.appendChild(jobchange);
 		span.appendChild(jobicon);
-
-		for (let i = 0; i < carddata.jobname.length; i++) {
-			let refcanvas = card[carddata.jobname[i] + 'card'];
-			let refctx = refcanvas.getContext('2d');
-			let refjob = refctx.getImageData(15, 152, 10, 12);
-			if ((function () {
-				let arr = {};
-				for (let j = 0; j < refjob.data.length; j += 4) {
-					arr[j] = Math.abs(canvasjob.data[j] - refjob.data[j]);
-					arr[j + 1] = Math.abs(canvasjob.data[j + 1] - refjob.data[j + 1]);
-					arr[j + 2] = Math.abs(canvasjob.data[j + 2] - refjob.data[j + 2]);
-
-					if (Math.abs(canvasjob.data[j] - refjob.data[j]) > 100
-						|| Math.abs(canvasjob.data[j + 1] - refjob.data[j + 1]) > 100
-						|| Math.abs(canvasjob.data[j + 2] - refjob.data[j + 2]) > 100) {
-						return false;
-					};
-				}
-				return true;
-			})()) {
-				ref.jobname = carddata.jobname[i];
-				namectx.drawImage(
-					refcanvas,
-					10,
-					147,
-					carddata.size.w - 10 - 10,
-					carddata.size.h - 147 - 10,
-					10,
-					147,
-					carddata.size.w - 10 - 10,
-					carddata.size.h - 147 - 10,
-				);
-				break;
-			}
-		}
-		name.style.zIndex = 2;
-		span.appendChild(name);
 
 		spanmain.appendChild(span);
 		card.reg[x][y] = ref;
