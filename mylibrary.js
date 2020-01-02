@@ -197,4 +197,30 @@ function startDownload(url, name) {
 	download.href = url;
 	download.download = name;
 	download.click();
-}  
+}
+
+function arrsum(arr) {
+	let sum = 0;
+	let len = arr.length;
+	for (let i = 0; i < len; i++) {
+		sum += arr[i] * 1;
+	}
+	return sum;
+}
+function arraverage(arr) {
+	let len = arr.length;
+	if (len != 0)
+		return arrsum(arr) / len;
+	else
+		return 0;
+}
+function arrsd(arr) {
+	let sum = 0;
+	let average = arraverage(arr);
+	let len = arr.length;
+	for (let i = 0; i < len; i++) {
+		let k = arr[i] - average;
+		sum += k * k;
+	}
+	return Math.sqrt(sum / len);
+}
