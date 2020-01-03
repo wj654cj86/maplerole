@@ -231,7 +231,7 @@ role.mergeimg = function () {
 		if (ref.use) {
 			cardimg = ref.card;
 		} else {
-			cardimg = card.card['null'];
+			cardimg = ref.nullcard;
 		}
 		ctx.drawImage(
 			cardimg,
