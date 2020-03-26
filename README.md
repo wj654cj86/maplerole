@@ -27,8 +27,8 @@
 		7. ![Lab圖示](https://wj654cj86.github.io/maplerole/img/icon/lab.png) Lab：當要使用遮住傷害時，Lab方塊不會遮住傷害。
 		8. ![楓之谷M圖示](https://wj654cj86.github.io/maplerole/img/icon/mobile.png) 楓之谷M
 		9. ![無圖示](https://wj654cj86.github.io/maplerole/img/icon/card.png) 無圖示：需要用滑鼠右鍵來切換。
-	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.svg) 下載：因為編輯器是使用疊圖預覽，如果要遮住傷害或遮住名稱直接另存圖片會出錯。
-	3. ![刪除圖示](https://wj654cj86.github.io/maplerole/img/cross.svg) 刪除：可以刪除掉不要顯示的角色。
+	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.png) 下載：因為編輯器是使用疊圖預覽，如果要遮住傷害或遮住名稱直接另存圖片會出錯。
+	3. ![刪除圖示](https://wj654cj86.github.io/maplerole/img/cross.png) 刪除：可以刪除掉不要顯示的角色。
 
 * 向前排列：將角色卡往前遞補空卡位
 
