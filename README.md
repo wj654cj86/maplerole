@@ -12,9 +12,13 @@
 	2. 然後修改「每行角色數量」
 	3. 最後按下載入
 
-* 遮住傷害或名稱
-	1. 按下遮住傷害會把所有傷害遮住
-	2. 按下遮住名稱會把所有名稱遮住
+* 遮住或傷害或名稱
+	1. 按下遮住全部傷害會把所有傷害遮住
+	2. 按下遮住全部名稱會把所有名稱遮住
+
+* 刪除或新增一行
+	1. 刪除一行會刪除最後一行，需要將最後一行的角色卡清空，否則無法刪除。
+	2. 新增一行會在最後面新增一行。
 
 * 角色卡上面的圖示功能
 	1. 職業圖示：可以用滑鼠左鍵點擊切換，因為有些角色名稱會蓋到角色卡上的職業圖示，所以編輯器會偵測職業圖示重新覆蓋上完整圖示。但是編輯器偵測職業圖示時有機率偵測錯誤，只要點擊角色卡上方的職業圖示可以修正。
@@ -29,6 +33,8 @@
 		9. ![無圖示](https://wj654cj86.github.io/maplerole/img/icon/card.png) 無圖示：需要用滑鼠右鍵來切換。
 	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.png) 下載：因為編輯器是使用疊圖預覽，如果要遮住傷害或遮住名稱直接另存圖片會出錯。
 	3. ![刪除圖示](https://wj654cj86.github.io/maplerole/img/cross.png) 刪除：可以刪除掉不要顯示的角色。
+	4. ![遮住傷害圖示](https://wj654cj86.github.io/maplerole/img/maskdamage.png)![顯示傷害圖示](https://wj654cj86.github.io/maplerole/img/showdamage.png) 傷害顯示：可以選擇單張角色卡是否顯示戰地傷害。
+	5. ![遮住名稱圖示](https://wj654cj86.github.io/maplerole/img/maskname.png)![顯示名稱圖示](https://wj654cj86.github.io/maplerole/img/showname.png) 名稱顯示：可以選擇單張角色卡是否顯示遊戲匿名。
 
 * 向前排列：將角色卡往前遞補空卡位
 

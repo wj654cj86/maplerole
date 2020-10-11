@@ -133,33 +133,15 @@ var card = {
 					}
 				};
 			}
-			yield {
-				nextfunc: loadimg,
-				argsfront: ['img/cross.svg'],
-				cbfunc: function (img) {
-					card.crossicon = img;
-				}
-			};
-			card.crossicon.style.zIndex = 7;
-			card.crossicon.style.opacity = 0.3;
-			card.crossicon.style.transition = 'all 300ms';
-			card.crossicon.style.left = carddata.size.w - 20 + 'px';
-			card.crossicon.style.top = '0px';
-
-			yield {
-				nextfunc: loadimg,
-				argsfront: ['img/download.svg'],
-				cbfunc: function (img) {
-					card.downloadicon = img;
-				}
-			};
-			card.downloadicon.style.zIndex = 7;
-			card.downloadicon.style.opacity = 0.3;
-			card.downloadicon.style.transition = 'all 300ms';
-			card.downloadicon.style.left = carddata.size.w - 45 + 'px';
-			card.downloadicon.style.top = '0px';
+			let gap = Math.floor((carddata.size.w - 20 * 5) / 4) + 20;
+			root.style.setProperty('--cross-x', gap * 4 + 'px');
+			root.style.setProperty('--download-x', gap * 3 + 'px');
+			root.style.setProperty('--jobchange-x', gap * 2 + 'px');
+			root.style.setProperty('--damagebt-x', gap + 'px');
+			root.style.setProperty('--namebt-x', 0 + 'px');
 
 			let damage = document.createElement('canvas');
+			card.damage = damage;
 			let damagectx = damage.getContext('2d');
 			damage.setAttribute('width', carddata.size.w);
 			damage.setAttribute('height', carddata.size.h);
@@ -175,10 +157,11 @@ var card = {
 				17,
 			);
 			damage.toBlob(function (blob) {
-				card.damagemaskurl = URL.createObjectURL(blob);
+				root.style.setProperty('--damage-mask', 'url(' + URL.createObjectURL(blob) + ')');
 			});
 
 			let name = document.createElement('canvas');
+			card.name = name;
 			let namectx = name.getContext('2d');
 			name.setAttribute('width', carddata.size.w);
 			name.setAttribute('height', carddata.size.h);
@@ -195,6 +178,7 @@ var card = {
 			);
 			name.toBlob(function (blob) {
 				card.namemaskurl = URL.createObjectURL(blob);
+				root.style.setProperty('--name-mask', 'url(' + URL.createObjectURL(blob) + ')');
 			});
 
 			callback();
@@ -274,7 +258,9 @@ var card = {
 		canvas.style.zIndex = 3;
 		span.appendChild(canvas);
 
-		let cross = card.crossicon.cloneNode(true);
+		let cross = new Image();
+		cross.className = 'cross icon';
+		cross.title = language.reg[language.mod].cross;
 		ref.cross = cross;
 		cross.onclick = function () {
 			span.style.opacity = 0;
@@ -284,11 +270,13 @@ var card = {
 			cross.style.opacity = 1;
 		};
 		cross.onmouseout = function () {
-			cross.style.opacity = 0.3;
+			cross.style.opacity = 0.5;
 		};
 		span.appendChild(cross);
 
-		let download = card.downloadicon.cloneNode(true);
+		let download = new Image();
+		download.className = 'download icon';
+		download.title = language.reg[language.mod].download;
 		ref.download = download;
 		download.onclick = function () {
 			let canvas = document.createElement('canvas');
@@ -304,11 +292,11 @@ var card = {
 			ctx.drawImage(cardimg, 0, 0);
 			if (ref.use) {
 				if (ref.namemask) {
-					ctx.drawImage(ref.name, 0, 0);
+					ctx.drawImage(card.name, 0, 0);
 					ctx.drawImage(ref.jobicon, 14, 151);
 				}
 				if (ref.jobname != 'lab' && ref.damagemask) {
-					ctx.drawImage(ref.damage, 0, 0);
+					ctx.drawImage(card.damage, 0, 0);
 				}
 			}
 			canvas.toBlob(function (blob) {
@@ -320,38 +308,90 @@ var card = {
 			download.style.opacity = 1;
 		};
 		download.onmouseout = function () {
-			download.style.opacity = 0.3;
+			download.style.opacity = 0.5;
 		};
 		span.appendChild(download);
 
 		ref.damagemask = false;
 		let damage = new Image();
-		damage.src = card.damagemaskurl;
+		damage.className = 'damage';
 		ref.damage = damage;
-		damage.style.zIndex = 2;
 		span.appendChild(damage);
+
+		let damagebt = new Image();
+		damagebt.className = 'damagebt icon';
+		damagebt.src = 'img/maskdamage.svg';
+		damagebt.title = language.reg[language.mod].maskdamage;
+		ref.damagebt = damagebt;
+		damagebt.onclick = function () {
+			if (ref.damage) {
+				if (ref.damagemask) {
+					ref.damage.style.zIndex = 2;
+					ref.damagemask = false;
+					ref.damagebt.src = 'img/maskdamage.svg';
+					ref.damagebt.title = language.reg[language.mod].maskdamage;
+				} else {
+					if (ref.jobname != 'lab')
+						ref.damage.style.zIndex = 5;
+					ref.damagemask = true;
+					ref.damagebt.src = 'img/showdamage.svg';
+					ref.damagebt.title = language.reg[language.mod].showdamage;
+				}
+			}
+		};
+		damagebt.onmouseenter = function () {
+			damagebt.style.opacity = 1;
+		};
+		damagebt.onmouseout = function () {
+			damagebt.style.opacity = 0.5;
+		};
+		span.appendChild(damagebt);
 
 		ref.namemask = false;
 		let name = new Image();
-		name.src = card.namemaskurl;
+		name.className = 'name';
 		ref.name = name;
-		name.style.zIndex = 2;
 		span.appendChild(name);
+
+		let namebt = new Image();
+		namebt.className = 'namebt icon';
+		namebt.src = 'img/maskname.svg';
+		namebt.title = language.reg[language.mod].maskname;
+		ref.namebt = namebt;
+		namebt.onclick = function () {
+			if (ref.name) {
+				if (ref.namemask) {
+					ref.name.style.zIndex = 2;
+					ref.jobicon.style.zIndex = 2;
+					ref.namemask = false;
+					ref.namebt.src = 'img/maskname.svg';
+					ref.namebt.title = language.reg[language.mod].maskname;
+				} else {
+					ref.name.style.zIndex = 4;
+					ref.jobicon.style.zIndex = 6;
+					ref.namemask = true;
+					ref.namebt.src = 'img/showname.svg';
+					ref.namebt.title = language.reg[language.mod].showname;
+				}
+			}
+		};
+		namebt.onmouseenter = function () {
+			namebt.style.opacity = 1;
+		};
+		namebt.onmouseout = function () {
+			namebt.style.opacity = 0.5;
+		};
+		span.appendChild(namebt);
 
 		ref.jobname = 'card';
 		let jobicon = new Image();
+		jobicon.className = 'jobicon';
 		ref.jobicon = jobicon;
-		jobicon.style.zIndex = 2;
-		jobicon.style.left = 14 + 'px';
-		jobicon.style.top = 151 + 'px';
 
 		let jobchange = new Image();
+		jobchange.className = 'jobchange icon';
+		jobchange.title = language.reg[language.mod].jobchange;
 		ref.jobchange = jobchange;
-		jobchange.style.zIndex = 7;
-		jobchange.style.left = carddata.size.w - 70 + 'px';
-		jobchange.style.top = '0px';
-		jobchange.style.opacity = 0.3;
-		jobchange.style.transition = 'all 300ms';
 		jobchange.oncontextmenu = function () {
 			return false;
 		};
@@ -359,7 +399,7 @@ var card = {
 			jobchange.style.opacity = 1;
 		};
 		jobchange.onmouseout = function () {
-			jobchange.style.opacity = 0.3;
+			jobchange.style.opacity = 0.5;
 		};
 		let changejob = function (jobname) {
 			ref.jobname = jobname;

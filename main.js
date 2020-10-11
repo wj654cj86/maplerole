@@ -1,10 +1,13 @@
+var root = document.documentElement;
 var geturl = url2array();
 var role = {
+	linelen: 8,
 	line: 8,
 	id: [],
 	addr: [],
 	ref: [],
 	len: 0,
+	hismaxlen: 0,
 	w: 0,
 	h: 0,
 	damage: false,
@@ -20,12 +23,6 @@ role.loadimg = function () {
 		if (role.merge) {
 			role.cancelmergeimg();
 		}
-		if (role.damage) {
-			role.showdamage();
-		}
-		if (role.name) {
-			role.showname();
-		}
 		for (let i = 0; i < role.len; i++) {
 			let node = role.ref[i].main;
 			if (node.parentNode) {
@@ -33,11 +30,11 @@ role.loadimg = function () {
 			}
 		}
 
-		role.line = Number(cardlinelen.value);
-		if (typeof role.line != 'number') role.line = 8;
-		role.line = Math.floor(role.line);
-		if (role.line < 1) role.line = 1;
-		if (role.line > 20) role.line = 20;
+		role.linelen = Number(cardlinelen.value);
+		if (typeof role.linelen != 'number') role.linelen = 8;
+		role.linelen = Math.floor(role.linelen);
+		if (role.linelen < 1) role.linelen = 1;
+		if (role.linelen > 20) role.linelen = 20;
 
 		yield {
 			nextfunc: card.loadimg,
@@ -45,23 +42,23 @@ role.loadimg = function () {
 		};
 
 		let cnt = 0;
-		let line = Math.ceil(hostfile.files.length * 4 / role.line);
+		role.line = Math.ceil(hostfile.files.length * 4 / role.linelen);
 		role.id = [];
 		role.addr = [];
 		role.nullref = [];
-		for (let i = 0; i < line; i++) {
-			for (let j = 0; j < role.line; j++) {
+		for (let i = 0; i < role.line; i++) {
+			for (let j = 0; j < role.linelen; j++) {
 				role.id[cnt] = cnt;
 				role.addr[cnt] = { left: j * carddata.size.w, top: i * carddata.size.h };
 				cnt++;
 			}
 		}
-		role.len = cnt;
+		role.hismaxlen = role.len = cnt;
 
 		cnt = 0;
 		role.ref = [];
-		role.w = role.line * carddata.size.w;
-		role.h = line * carddata.size.h;
+		role.w = role.linelen * carddata.size.w;
+		role.h = role.line * carddata.size.h;
 		layout.style.width = role.w + 'px';
 		layout.style.height = role.h + 'px';
 		for (let i = 0; i < hostfile.files.length; i++) {
@@ -158,65 +155,102 @@ role.sort = function () {
 	}
 };
 
-role.maskdamage = function () {
-	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].damage) {
-			if (role.ref[i].jobname != 'lab')
-				role.ref[i].damage.style.zIndex = 5;
-			role.ref[i].damagemask = true;
+role.linedec = function () {
+	let lineuse = false;
+	for (let i = role.len - role.linelen; i < role.len; i++) {
+		if (role.ref[role.id[i]].use) {
+			lineuse = true;
+			break;
 		}
 	}
-	role.damage = true;
-	if (role.merge) {
-		role.mergeimg();
+	if (!lineuse) {
+		for (let i = role.len - role.linelen; i < role.len; i++) {
+			let node = role.ref[role.id[i]].main;
+			if (node.parentNode) {
+				node.parentNode.removeChild(node);
+			}
+		}
+		role.line--;
+		role.len -= role.linelen;
+		role.h = role.line * carddata.size.h;
+		layout.style.height = role.h + 'px';
 	}
-	maskdamage.onclick = role.showdamage;
-	maskdamage.value = language.reg[language.mod].showdamage;
 };
-role.showdamage = function () {
-	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].damage) {
-			role.ref[i].damage.style.zIndex = 2;
-			role.ref[i].damagemask = false;
+role.lineinc = function () {
+	if (role.len < role.hismaxlen) {
+		role.line++;
+		role.len += role.linelen;
+		role.h = role.line * carddata.size.h;
+		layout.style.height = role.h + 'px';
+		for (let i = role.len - role.linelen; i < role.len; i++) {
+			let ref = card.newnullstyle();
+			role.ref[role.id[i]] = ref;
+			role.setseat(i);
+			layout.appendChild(role.ref[role.id[i]].main);
+		}
+	} else {
+		let cnt = role.len;
+		let i = role.line;
+		role.line++;
+		for (let j = 0; j < role.linelen; j++) {
+			role.id[cnt] = cnt;
+			role.addr[cnt] = { left: j * carddata.size.w, top: i * carddata.size.h };
+			cnt++;
+		}
+		cnt = role.len;
+		role.len += role.linelen;
+		role.hismaxlen = role.len;
+		role.h = role.line * carddata.size.h;
+		layout.style.height = role.h + 'px';
+		for (; cnt < role.len; cnt++) {
+			let ref = card.newnullstyle();
+			role.ref[cnt] = ref;
+			role.setseat(cnt);
+			layout.appendChild(role.ref[cnt].main);
 		}
 	}
-	role.damage = false;
-	if (role.merge) {
-		role.mergeimg();
-	}
-	maskdamage.onclick = role.maskdamage;
-	maskdamage.value = language.reg[language.mod].maskdamage;
 };
 
-role.maskname = function () {
+role.maskalldamage = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].name) {
-			role.ref[i].name.style.zIndex = 4;
-			role.ref[i].jobicon.style.zIndex = 6;
-			role.ref[i].namemask = true;
+		if (role.ref[i].damage && !role.ref[i].damagemask) {
+			role.ref[i].damagebt.click();
 		}
 	}
-	role.name = true;
 	if (role.merge) {
 		role.mergeimg();
 	}
-	maskname.onclick = role.showname;
-	maskname.value = language.reg[language.mod].showname;
 };
-role.showname = function () {
+role.showalldamage = function () {
 	for (let i = 0; i < role.len; i++) {
-		if (role.ref[i].name) {
-			role.ref[i].name.style.zIndex = 2;
-			role.ref[i].jobicon.style.zIndex = 2;
-			role.ref[i].namemask = false;
+		if (role.ref[i].damage && role.ref[i].damagemask) {
+			role.ref[i].damagebt.click();
 		}
 	}
-	role.name = false;
 	if (role.merge) {
 		role.mergeimg();
 	}
-	maskname.onclick = role.maskname;
-	maskname.value = language.reg[language.mod].maskname;
+};
+
+role.maskallname = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].name && !role.ref[i].namemask) {
+			role.ref[i].namebt.click();
+		}
+	}
+	if (role.merge) {
+		role.mergeimg();
+	}
+};
+role.showallname = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[i].name && role.ref[i].namemask) {
+			role.ref[i].namebt.click();
+		}
+	}
+	if (role.merge) {
+		role.mergeimg();
+	}
 };
 role.mergeimg = function () {
 	if (role.len == 0) return;
@@ -239,9 +273,9 @@ role.mergeimg = function () {
 			role.addr[i].top
 		);
 		if (ref.use) {
-			if (role.name) {
+			if (ref.namemask) {
 				ctx.drawImage(
-					ref.name,
+					card.name,
 					role.addr[i].left,
 					role.addr[i].top
 				);
@@ -251,9 +285,9 @@ role.mergeimg = function () {
 					role.addr[i].top + 151
 				);
 			}
-			if (ref.jobname != 'lab' && role.damage) {
+			if (ref.jobname != 'lab' && ref.damagemask) {
 				ctx.drawImage(
-					ref.damage,
+					card.damage,
 					role.addr[i].left,
 					role.addr[i].top
 				);
@@ -292,11 +326,15 @@ window.onload = function () {
 				document.getElementsByTagName('html')[0].lang = language.mod;
 				document.title = data.title;
 				loadbtn.value = data.loadfile;
-				maskdamage.value = data.maskdamage;
-				maskname.value = data.maskname;
+				maskalldamage.value = data.maskalldamage;
+				showalldamage.value = data.showalldamage;
+				maskallname.value = data.maskallname;
+				showallname.value = data.showallname;
 				sortcard.value = data.sortcard;
 				mergeimgbtn.value = data.mergeimg;
 				cardlinelenspan.innerHTML = data.cardlinelen;
+				cardlinedec.value = data.cardlinedec;
+				cardlineinc.value = data.cardlineinc;
 				movemodespan.innerHTML = data.movemode;
 				sortmovespan.innerHTML = data.sortmove;
 				swapmovespan.innerHTML = data.swapmove;
@@ -311,9 +349,13 @@ window.onload = function () {
 			return false;
 		};
 		loadbtn.onclick = role.loadimg;
-		maskdamage.onclick = role.maskdamage;
-		maskname.onclick = role.maskname;
+		maskalldamage.onclick = role.maskalldamage;
+		showalldamage.onclick = role.showalldamage;
+		maskallname.onclick = role.maskallname;
+		showallname.onclick = role.showallname;
 		sortcard.onclick = role.sort;
 		mergeimgbtn.onclick = role.mergeimg;
+		cardlinedec.onclick = role.linedec;
+		cardlineinc.onclick = role.lineinc;
 	});
 };

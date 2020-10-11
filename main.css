@@ -1,104 +1,174 @@
 body {
-	position: relative;
-	margin: 0px;
-	user-select: none;
-	-moz-user-select: none;
+	position           : relative;
+	margin             : 0px;
+	user-select        : none;
+	-moz-user-select   : none;
 	-webkit-user-select: none;
-	-ms-user-select: none;
+	-ms-user-select    : none;
+}
+
+input,
+span,
+canvas,
+img {
+	position: absolute;
 }
 
 input[type="button"] {
-	width: 100px;
+	width : 120px;
 	height: 25px;
 }
 
 #hostfile {
-	position: absolute;
-	left: 10px;
-	top: 10px;
-	width: 200px;
+	left : 10px;
+	top  : 10px;
+	width: 240px;
 }
 
 #loadbtn {
-	position: absolute;
-	left: 230px;
-	top: 10px;
+	left: 270px;
+	top : 10px;
 }
 
 #cardlinelenspan {
-	position: absolute;
-	left: 350px;
-	top: 10px;
+	left : 400px;
+	top  : 10px;
 	width: 120px;
 }
 
 #cardlinelen {
-	position: absolute;
-	left: 470px;
-	top: 10px;
+	left : 520px;
+	top  : 10px;
 	width: 50px;
 }
 
 #movemod {
 	position: absolute;
-	left: 350px;
-	top: 40px;
+	left    : 530px;
+	top     : 40px;
 }
 
-#maskdamage {
-	position: absolute;
+#movemodespan {
+	width: 150px;
+	left : 0px;
+}
+
+#sortmovespan,
+#swapmovespan {
+	width: 150px;
+	left : 20px;
+}
+
+#maskalldamage {
 	left: 10px;
-	top: 40px;
+	top : 40px;
 }
 
-#maskname {
-	position: absolute;
-	left: 120px;
-	top: 40px;
+#showalldamage {
+	left: 10px;
+	top : 70px;
+}
+
+#maskallname {
+	left: 140px;
+	top : 40px;
+}
+
+#showallname {
+	left: 140px;
+	top : 70px;
 }
 
 #sortcard {
-	position: absolute;
-	left: 10px;
-	top: 70px;
+	left: 270px;
+	top : 40px;
 }
 
 #mergeimgbtn {
-	position: absolute;
-	left: 120px;
-	top: 70px;
+	left: 270px;
+	top : 70px;
+}
+
+#cardlinedec {
+	left: 400px;
+	top : 40px;
+}
+
+#cardlineinc {
+	left: 400px;
+	top : 70px;
 }
 
 #layout {
-	position: absolute;
 	background: #444;
-	left: 10px;
-	top: 110px;
-	z-index: 3;
+	left      : 10px;
+	top       : 110px;
+	z-index   : 3;
 }
 
 #layout span {
-	position: absolute;
 	transition: all 300ms;
-	z-index: 3;
+	z-index   : 3;
 }
 
 #layout span canvas {
-	position: absolute;
 	left: 0px;
-	top: 0px;
+	top : 0px;
 }
 
 #layout span img {
-	position: absolute;
 	left: 0px;
-	top: 0px;
+	top : 0px;
+}
+
+#layout span .icon {
+	z-index   : 7;
+	opacity   : 0.5;
+	transition: all 300ms ease 0s;
+	top       : 0px;
+}
+
+#layout span .cross {
+	content: url("img/cross.svg");
+	left   : var(--cross-x);
+}
+
+#layout span .download {
+	content: url("img/download.svg");
+	left   : var(--download-x);
+}
+
+#layout span .jobchange {
+	left: var(--jobchange-x);
+}
+
+#layout span .damagebt {
+	left: var(--damagebt-x);
+}
+
+#layout span .namebt {
+	left: var(--namebt-x);
+}
+
+#layout span .jobicon {
+	z-index: 2;
+	left   : 14px;
+	top    : 151px;
+}
+
+#layout span .damage {
+	content: var(--damage-mask);
+	z-index: 2;
+}
+
+#layout span .name {
+	content: var(--name-mask);
+	z-index: 2;
 }
 
 #mergeimg {
-	position: absolute;
-	left: 10px;
-	top: 110px;
+	left   : 10px;
+	top    : 110px;
 	opacity: 0;
 	z-index: 0;
 }

@@ -171,6 +171,19 @@ function svgtopngurl(svg, callback) {
 	});
 }
 
+function pngtobase64(imgsrc, callback) {
+	let img = new Image();
+	img.onload = function () {
+		let c = document.createElement("canvas");
+		c.setAttribute('width', img.naturalWidth);
+		c.setAttribute('height', img.naturalHeight);
+		let ctx = c.getContext("2d");
+		ctx.drawImage(img, 0, 0);
+		callback(c.toDataURL());
+	};
+	img.src = imgsrc;
+}
+
 function getclickpoint(event, element) {
 	return {
 		x: event.clientX - element.offsetLeft + document.documentElement.scrollLeft + document.body.scrollLeft,
@@ -223,4 +236,62 @@ function arrsd(arr) {
 		sum += k * k;
 	}
 	return Math.sqrt(sum / len);
+}
+
+function componentToHex(c) {
+	c = Math.floor(c * 1);
+	var hex = c.toString(16);
+	return paddingLeft(hex, 2);
+}
+
+function rgbToHex(r, g, b) {
+	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b);
+}
+
+function hexToRgb(h) {
+	let r, g, b;
+	if (h.length == 4) {
+		r = 0x11 * ('0x' + h[1]);
+		g = 0x11 * ('0x' + h[2]);
+		b = 0x11 * ('0x' + h[3]);
+	} else {
+		r = 1 * ('0x' + h[1] + h[2]);
+		g = 1 * ('0x' + h[3] + h[4]);
+		b = 1 * ('0x' + h[5] + h[6]);
+	}
+	return [r, g, b];
+}
+
+Node.prototype.getElementsByAttributeValue = function (attribute, value) {
+	var dom = this.all || this.getElementsByTagName("*");
+	var match = new Array();
+	for (var i in dom) {
+		if ((typeof dom[i]) === "object") {
+			if (dom[i].getAttribute(attribute) == value) {
+				match.push(dom[i]);
+			}
+		}
+	}
+	return match;
+};
+
+Node.prototype.getElementByIdSvg = function (value) {
+	return this.getElementsByAttributeValue('id', value)[0];
+};
+
+function removeChild(node) {
+	if (node.parentNode) {
+		node.parentNode.removeChild(node);
+	}
+}
+
+function sentpost(url, obj) {
+	obj = obj || {};
+
+	let oReq = new XMLHttpRequest();
+	oReq.open("POST", url, true);
+	oReq.setRequestHeader('Content-Type', 'application/json');
+	oReq.onreadystatechange = function () {
+	};
+	oReq.send(JSON.stringify(obj));
 }
