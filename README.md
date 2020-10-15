@@ -31,12 +31,18 @@
 		7. ![Lab圖示](https://wj654cj86.github.io/maplerole/img/icon/lab.png) Lab：當要使用遮住傷害時，Lab方塊不會遮住傷害。
 		8. ![楓之谷M圖示](https://wj654cj86.github.io/maplerole/img/icon/mobile.png) 楓之谷M
 		9. ![無圖示](https://wj654cj86.github.io/maplerole/img/icon/card.png) 無圖示：需要用滑鼠右鍵來切換。
-	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.png) 下載：因為編輯器是使用疊圖預覽，如果要遮住傷害或遮住名稱直接另存圖片會出錯。
+	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.png) 下載：下載單張角色卡。
 	3. ![刪除圖示](https://wj654cj86.github.io/maplerole/img/cross.png) 刪除：可以刪除掉不要顯示的角色。
 	4. ![遮住傷害圖示](https://wj654cj86.github.io/maplerole/img/maskdamage.png)![顯示傷害圖示](https://wj654cj86.github.io/maplerole/img/showdamage.png) 傷害顯示：可以選擇單張角色卡是否顯示戰地傷害。
 	5. ![遮住名稱圖示](https://wj654cj86.github.io/maplerole/img/maskname.png)![顯示名稱圖示](https://wj654cj86.github.io/maplerole/img/showname.png) 名稱顯示：可以選擇單張角色卡是否顯示遊戲匿名。
 
 * 向前排列：將角色卡往前遞補空卡位
+
+* 解除鎖定：當按下角色卡時會出現圖示功能，所以按下解除鎖定可以解除圖示功能的顯示來預覽全部圖片。
+
+* 下載圖片：下載所有角色卡集成一張圖片。
+	1. 下載為png
+	2. 下載為jpg，有jpg品質，主要是調整檔案大小使用，太低圖片會很糊。
 
 * 移動方式
 	1. 序列移動：因為有些使用者想要按等級排序，圖片載入後有可能是按順序載入，如果用交換移動會破壞順序。

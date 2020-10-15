@@ -12,17 +12,27 @@ var role = {
 	h: 0,
 	damage: false,
 	name: false,
-	merge: false
+	download: document.createElement('canvas')
 };
 role.setseat = function (i) {
 	role.ref[role.id[i]].main.style.left = role.addr[i].left + 'px';
 	role.ref[role.id[i]].main.style.top = role.addr[i].top + 'px';
 };
+role.unlock = function (i) {
+	if (typeof i != 'number') {
+		for (let i = 0; i < role.len; i++) {
+			if (role.ref[role.id[i]].use) {
+				role.ref[role.id[i]].button.style.zIndex = 0;
+			}
+		}
+	} else {
+		if (role.ref[role.id[i]].use) {
+			role.ref[role.id[i]].button.style.zIndex = 0;
+		}
+	}
+};
 role.loadimg = function () {
 	generator(function* () {
-		if (role.merge) {
-			role.cancelmergeimg();
-		}
 		for (let i = 0; i < role.len; i++) {
 			let node = role.ref[i].main;
 			if (node.parentNode) {
@@ -80,6 +90,7 @@ role.loadimg = function () {
 		layout.onmousedown = function (event) {
 			let mp = getclickpoint(event, layout);
 			let nowid = -1;
+			role.unlock();
 			for (let i = 0; i < role.len; i++) {
 				let cp = { x: role.addr[i].left, y: role.addr[i].top };
 				if (mp.x >= cp.x
@@ -91,6 +102,7 @@ role.loadimg = function () {
 				}
 			}
 			if (nowid == -1) return;
+			if (role.ref[role.id[nowid]].use == true) role.ref[role.id[nowid]].button.style.zIndex = 4;
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
 			role.ref[role.id[nowid]].main.style.transition = 'all 0s';
 			role.ref[role.id[nowid]].main.style.zIndex = 10;
@@ -217,18 +229,12 @@ role.maskalldamage = function () {
 			role.ref[i].damagebt.click();
 		}
 	}
-	if (role.merge) {
-		role.mergeimg();
-	}
 };
 role.showalldamage = function () {
 	for (let i = 0; i < role.len; i++) {
 		if (role.ref[i].damage && role.ref[i].damagemask) {
 			role.ref[i].damagebt.click();
 		}
-	}
-	if (role.merge) {
-		role.mergeimg();
 	}
 };
 
@@ -238,9 +244,6 @@ role.maskallname = function () {
 			role.ref[i].namebt.click();
 		}
 	}
-	if (role.merge) {
-		role.mergeimg();
-	}
 };
 role.showallname = function () {
 	for (let i = 0; i < role.len; i++) {
@@ -248,15 +251,13 @@ role.showallname = function () {
 			role.ref[i].namebt.click();
 		}
 	}
-	if (role.merge) {
-		role.mergeimg();
-	}
 };
-role.mergeimg = function () {
+
+role.mergeimg = function (canvas) {
 	if (role.len == 0) return;
-	let ctx = mergeimg.getContext('2d');
-	mergeimg.setAttribute('width', role.w);
-	mergeimg.setAttribute('height', role.h);
+	let ctx = canvas.getContext('2d');
+	canvas.setAttribute('width', role.w);
+	canvas.setAttribute('height', role.h);
 	ctx.fillStyle = "#444";
 	ctx.fillRect(0, 0, role.w, role.h);
 	for (let i = 0; i < role.len; i++) {
@@ -294,21 +295,22 @@ role.mergeimg = function () {
 			}
 		}
 	}
-	mergeimg.style.zIndex = 10;
-	mergeimg.style.opacity = 1;
-	role.merge = true;
-	mergeimgbtn.onclick = role.cancelmergeimg;
-	mergeimgbtn.value = language.reg[language.mod].cancelmergeimg;
 };
-role.cancelmergeimg = function () {
-	mergeimg.setAttribute('width', 0);
-	mergeimg.setAttribute('height', 0);
-	mergeimg.style.zIndex = 0;
-	mergeimg.style.opacity = 0;
-	role.merge = false;
-	mergeimgbtn.onclick = role.mergeimg;
-	mergeimgbtn.value = language.reg[language.mod].mergeimg;
-}
+role.downloadallpng = function () {
+	role.mergeimg(role.download);
+	role.download.toBlob(function (blob) {
+		let url = URL.createObjectURL(blob);
+		startDownload(url, 'roleall.png');
+	});
+};
+role.downloadalljpg = function () {
+	role.mergeimg(role.download);
+	role.download.toBlob(function (blob) {
+		let url = URL.createObjectURL(blob);
+		startDownload(url, 'roleall.jpg');
+	}, 'image/jpeg', Number(jpgquality.value));
+};
+
 window.onload = function () {
 	generator(function* () {
 		if (typeof geturl['fbclid'] != 'undefined') {
@@ -331,10 +333,13 @@ window.onload = function () {
 				maskallname.value = data.maskallname;
 				showallname.value = data.showallname;
 				sortcard.value = data.sortcard;
-				mergeimgbtn.value = data.mergeimg;
+				unlock.value = data.unlock;
 				cardlinelenspan.innerHTML = data.cardlinelen;
+				jpgqualityspan.innerHTML = data.jpgquality;
 				cardlinedec.value = data.cardlinedec;
 				cardlineinc.value = data.cardlineinc;
+				downloadallpng.value = data.downloadallpng;
+				downloadalljpg.value = data.downloadalljpg;
 				movemodespan.innerHTML = data.movemode;
 				sortmovespan.innerHTML = data.sortmove;
 				swapmovespan.innerHTML = data.swapmove;
@@ -354,8 +359,10 @@ window.onload = function () {
 		maskallname.onclick = role.maskallname;
 		showallname.onclick = role.showallname;
 		sortcard.onclick = role.sort;
-		mergeimgbtn.onclick = role.mergeimg;
+		unlock.onclick = function () { role.unlock() };
 		cardlinedec.onclick = role.linedec;
 		cardlineinc.onclick = role.lineinc;
+		downloadallpng.onclick = role.downloadallpng;
+		downloadalljpg.onclick = role.downloadalljpg;
 	});
 };

@@ -31,9 +31,10 @@ input[type="button"] {
 }
 
 #cardlinelenspan {
-	left : 400px;
-	top  : 10px;
-	width: 120px;
+	left      : 400px;
+	top       : 10px;
+	width     : 120px;
+	text-align: right;
 }
 
 #cardlinelen {
@@ -42,9 +43,22 @@ input[type="button"] {
 	width: 50px;
 }
 
+#jpgqualityspan {
+	left      : 570px;
+	top       : 10px;
+	width     : 110px;
+	text-align: right;
+}
+
+#jpgquality {
+	left : 680px;
+	top  : 10px;
+	width: 50px;
+}
+
 #movemod {
 	position: absolute;
-	left    : 530px;
+	left    : 660px;
 	top     : 40px;
 }
 
@@ -84,7 +98,7 @@ input[type="button"] {
 	top : 40px;
 }
 
-#mergeimgbtn {
+#unlock {
 	left: 270px;
 	top : 70px;
 }
@@ -96,6 +110,16 @@ input[type="button"] {
 
 #cardlineinc {
 	left: 400px;
+	top : 70px;
+}
+
+#downloadallpng {
+	left: 530px;
+	top : 40px;
+}
+
+#downloadalljpg {
+	left: 530px;
 	top : 70px;
 }
 
@@ -111,18 +135,16 @@ input[type="button"] {
 	z-index   : 3;
 }
 
-#layout span canvas {
-	left: 0px;
-	top : 0px;
+#layout span .null {
+	content: url("img/card/null.png");
+	z-index: 2;
 }
 
-#layout span img {
-	left: 0px;
-	top : 0px;
+#layout span .button {
+	z-index: 0;
 }
 
-#layout span .icon {
-	z-index   : 7;
+#layout span .button img {
 	opacity   : 0.5;
 	transition: all 300ms ease 0s;
 	top       : 0px;
@@ -164,11 +186,4 @@ input[type="button"] {
 #layout span .name {
 	content: var(--name-mask);
 	z-index: 2;
-}
-
-#mergeimg {
-	left   : 10px;
-	top    : 110px;
-	opacity: 0;
-	z-index: 0;
 }

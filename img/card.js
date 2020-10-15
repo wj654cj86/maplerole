@@ -184,13 +184,6 @@ var card = {
 			callback();
 		});
 	},
-	newnullcard: function () {
-		let nullcard = new Image();
-		nullcard.src = 'img/card/null.png';
-		nullcard.style.zIndex = 2;
-		nullcard.style.opacity = 1;
-		return nullcard;
-	},
 	loadimg: function (callback) {
 		generator(function* () {
 			for (let i = 0; i < hostfile.files.length; i++) {
@@ -230,7 +223,8 @@ var card = {
 		ref.use = true;
 		let spanmain = document.createElement('span');
 		ref.main = spanmain;
-		let nullcard = card.newnullcard();
+		let nullcard = new Image();
+		nullcard.className = 'null';
 		ref.nullcard = nullcard;
 		spanmain.appendChild(nullcard);
 
@@ -258,8 +252,13 @@ var card = {
 		canvas.style.zIndex = 3;
 		span.appendChild(canvas);
 
+		let button = document.createElement('span');
+		button.className = 'button';
+		ref.button = button;
+		span.appendChild(button);
+
 		let cross = new Image();
-		cross.className = 'cross icon';
+		cross.className = 'cross';
 		cross.title = language.reg[language.mod].cross;
 		ref.cross = cross;
 		cross.onclick = function () {
@@ -272,10 +271,10 @@ var card = {
 		cross.onmouseout = function () {
 			cross.style.opacity = 0.5;
 		};
-		span.appendChild(cross);
+		button.appendChild(cross);
 
 		let download = new Image();
-		download.className = 'download icon';
+		download.className = 'download';
 		download.title = language.reg[language.mod].download;
 		ref.download = download;
 		download.onclick = function () {
@@ -310,7 +309,7 @@ var card = {
 		download.onmouseout = function () {
 			download.style.opacity = 0.5;
 		};
-		span.appendChild(download);
+		button.appendChild(download);
 
 		ref.damagemask = false;
 		let damage = new Image();
@@ -319,7 +318,7 @@ var card = {
 		span.appendChild(damage);
 
 		let damagebt = new Image();
-		damagebt.className = 'damagebt icon';
+		damagebt.className = 'damagebt';
 		damagebt.src = 'img/maskdamage.svg';
 		damagebt.title = language.reg[language.mod].maskdamage;
 		ref.damagebt = damagebt;
@@ -345,7 +344,7 @@ var card = {
 		damagebt.onmouseout = function () {
 			damagebt.style.opacity = 0.5;
 		};
-		span.appendChild(damagebt);
+		button.appendChild(damagebt);
 
 		ref.namemask = false;
 		let name = new Image();
@@ -354,7 +353,7 @@ var card = {
 		span.appendChild(name);
 
 		let namebt = new Image();
-		namebt.className = 'namebt icon';
+		namebt.className = 'namebt';
 		namebt.src = 'img/maskname.svg';
 		namebt.title = language.reg[language.mod].maskname;
 		ref.namebt = namebt;
@@ -381,7 +380,7 @@ var card = {
 		namebt.onmouseout = function () {
 			namebt.style.opacity = 0.5;
 		};
-		span.appendChild(namebt);
+		button.appendChild(namebt);
 
 		ref.jobname = 'card';
 		let jobicon = new Image();
@@ -389,7 +388,7 @@ var card = {
 		ref.jobicon = jobicon;
 
 		let jobchange = new Image();
-		jobchange.className = 'jobchange icon';
+		jobchange.className = 'jobchange';
 		jobchange.title = language.reg[language.mod].jobchange;
 		ref.jobchange = jobchange;
 		jobchange.oncontextmenu = function () {
@@ -433,7 +432,7 @@ var card = {
 			}
 		};
 		changejob(card.findjob(canvas));
-		span.appendChild(jobchange);
+		button.appendChild(jobchange);
 		span.appendChild(jobicon);
 		spanmain.appendChild(span);
 		card.reg[x][y] = ref;
@@ -444,7 +443,8 @@ var card = {
 		ref.use = false;
 		let spanmain = document.createElement('span');
 		ref.main = spanmain;
-		let nullcard = card.newnullcard();
+		let nullcard = new Image();
+		nullcard.className = 'null';
 		ref.nullcard = nullcard;
 		spanmain.appendChild(nullcard);
 		return ref;
