@@ -136,6 +136,14 @@ role.loadimg = function () {
 		};
 	});
 };
+
+role.idreplace = function (newid) {
+	for (let i = 0; i < role.len; i++) {
+		role.id[i] = newid[i];
+		role.setseat(i);
+	}
+};
+
 role.sort = function () {
 	let used = [];
 	let unused = [];
@@ -146,10 +154,7 @@ role.sort = function () {
 			unused.push(role.id[i]);
 		}
 	}
-	role.id = used.concat(unused);
-	for (let i = 0; i < role.len; i++) {
-		role.setseat(i);
-	}
+	role.idreplace(used.concat(unused));
 };
 role.delunknown = function () {
 	for (let i = 0; i < role.len; i++) {
@@ -173,10 +178,7 @@ role.forwardlab = function () {
 			unused.push(role.id[i]);
 		}
 	}
-	role.id = lab.concat(other).concat(unused);
-	for (let i = 0; i < role.len; i++) {
-		role.setseat(i);
-	}
+	role.idreplace(lab.concat(other).concat(unused));
 };
 role.backwardlab = function () {
 	let unused = [];
@@ -193,10 +195,7 @@ role.backwardlab = function () {
 			unused.push(role.id[i]);
 		}
 	}
-	role.id = other.concat(lab).concat(unused);
-	for (let i = 0; i < role.len; i++) {
-		role.setseat(i);
-	}
+	role.idreplace(other.concat(lab).concat(unused));
 };
 role.linedec = function () {
 	let lineuse = false;
