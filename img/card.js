@@ -269,7 +269,7 @@ var card = {
 			cross.style.opacity = 1;
 		};
 		cross.onmouseout = function () {
-			cross.style.opacity = 0.5;
+			cross.style.opacity = 0;
 		};
 		button.appendChild(cross);
 
@@ -307,7 +307,7 @@ var card = {
 			download.style.opacity = 1;
 		};
 		download.onmouseout = function () {
-			download.style.opacity = 0.5;
+			download.style.opacity = 0;
 		};
 		button.appendChild(download);
 
@@ -342,7 +342,7 @@ var card = {
 			damagebt.style.opacity = 1;
 		};
 		damagebt.onmouseout = function () {
-			damagebt.style.opacity = 0.5;
+			damagebt.style.opacity = 0;
 		};
 		button.appendChild(damagebt);
 
@@ -378,7 +378,7 @@ var card = {
 			namebt.style.opacity = 1;
 		};
 		namebt.onmouseout = function () {
-			namebt.style.opacity = 0.5;
+			namebt.style.opacity = 0;
 		};
 		button.appendChild(namebt);
 
@@ -398,7 +398,7 @@ var card = {
 			jobchange.style.opacity = 1;
 		};
 		jobchange.onmouseout = function () {
-			jobchange.style.opacity = 0.5;
+			jobchange.style.opacity = 0;
 		};
 		let changejob = function (jobname) {
 			ref.jobname = jobname;

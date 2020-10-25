@@ -18,19 +18,6 @@ role.setseat = function (i) {
 	role.ref[role.id[i]].main.style.left = role.addr[i].left + 'px';
 	role.ref[role.id[i]].main.style.top = role.addr[i].top + 'px';
 };
-role.unlock = function (i) {
-	if (typeof i != 'number') {
-		for (let i = 0; i < role.len; i++) {
-			if (role.ref[role.id[i]].use) {
-				role.ref[role.id[i]].button.style.zIndex = 0;
-			}
-		}
-	} else {
-		if (role.ref[role.id[i]].use) {
-			role.ref[role.id[i]].button.style.zIndex = 0;
-		}
-	}
-};
 role.loadimg = function () {
 	generator(function* () {
 		for (let i = 0; i < role.len; i++) {
@@ -90,7 +77,6 @@ role.loadimg = function () {
 		layout.onmousedown = function (event) {
 			let mp = getclickpoint(event, layout);
 			let nowid = -1;
-			role.unlock();
 			for (let i = 0; i < role.len; i++) {
 				let cp = { x: role.addr[i].left, y: role.addr[i].top };
 				if (mp.x >= cp.x
@@ -102,7 +88,6 @@ role.loadimg = function () {
 				}
 			}
 			if (nowid == -1) return;
-			if (role.ref[role.id[nowid]].use == true) role.ref[role.id[nowid]].button.style.zIndex = 4;
 			let dp = { x: mp.x - role.addr[nowid].left, y: mp.y - role.addr[nowid].top };
 			role.ref[role.id[nowid]].main.style.transition = 'all 0s';
 			role.ref[role.id[nowid]].main.style.zIndex = 10;
@@ -166,7 +151,53 @@ role.sort = function () {
 		role.setseat(i);
 	}
 };
-
+role.delunknown = function () {
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[role.id[i]].jobname == 'card') {
+			role.ref[role.id[i]].cross.click();
+		}
+	}
+};
+role.forwardlab = function () {
+	let unused = [];
+	let other = [];
+	let lab = [];
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[role.id[i]].use) {
+			if (role.ref[role.id[i]].jobname == 'lab') {
+				lab.push(role.id[i]);
+			} else {
+				other.push(role.id[i]);
+			}
+		} else {
+			unused.push(role.id[i]);
+		}
+	}
+	role.id = lab.concat(other).concat(unused);
+	for (let i = 0; i < role.len; i++) {
+		role.setseat(i);
+	}
+};
+role.backwardlab = function () {
+	let unused = [];
+	let other = [];
+	let lab = [];
+	for (let i = 0; i < role.len; i++) {
+		if (role.ref[role.id[i]].use) {
+			if (role.ref[role.id[i]].jobname == 'lab') {
+				lab.push(role.id[i]);
+			} else {
+				other.push(role.id[i]);
+			}
+		} else {
+			unused.push(role.id[i]);
+		}
+	}
+	role.id = other.concat(lab).concat(unused);
+	for (let i = 0; i < role.len; i++) {
+		role.setseat(i);
+	}
+};
 role.linedec = function () {
 	let lineuse = false;
 	for (let i = role.len - role.linelen; i < role.len; i++) {
@@ -333,7 +364,9 @@ window.onload = function () {
 				maskallname.value = data.maskallname;
 				showallname.value = data.showallname;
 				sortcard.value = data.sortcard;
-				unlock.value = data.unlock;
+				delunknown.value = data.delunknown;
+				forwardlab.value = data.forwardlab;
+				backwardlab.value = data.backwardlab;
 				cardlinelenspan.innerHTML = data.cardlinelen;
 				jpgqualityspan.innerHTML = data.jpgquality;
 				cardlinedec.value = data.cardlinedec;
@@ -359,7 +392,9 @@ window.onload = function () {
 		maskallname.onclick = role.maskallname;
 		showallname.onclick = role.showallname;
 		sortcard.onclick = role.sort;
-		unlock.onclick = function () { role.unlock() };
+		delunknown.onclick = role.delunknown;
+		forwardlab.onclick = role.forwardlab;
+		backwardlab.onclick = role.backwardlab;
 		cardlinedec.onclick = role.linedec;
 		cardlineinc.onclick = role.lineinc;
 		downloadallpng.onclick = role.downloadallpng;

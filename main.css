@@ -58,8 +58,8 @@ input[type="button"] {
 
 #movemod {
 	position: absolute;
-	left    : 660px;
-	top     : 40px;
+	left    : 790px;
+	top     : 10px;
 }
 
 #movemodespan {
@@ -98,28 +98,38 @@ input[type="button"] {
 	top : 40px;
 }
 
-#unlock {
+#delunknown {
 	left: 270px;
 	top : 70px;
 }
 
-#cardlinedec {
+#forwardlab {
 	left: 400px;
 	top : 40px;
 }
 
-#cardlineinc {
+#backwardlab {
 	left: 400px;
 	top : 70px;
 }
 
-#downloadallpng {
+#cardlinedec {
 	left: 530px;
 	top : 40px;
 }
 
-#downloadalljpg {
+#cardlineinc {
 	left: 530px;
+	top : 70px;
+}
+
+#downloadallpng {
+	left: 660px;
+	top : 40px;
+}
+
+#downloadalljpg {
+	left: 660px;
 	top : 70px;
 }
 
@@ -141,11 +151,11 @@ input[type="button"] {
 }
 
 #layout span .button {
-	z-index: 0;
+	z-index: 5;
 }
 
 #layout span .button img {
-	opacity   : 0.5;
+	opacity   : 0;
 	transition: all 300ms ease 0s;
 	top       : 0px;
 }
