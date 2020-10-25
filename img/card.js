@@ -28,8 +28,6 @@ var card = {
 	refreg: [],
 	reg: {},
 	card: {},
-	icon: {},
-	minicon: {},
 	setcardangle: function (ctx, arr) {
 		let u8arr = new Uint8ClampedArray(arr);
 		let imageData = new ImageData(u8arr, 1, 1);
@@ -94,42 +92,6 @@ var card = {
 						ctx.drawImage(img, 0, 0);
 						card.setcardangle(ctx, [0, 0, 0, 0]);
 						card.card[carddata.jobname[i]] = canvas;
-					}
-				};
-			}
-			for (let i = 0; i < carddata.name.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/icon/' + carddata.name[i] + '.png'],
-					cbfunc: function (img) {
-						card.icon[carddata.name[i]] = img;
-					}
-				};
-			}
-			for (let i = 0; i < carddata.jobname.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/icon/' + carddata.jobname[i] + '.png'],
-					cbfunc: function (img) {
-						card.icon[carddata.jobname[i]] = img;
-					}
-				};
-			}
-			for (let i = 0; i < carddata.name.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/minicon/' + carddata.name[i] + '.png'],
-					cbfunc: function (img) {
-						card.minicon[carddata.name[i]] = img;
-					}
-				};
-			}
-			for (let i = 0; i < carddata.jobname.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/minicon/' + carddata.jobname[i] + '.png'],
-					cbfunc: function (img) {
-						card.minicon[carddata.jobname[i]] = img;
 					}
 				};
 			}
@@ -367,7 +329,7 @@ var card = {
 					ref.namebt.title = language.reg[language.mod].maskname;
 				} else {
 					ref.name.style.zIndex = 4;
-					ref.jobicon.style.zIndex = 6;
+					ref.jobicon.style.zIndex = 4;
 					ref.namemask = true;
 					ref.namebt.src = 'img/showname.svg';
 					ref.namebt.title = language.reg[language.mod].showname;
@@ -414,7 +376,7 @@ var card = {
 					if (i >= carddata.jobname.length) i = 0;
 					changejob(carddata.jobname[i]);
 					if (ref.jobname != 'lab' && ref.damagemask) {
-						damage.style.zIndex = 5;
+						damage.style.zIndex = 4;
 					} else {
 						damage.style.zIndex = 2;
 					}
@@ -422,7 +384,7 @@ var card = {
 				case 2:
 					changejob('card');
 					if (ref.jobname != 'lab' && ref.damagemask) {
-						damage.style.zIndex = 5;
+						damage.style.zIndex = 4;
 					} else {
 						damage.style.zIndex = 2;
 					}
