@@ -119,7 +119,7 @@ var card = {
 				17,
 			);
 			damage.toBlob(function (blob) {
-				root.style.setProperty('--damage-mask', 'url(' + URL.createObjectURL(blob) + ')');
+				card.damagemaskurl = URL.createObjectURL(blob);
 			});
 
 			let name = document.createElement('canvas');
@@ -140,7 +140,6 @@ var card = {
 			);
 			name.toBlob(function (blob) {
 				card.namemaskurl = URL.createObjectURL(blob);
-				root.style.setProperty('--name-mask', 'url(' + URL.createObjectURL(blob) + ')');
 			});
 
 			callback();
@@ -187,6 +186,7 @@ var card = {
 		ref.main = spanmain;
 		let nullcard = new Image();
 		nullcard.className = 'null';
+		nullcard.src = 'img/card/null.png';
 		ref.nullcard = nullcard;
 		spanmain.appendChild(nullcard);
 
@@ -221,6 +221,7 @@ var card = {
 
 		let cross = new Image();
 		cross.className = 'cross';
+		cross.src = 'img/cross.svg';
 		cross.title = language.reg[language.mod].cross;
 		ref.cross = cross;
 		cross.onclick = function () {
@@ -237,6 +238,7 @@ var card = {
 
 		let download = new Image();
 		download.className = 'download';
+		download.src = 'img/download.svg';
 		download.title = language.reg[language.mod].download;
 		ref.download = download;
 		download.onclick = function () {
@@ -276,6 +278,7 @@ var card = {
 		ref.damagemask = false;
 		let damage = new Image();
 		damage.className = 'damage';
+		damage.src = card.damagemaskurl;
 		ref.damage = damage;
 		span.appendChild(damage);
 
@@ -311,6 +314,7 @@ var card = {
 		ref.namemask = false;
 		let name = new Image();
 		name.className = 'name';
+		name.src = card.namemaskurl;
 		ref.name = name;
 		span.appendChild(name);
 
@@ -329,7 +333,7 @@ var card = {
 					ref.namebt.title = language.reg[language.mod].maskname;
 				} else {
 					ref.name.style.zIndex = 4;
-					ref.jobicon.style.zIndex = 4;
+					ref.jobicon.style.zIndex = 5;
 					ref.namemask = true;
 					ref.namebt.src = 'img/showname.svg';
 					ref.namebt.title = language.reg[language.mod].showname;
@@ -407,6 +411,7 @@ var card = {
 		ref.main = spanmain;
 		let nullcard = new Image();
 		nullcard.className = 'null';
+		nullcard.src = 'img/card/null.png';
 		ref.nullcard = nullcard;
 		spanmain.appendChild(nullcard);
 		return ref;

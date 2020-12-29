@@ -146,12 +146,11 @@ input[type="button"] {
 }
 
 #layout span .null {
-	content: url("img/card/null.png");
 	z-index: 2;
 }
 
 #layout span .button {
-	z-index: 5;
+	z-index: 7;
 }
 
 #layout span .button img {
@@ -161,13 +160,11 @@ input[type="button"] {
 }
 
 #layout span .cross {
-	content: url("img/cross.svg");
-	left   : var(--cross-x);
+	left: var(--cross-x);
 }
 
 #layout span .download {
-	content: url("img/download.svg");
-	left   : var(--download-x);
+	left: var(--download-x);
 }
 
 #layout span .jobchange {
@@ -189,11 +186,9 @@ input[type="button"] {
 }
 
 #layout span .damage {
-	content: var(--damage-mask);
 	z-index: 2;
 }
 
 #layout span .name {
-	content: var(--name-mask);
 	z-index: 2;
 }
