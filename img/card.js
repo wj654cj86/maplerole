@@ -43,12 +43,12 @@ var card = (function () {
 	}
 	function findjob(canvas) {
 		let ctx = canvas.getContext('2d');
-		let canvasjob = ctx.getImageData(15, 152, 10, 12);
+		let canvasjob = ctx.getImageData(15, 152, 6, 12);
 		let sdarr = [];
 		for (let i = 0; i < data.jobname.length; i++) {
 			let refcanvas = tmp[data.jobname[i]];
 			let refctx = refcanvas.getContext('2d');
-			let refjob = refctx.getImageData(15, 152, 10, 12);
+			let refjob = refctx.getImageData(15, 152, 6, 12);
 			let differencearr = [];
 			for (let j = 0; j < refjob.data.length; j += 4) {
 				differencearr[j] = canvasjob.data[j] - refjob.data[j];
@@ -59,7 +59,7 @@ var card = (function () {
 			sdarr[i] = Math.round(arrsd(differencearr));
 		}
 		let minnum = Math.min(...sdarr);
-		if (minnum < 30)
+		if (minnum < 50)
 			return data.jobname[sdarr.indexOf(minnum)];
 		else
 			return 'card';
@@ -110,13 +110,13 @@ var card = (function () {
 			damage.setAttribute('height', data.size.h);
 			damagectx.drawImage(
 				tmp['card'],
-				10,
+				0,
 				130,
-				data.size.w - 10 - 10,
+				data.size.w,
 				17,
-				10,
+				0,
 				130,
-				data.size.w - 10 - 10,
+				data.size.w,
 				17,
 			);
 			damage.toBlob(function (blob) {
@@ -130,13 +130,13 @@ var card = (function () {
 			name.setAttribute('height', data.size.h);
 			namectx.drawImage(
 				tmp['card'],
-				10,
+				0,
 				147,
-				data.size.w - 10 - 10,
+				data.size.w,
 				data.size.h - 147 - 10,
-				10,
+				0,
 				147,
-				data.size.w - 10 - 10,
+				data.size.w,
 				data.size.h - 147 - 10,
 			);
 			name.toBlob(function (blob) {
