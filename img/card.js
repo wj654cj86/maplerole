@@ -223,12 +223,6 @@ var card = (function () {
 			span.style.opacity = 0;
 			ref.use = false;
 		};
-		cross.onmouseenter = function () {
-			cross.style.opacity = 1;
-		};
-		cross.onmouseout = function () {
-			cross.style.opacity = 0;
-		};
 		button.appendChild(cross);
 
 		let download = new Image();
@@ -262,12 +256,6 @@ var card = (function () {
 				startDownload(url, 'role.png');
 			});
 		};
-		download.onmouseenter = function () {
-			download.style.opacity = 1;
-		};
-		download.onmouseout = function () {
-			download.style.opacity = 0;
-		};
 		button.appendChild(download);
 
 		ref.damagemask = false;
@@ -297,12 +285,6 @@ var card = (function () {
 					ref.damagebt.title = language.reg[language.mod].showdamage;
 				}
 			}
-		};
-		damagebt.onmouseenter = function () {
-			damagebt.style.opacity = 1;
-		};
-		damagebt.onmouseout = function () {
-			damagebt.style.opacity = 0;
 		};
 		button.appendChild(damagebt);
 
@@ -335,12 +317,6 @@ var card = (function () {
 				}
 			}
 		};
-		namebt.onmouseenter = function () {
-			namebt.style.opacity = 1;
-		};
-		namebt.onmouseout = function () {
-			namebt.style.opacity = 0;
-		};
 		button.appendChild(namebt);
 
 		ref.jobname = 'card';
@@ -354,12 +330,6 @@ var card = (function () {
 		ref.jobchange = jobchange;
 		jobchange.oncontextmenu = function () {
 			return false;
-		};
-		jobchange.onmouseenter = function () {
-			jobchange.style.opacity = 1;
-		};
-		jobchange.onmouseout = function () {
-			jobchange.style.opacity = 0;
 		};
 		let changejob = function (jobname) {
 			ref.jobname = jobname;

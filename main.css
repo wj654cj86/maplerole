@@ -44,21 +44,21 @@ input[type="button"] {
 }
 
 #jpgqualityspan {
-	left      : 570px;
+	left      : 740px;
 	top       : 10px;
 	width     : 110px;
 	text-align: right;
 }
 
 #jpgquality {
-	left : 680px;
+	left : 850px;
 	top  : 10px;
 	width: 50px;
 }
 
 #movemod {
 	position: absolute;
-	left    : 790px;
+	left    : 920px;
 	top     : 10px;
 }
 
@@ -123,13 +123,23 @@ input[type="button"] {
 	top : 70px;
 }
 
-#downloadallpng {
+#maskallicon {
 	left: 660px;
 	top : 40px;
 }
 
-#downloadalljpg {
+#showallicon {
 	left: 660px;
+	top : 70px;
+}
+
+#downloadallpng {
+	left: 790px;
+	top : 40px;
+}
+
+#downloadalljpg {
+	left: 790px;
 	top : 70px;
 }
 
@@ -154,8 +164,6 @@ input[type="button"] {
 }
 
 #layout span .button img {
-	opacity   : 0;
-	transition: all 300ms ease 0s;
 	top       : 0px;
 }
 

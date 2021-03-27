@@ -313,6 +313,22 @@ var role = (function () {
 			}
 		}
 	}
+	function maskallicon() {
+		for (let i = 0; i < len; i++) {
+			let r = ref[id[i]];
+			if (r.use) {
+				r.button.style.zIndex = -1;
+			}
+		}
+	}
+	function showallicon() {
+		for (let i = 0; i < len; i++) {
+			let r = ref[id[i]];
+			if (r.use) {
+				r.button.style.zIndex = 7;
+			}
+		}
+	}
 	function downloadallpng() {
 		mergeimg(download);
 		download.toBlob(function (blob) {
@@ -339,6 +355,8 @@ var role = (function () {
 		backwardlab: backwardlab,
 		linedec: linedec,
 		lineinc: lineinc,
+		maskallicon: maskallicon,
+		showallicon: showallicon,
 		downloadallpng: downloadallpng,
 		downloadalljpg: downloadalljpg
 	};
@@ -373,6 +391,8 @@ window.onload = function () {
 				jpgqualityspan.innerHTML = data.jpgquality;
 				cardlinedec.value = data.cardlinedec;
 				cardlineinc.value = data.cardlineinc;
+				maskallicon.value = data.maskallicon;
+				showallicon.value = data.showallicon;
 				downloadallpng.value = data.downloadallpng;
 				downloadalljpg.value = data.downloadalljpg;
 				movemodespan.innerHTML = data.movemode;
@@ -399,6 +419,8 @@ window.onload = function () {
 		backwardlab.onclick = role.backwardlab;
 		cardlinedec.onclick = role.linedec;
 		cardlineinc.onclick = role.lineinc;
+		maskallicon.onclick = role.maskallicon;
+		showallicon.onclick = role.showallicon;
 		downloadallpng.onclick = role.downloadallpng;
 		downloadalljpg.onclick = role.downloadalljpg;
 	});

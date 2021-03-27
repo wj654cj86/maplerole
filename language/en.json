@@ -24,6 +24,8 @@
 	"cardlinelen": "Roles per line:&nbsp;",
 	"cardlinedec": "Sub a line",
 	"cardlineinc": "Add a line",
+	"maskallicon": "Preview image",
+	"showallicon": "Cancel preview",
 	"downloadallpng": "Save as png",
 	"downloadalljpg": "Save as jpg",
 	"jpgquality": "Jpg quality:&nbsp;",

@@ -24,6 +24,8 @@
 	"cardlinelen": "每行角色数量：",
 	"cardlinedec": "删除一行",
 	"cardlineinc": "新增一行",
+	"maskallicon": "预览图像",
+	"showallicon": "取消预览",
 	"downloadallpng": "下载为png",
 	"downloadalljpg": "下载为jpg",
 	"jpgquality": "jpg质量：",
