@@ -15,120 +15,115 @@ var role = (function () {
 		ref[id[i]].main.style.left = addr[i].left + 'px';
 		ref[id[i]].main.style.top = addr[i].top + 'px';
 	}
-	function loadroleimg() {
-		generator(function* () {
-			for (let i = 0; i < len; i++) {
-				let node = ref[i].main;
-				if (node.parentNode) {
-					node.parentNode.removeChild(node);
-				}
+	async function loadroleimg() {
+		for (let i = 0; i < len; i++) {
+			let node = ref[i].main;
+			if (node.parentNode) {
+				node.parentNode.removeChild(node);
 			}
+		}
 
-			linelen = Number(cardlinelen.value);
-			if (typeof linelen != 'number') linelen = 8;
-			linelen = Math.floor(linelen);
-			if (linelen < 1) linelen = 1;
-			if (linelen > 20) linelen = 20;
+		linelen = Number(cardlinelen.value);
+		if (typeof linelen != 'number') linelen = 8;
+		linelen = Math.floor(linelen);
+		if (linelen < 1) linelen = 1;
+		if (linelen > 20) linelen = 20;
 
-			yield {
-				nextfunc: card.loadroleimg,
-				cbfunc: function () { }
-			};
+		await card.loadroleimg();
 
-			let cnt = 0;
-			line = Math.ceil(hostfile.files.length * 4 / linelen);
-			id = [];
-			addr = [];
-			for (let i = 0; i < line; i++) {
-				for (let j = 0; j < linelen; j++) {
-					id[cnt] = cnt;
-					addr[cnt] = { left: j * card.data.size.w, top: i * card.data.size.h };
-					cnt++;
-				}
+		let cnt = 0;
+		line = Math.ceil(hostfile.files.length * 4 / linelen);
+		id = [];
+		addr = [];
+		for (let i = 0; i < line; i++) {
+			for (let j = 0; j < linelen; j++) {
+				id[cnt] = cnt;
+				addr[cnt] = { left: j * card.data.size.w, top: i * card.data.size.h };
+				cnt++;
 			}
-			hismaxlen = len = cnt;
+		}
+		hismaxlen = len = cnt;
 
-			cnt = 0;
-			ref = [];
-			w = linelen * card.data.size.w;
-			h = line * card.data.size.h;
-			layout.style.width = w + 'px';
-			layout.style.height = h + 'px';
-			for (let i = 0; i < hostfile.files.length; i++) {
-				for (let j = 0; j < 4; j++) {
-					ref[cnt] = card.style(i, j);
-					setseat(cnt);
-					layout.appendChild(ref[cnt].main);
-					cnt++;
-				}
-			}
-			for (; cnt < len; cnt++) {
-				ref[cnt] = card.newnullstyle();
+		cnt = 0;
+		ref = [];
+		w = linelen * card.data.size.w;
+		h = line * card.data.size.h;
+		layout.style.width = w + 'px';
+		layout.style.height = h + 'px';
+		for (let i = 0; i < hostfile.files.length; i++) {
+			for (let j = 0; j < 4; j++) {
+				ref[cnt] = card.style(i, j);
 				setseat(cnt);
 				layout.appendChild(ref[cnt].main);
+				cnt++;
 			}
+		}
+		for (; cnt < len; cnt++) {
+			ref[cnt] = card.newnullstyle();
+			setseat(cnt);
+			layout.appendChild(ref[cnt].main);
+		}
 
-			layout.onmousedown = function (event) {
+		layout.onmousedown = function (event) {
+			let mp = getclickpoint(event, layout);
+			let nowid = -1;
+			for (let i = 0; i < len; i++) {
+				let cp = { x: addr[i].left, y: addr[i].top };
+				if (mp.x >= cp.x
+					&& mp.x < cp.x + card.data.size.w
+					&& mp.y >= cp.y
+					&& mp.y < cp.y + card.data.size.h) {
+					nowid = i;
+					break;
+				}
+			}
+			if (nowid == -1) return;
+			let dp = { x: mp.x - addr[nowid].left, y: mp.y - addr[nowid].top };
+			ref[id[nowid]].main.style.transition = 'all 0s';
+			ref[id[nowid]].main.style.zIndex = 10;
+			window.onmousemove = function (event) {
 				let mp = getclickpoint(event, layout);
-				let nowid = -1;
+				let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
 				for (let i = 0; i < len; i++) {
+					if (i == nowid) continue;
 					let cp = { x: addr[i].left, y: addr[i].top };
-					if (mp.x >= cp.x
-						&& mp.x < cp.x + card.data.size.w
-						&& mp.y >= cp.y
-						&& mp.y < cp.y + card.data.size.h) {
+					if (sp.x >= cp.x - card.data.size.w / 2
+						&& sp.x < cp.x + card.data.size.w / 2
+						&& sp.y >= cp.y - card.data.size.h / 2
+						&& sp.y < cp.y + card.data.size.h / 2) {
+						let tmp = id[nowid];
+						if (movemod[0].checked) {
+							if (i < nowid) {
+								for (let j = nowid; j > i; j--) {
+									id[j] = id[j - 1];
+									setseat(j);
+								}
+							} else {
+								for (let j = nowid; j < i; j++) {
+									id[j] = id[j + 1];
+									setseat(j);
+								}
+							}
+						} else {
+							id[nowid] = id[i];
+							setseat(nowid);
+						}
+						id[i] = tmp;
 						nowid = i;
 						break;
 					}
 				}
-				if (nowid == -1) return;
-				let dp = { x: mp.x - addr[nowid].left, y: mp.y - addr[nowid].top };
-				ref[id[nowid]].main.style.transition = 'all 0s';
-				ref[id[nowid]].main.style.zIndex = 10;
-				window.onmousemove = function (event) {
-					let mp = getclickpoint(event, layout);
-					let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
-					for (let i = 0; i < len; i++) {
-						if (i == nowid) continue;
-						let cp = { x: addr[i].left, y: addr[i].top };
-						if (sp.x >= cp.x - card.data.size.w / 2
-							&& sp.x < cp.x + card.data.size.w / 2
-							&& sp.y >= cp.y - card.data.size.h / 2
-							&& sp.y < cp.y + card.data.size.h / 2) {
-							let tmp = id[nowid];
-							if (movemod[0].checked) {
-								if (i < nowid) {
-									for (let j = nowid; j > i; j--) {
-										id[j] = id[j - 1];
-										setseat(j);
-									}
-								} else {
-									for (let j = nowid; j < i; j++) {
-										id[j] = id[j + 1];
-										setseat(j);
-									}
-								}
-							} else {
-								id[nowid] = id[i];
-								setseat(nowid);
-							}
-							id[i] = tmp;
-							nowid = i;
-							break;
-						}
-					}
-					ref[id[nowid]].main.style.left = mp.x - dp.x + 'px';
-					ref[id[nowid]].main.style.top = mp.y - dp.y + 'px';
-				}
-				window.onmouseup = function () {
-					setseat(nowid);
-					ref[id[nowid]].main.style.transition = 'all 300ms';
-					ref[id[nowid]].main.style.zIndex = 3;
-					window.onmousemove = function () { };
-					window.onmouseup = function () { };
-				};
+				ref[id[nowid]].main.style.left = mp.x - dp.x + 'px';
+				ref[id[nowid]].main.style.top = mp.y - dp.y + 'px';
+			}
+			window.onmouseup = function () {
+				setseat(nowid);
+				ref[id[nowid]].main.style.transition = 'all 300ms';
+				ref[id[nowid]].main.style.zIndex = 3;
+				window.onmousemove = function () { };
+				window.onmouseup = function () { };
 			};
-		});
+		};
 	}
 	function idreplace(newid) {
 		for (let i = 0; i < len; i++) {
@@ -362,66 +357,55 @@ var role = (function () {
 	};
 })();
 
-window.onload = function () {
-	generator(function* () {
-		if (typeof geturl['fbclid'] != 'undefined') {
-			delete geturl['fbclid'];
-			array2url(geturl);
-		}
-		yield {
-			nextfunc: language.initial,
-			cbfunc: function () { }
-		};
-		yield {
-			nextfunc: language.setting,
-			argsfront: [geturl['lang']],
-			cbfunc: function (data) {
-				document.getElementsByTagName('html')[0].lang = language.mod;
-				document.title = data.title;
-				loadbtn.value = data.loadfile;
-				maskalldamage.value = data.maskalldamage;
-				showalldamage.value = data.showalldamage;
-				maskallname.value = data.maskallname;
-				showallname.value = data.showallname;
-				sortcard.value = data.sortcard;
-				delunknown.value = data.delunknown;
-				forwardlab.value = data.forwardlab;
-				backwardlab.value = data.backwardlab;
-				cardlinelenspan.innerHTML = data.cardlinelen;
-				jpgqualityspan.innerHTML = data.jpgquality;
-				cardlinedec.value = data.cardlinedec;
-				cardlineinc.value = data.cardlineinc;
-				maskallicon.value = data.maskallicon;
-				showallicon.value = data.showallicon;
-				downloadallpng.value = data.downloadallpng;
-				downloadalljpg.value = data.downloadalljpg;
-				movemodespan.innerHTML = data.movemode;
-				sortmovespan.innerHTML = data.sortmove;
-				swapmovespan.innerHTML = data.swapmove;
-			}
-		};
-		yield {
-			nextfunc: card.initial,
-			cbfunc: function () { }
-		};
+window.onload = async function () {
+	if (typeof geturl['fbclid'] != 'undefined') {
+		delete geturl['fbclid'];
+		array2url(geturl);
+	}
+	await language.initial();
+	let data = await language.setting(geturl['lang']);
+	document.getElementsByTagName('html')[0].lang = language.mod;
+	document.title = data.title;
+	loadbtn.value = data.loadfile;
+	maskalldamage.value = data.maskalldamage;
+	showalldamage.value = data.showalldamage;
+	maskallname.value = data.maskallname;
+	showallname.value = data.showallname;
+	sortcard.value = data.sortcard;
+	delunknown.value = data.delunknown;
+	forwardlab.value = data.forwardlab;
+	backwardlab.value = data.backwardlab;
+	cardlinelenspan.innerHTML = data.cardlinelen;
+	jpgqualityspan.innerHTML = data.jpgquality;
+	cardlinedec.value = data.cardlinedec;
+	cardlineinc.value = data.cardlineinc;
+	maskallicon.value = data.maskallicon;
+	showallicon.value = data.showallicon;
+	downloadallpng.value = data.downloadallpng;
+	downloadalljpg.value = data.downloadalljpg;
+	movemodespan.innerHTML = data.movemode;
+	sortmovespan.innerHTML = data.sortmove;
+	swapmovespan.innerHTML = data.swapmove;
 
-		layout.ondragstart = function () {
-			return false;
-		};
-		loadbtn.onclick = role.loadroleimg;
-		maskalldamage.onclick = role.maskalldamage;
-		showalldamage.onclick = role.showalldamage;
-		maskallname.onclick = role.maskallname;
-		showallname.onclick = role.showallname;
-		sortcard.onclick = role.sort;
-		delunknown.onclick = role.delunknown;
-		forwardlab.onclick = role.forwardlab;
-		backwardlab.onclick = role.backwardlab;
-		cardlinedec.onclick = role.linedec;
-		cardlineinc.onclick = role.lineinc;
-		maskallicon.onclick = role.maskallicon;
-		showallicon.onclick = role.showallicon;
-		downloadallpng.onclick = role.downloadallpng;
-		downloadalljpg.onclick = role.downloadalljpg;
-	});
+	await card.initial();
+
+	layout.ondragstart = function () {
+		return false;
+	};
+
+	loadbtn.onclick = role.loadroleimg;
+	maskalldamage.onclick = role.maskalldamage;
+	showalldamage.onclick = role.showalldamage;
+	maskallname.onclick = role.maskallname;
+	showallname.onclick = role.showallname;
+	sortcard.onclick = role.sort;
+	delunknown.onclick = role.delunknown;
+	forwardlab.onclick = role.forwardlab;
+	backwardlab.onclick = role.backwardlab;
+	cardlinedec.onclick = role.linedec;
+	cardlineinc.onclick = role.lineinc;
+	maskallicon.onclick = role.maskallicon;
+	showallicon.onclick = role.showallicon;
+	downloadallpng.onclick = role.downloadallpng;
+	downloadalljpg.onclick = role.downloadalljpg;
 };

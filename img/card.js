@@ -64,108 +64,88 @@ var card = (function () {
 		else
 			return 'card';
 	}
-	function initial(callback) {
-		generator(function* () {
-			for (let i = 0; i < data.name.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/card/' + data.name[i] + '.png'],
-					cbfunc: function (img) {
-						let canvas = document.createElement('canvas');
-						let ctx = canvas.getContext('2d');
-						canvas.setAttribute('width', data.size.w);
-						canvas.setAttribute('height', data.size.h);
-						ctx.drawImage(img, 0, 0);
-						setcardangle(ctx, [0, 0, 0, 0]);
-						tmp[data.name[i]] = canvas;
-					}
-				};
-			}
-			for (let i = 0; i < data.jobname.length; i++) {
-				yield {
-					nextfunc: loadimg,
-					argsfront: ['img/card/' + data.jobname[i] + '.png'],
-					cbfunc: function (img) {
-						let canvas = document.createElement('canvas');
-						let ctx = canvas.getContext('2d');
-						canvas.setAttribute('width', data.size.w);
-						canvas.setAttribute('height', data.size.h);
-						ctx.drawImage(img, 0, 0);
-						setcardangle(ctx, [0, 0, 0, 0]);
-						tmp[data.jobname[i]] = canvas;
-					}
-				};
-			}
-			let gap = Math.floor((data.size.w - 20 * 5) / 4) + 20;
-			root.style.setProperty('--cross-x', gap * 4 + 'px');
-			root.style.setProperty('--download-x', gap * 3 + 'px');
-			root.style.setProperty('--jobchange-x', gap * 2 + 'px');
-			root.style.setProperty('--damagebt-x', gap + 'px');
-			root.style.setProperty('--namebt-x', 0 + 'px');
+	async function initial() {
+		let tmppromise = {};
+		for (let i = 0; i < data.name.length; i++) {
+			tmppromise[data.name[i]] = loadimgpromise('img/card/' + data.name[i] + '.png');
+		}
+		for (let i = 0; i < data.jobname.length; i++) {
+			tmppromise[data.jobname[i]] = loadimgpromise('img/card/' + data.jobname[i] + '.png');
+		}
+		for (let key in tmppromise) {
+			let img = await tmppromise[key];
+			let canvas = document.createElement('canvas');
+			let ctx = canvas.getContext('2d');
+			canvas.setAttribute('width', data.size.w);
+			canvas.setAttribute('height', data.size.h);
+			ctx.drawImage(img, 0, 0);
+			setcardangle(ctx, [0, 0, 0, 0]);
+			tmp[key] = canvas;
+		}
+		let gap = Math.floor((data.size.w - 20 * 5) / 4) + 20;
+		root.style.setProperty('--cross-x', gap * 4 + 'px');
+		root.style.setProperty('--download-x', gap * 3 + 'px');
+		root.style.setProperty('--jobchange-x', gap * 2 + 'px');
+		root.style.setProperty('--damagebt-x', gap + 'px');
+		root.style.setProperty('--namebt-x', 0 + 'px');
 
-			damage = document.createElement('canvas');
-			card.damage = damage;
-			let damagectx = damage.getContext('2d');
-			damage.setAttribute('width', data.size.w);
-			damage.setAttribute('height', data.size.h);
-			damagectx.drawImage(
-				tmp['card'],
-				0,
-				130,
-				data.size.w,
-				17,
-				0,
-				130,
-				data.size.w,
-				17,
-			);
-			damage.toBlob(function (blob) {
-				damagemaskurl = URL.createObjectURL(blob);
-			});
+		damage = document.createElement('canvas');
+		card.damage = damage;
+		let damagectx = damage.getContext('2d');
+		damage.setAttribute('width', data.size.w);
+		damage.setAttribute('height', data.size.h);
+		damagectx.drawImage(
+			tmp['card'],
+			0,
+			130,
+			data.size.w,
+			17,
+			0,
+			130,
+			data.size.w,
+			17,
+		);
+		damage.toBlob(function (blob) {
+			damagemaskurl = URL.createObjectURL(blob);
+		});
 
-			name = document.createElement('canvas');
-			card.name = name;
-			let namectx = name.getContext('2d');
-			name.setAttribute('width', data.size.w);
-			name.setAttribute('height', data.size.h);
-			namectx.drawImage(
-				tmp['card'],
-				0,
-				147,
-				data.size.w,
-				data.size.h - 147 - 10,
-				0,
-				147,
-				data.size.w,
-				data.size.h - 147 - 10,
-			);
-			name.toBlob(function (blob) {
-				namemaskurl = URL.createObjectURL(blob);
-			});
-			callback();
+		name = document.createElement('canvas');
+		card.name = name;
+		let namectx = name.getContext('2d');
+		name.setAttribute('width', data.size.w);
+		name.setAttribute('height', data.size.h);
+		namectx.drawImage(
+			tmp['card'],
+			0,
+			147,
+			data.size.w,
+			data.size.h - 147 - 10,
+			0,
+			147,
+			data.size.w,
+			data.size.h - 147 - 10,
+		);
+		name.toBlob(function (blob) {
+			namemaskurl = URL.createObjectURL(blob);
 		});
 	}
-	function loadroleimg(callback) {
-		generator(function* () {
-			for (let i = 0; i < hostfile.files.length; i++) {
-				let url = URL.createObjectURL(hostfile.files[i]);
-				yield {
-					nextfunc: loadimg,
-					argsfront: [url],
-					cbfunc: function (img) {
-						if (typeof refreg[i] != 'undefined') {
-							let node = refreg[i];
-							if (node.parentNode) {
-								node.parentNode.removeChild(node);
-							}
-						}
-						refreg[i] = img;
-					}
-				};
+	async function loadroleimg() {
+		let refregpromise = []
+		for (let i = 0; i < hostfile.files.length; i++) {
+			let url = URL.createObjectURL(hostfile.files[i]);
+			refregpromise[i] = loadimgpromise(url);
+		}
+		for (let i = 0; i < hostfile.files.length; i++) {
+			let img = await refregpromise[i];
+			if (typeof refreg[i] != 'undefined') {
+				let node = refreg[i];
+				if (node.parentNode) {
+					node.parentNode.removeChild(node);
+				}
 			}
-			reg = {};
-			callback();
-		});
+			refreg[i] = img;
+		}
+		reg = {};
 	}
 	function style(x, y) {
 		if (x in reg) {

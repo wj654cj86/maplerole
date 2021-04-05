@@ -1,32 +1,32 @@
-var languagelist = {
-	'zh-Hant': "正體中文",
-	'zh-Hans': "简体中文",
-	'en': "English"
-};
-
-var language = {
-	mod: 'zh-Hant',
-	reg: {},
-	initial: function (callback) {
-		language.setting('zh-Hant', callback);
-	},
-	setting: function (languagename, callback) {
-		generator(function* () {
+var language = (() => {
+	let mod = 'zh-Hant',
+		reg = {},
+		languagelist = {
+			'zh-Hant': "正體中文",
+			'zh-Hans': "简体中文",
+			'en': "English"
+		};
+	function initial() {
+		return setting('zh-Hant');
+	}
+	function setting(languagename) {
+		return new Promise((resolve, reject) => {
 			if (languagename in languagelist) {
-				language.mod = languagename;
+				mod = languagename;
 			} else {
-				language.mod = 'zh-Hant';
+				mod = 'zh-Hant';
 			}
-			let languagefilepath = 'language/' + language.mod + '.json';
-			yield {
-				nextfunc: openfile,
-				argsfront: [languagefilepath],
-				cbfunc: function (str) {
-					language.reg[language.mod] = {};
-					Object.assign(language.reg[language.mod], language.reg['zh-Hant'], JSON.parse(str));
-				}
-			};
-			callback(language.reg[language.mod]);
+			openfile('language/' + mod + '.json', (str) => {
+				reg[mod] = {};
+				Object.assign(reg[mod], reg['zh-Hant'], JSON.parse(str));
+				resolve(reg[mod]);
+			});
 		});
 	}
-}
+	return {
+		mod: mod,
+		reg: reg,
+		initial: initial,
+		setting: setting
+	}
+})();

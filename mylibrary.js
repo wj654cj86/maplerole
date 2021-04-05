@@ -87,23 +87,6 @@ function copyxml(xml) {
 	return text2xml(xml2text(xml));
 }
 
-function generator(genfunc) {
-	var g = genfunc();
-
-	function next() {
-		let res = g.next();
-		if (!res.done) {
-			if (typeof res.value.argsfront != 'object') res.value.argsfront = [];
-			if (typeof res.value.argsback != 'object') res.value.argsback = [];
-			res.value.nextfunc(...res.value.argsfront, function (...args) {
-				res.value.cbfunc(...args);
-				next();
-			}, ...res.value.argsback);
-		}
-	}
-	next();
-}
-
 function getimgsize(imgsrc, callback) {
 	let a = new Image();
 	a.onload = function () {
@@ -121,6 +104,16 @@ function loadimg(imgsrc, callback) {
 		callback(img);
 	};
 	img.src = imgsrc;
+}
+
+function loadimgpromise(imgsrc) {
+	return new Promise((resolve, reject) => {
+		let img = new Image();
+		img.onload = function () {
+			resolve(img);
+		};
+		img.src = imgsrc;
+	});
 }
 
 function loadsound(src, callback) {
