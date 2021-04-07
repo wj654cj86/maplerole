@@ -1,7 +1,7 @@
 var language = (() => {
 	let mod = 'zh-Hant',
 		reg = {},
-		languagelist = {
+		list = {
 			'zh-Hant': "正體中文",
 			'zh-Hans': "简体中文",
 			'en': "English"
@@ -11,7 +11,7 @@ var language = (() => {
 	}
 	function setting(languagename) {
 		return new Promise((resolve, reject) => {
-			if (languagename in languagelist) {
+			if (languagename in list) {
 				mod = languagename;
 			} else {
 				mod = 'zh-Hant';
@@ -23,10 +23,13 @@ var language = (() => {
 			});
 		});
 	}
+	function modrt() {
+		return mod;
+	}
 	return {
-		mod: mod,
 		reg: reg,
 		initial: initial,
-		setting: setting
+		setting: setting,
+		modrt: modrt
 	}
 })();

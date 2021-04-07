@@ -67,10 +67,10 @@ var card = (function () {
 	async function initial() {
 		let tmppromise = {};
 		for (let i = 0; i < data.name.length; i++) {
-			tmppromise[data.name[i]] = loadimgpromise('img/card/' + data.name[i] + '.png');
+			tmppromise[data.name[i]] = promise(loadimg, 'img/card/' + data.name[i] + '.png');
 		}
 		for (let i = 0; i < data.jobname.length; i++) {
-			tmppromise[data.jobname[i]] = loadimgpromise('img/card/' + data.jobname[i] + '.png');
+			tmppromise[data.jobname[i]] = promise(loadimg, 'img/card/' + data.jobname[i] + '.png');
 		}
 		for (let key in tmppromise) {
 			let img = await tmppromise[key];
@@ -133,7 +133,7 @@ var card = (function () {
 		let refregpromise = []
 		for (let i = 0; i < hostfile.files.length; i++) {
 			let url = URL.createObjectURL(hostfile.files[i]);
-			refregpromise[i] = loadimgpromise(url);
+			refregpromise[i] = promise(loadimg, url);
 		}
 		for (let i = 0; i < hostfile.files.length; i++) {
 			let img = await refregpromise[i];

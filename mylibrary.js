@@ -54,6 +54,26 @@ function array2url(arr) {
 	window.history.pushState({}, 0, url + strUrl + location.hash);
 }
 
+function promise(callback, ...args) {
+	return new Promise((resolve, reject) => {
+		callback(...args, (data) => {
+			resolve(data);
+		});
+	});
+}
+
+function promisearr(callback, ...args) {
+	return new Promise((resolve, reject) => {
+		callback(...args, (...args) => {
+			resolve(args);
+		});
+	});
+}
+
+function sleep(ms) {
+	return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 function openfile(url, callback) {
 	if (typeof callback == "undefined") {
 		callback = function (str) { };
@@ -104,16 +124,6 @@ function loadimg(imgsrc, callback) {
 		callback(img);
 	};
 	img.src = imgsrc;
-}
-
-function loadimgpromise(imgsrc) {
-	return new Promise((resolve, reject) => {
-		let img = new Image();
-		img.onload = function () {
-			resolve(img);
-		};
-		img.src = imgsrc;
-	});
 }
 
 function loadsound(src, callback) {
