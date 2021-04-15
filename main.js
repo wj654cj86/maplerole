@@ -364,7 +364,7 @@ window.onload = async function () {
 	}
 	await language.initial();
 	let data = await language.setting(geturl['lang']);
-	document.getElementsByTagName('html')[0].lang = language.mod;
+	document.getElementsByTagName('html')[0].lang = language.modrt();
 	document.title = data.title;
 	loadbtn.value = data.loadfile;
 	maskalldamage.value = data.maskalldamage;
