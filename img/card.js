@@ -197,8 +197,7 @@ var card = (function () {
 		let cross = new Image();
 		cross.className = 'cross';
 		cross.src = 'img/cross.svg';
-		console.log(language);
-		cross.title = language.reg[language.modrt()].cross;
+		cross.title = language.reg[language.mod].cross;
 		ref.cross = cross;
 		cross.onclick = function () {
 			span.style.opacity = 0;
@@ -209,7 +208,7 @@ var card = (function () {
 		let download = new Image();
 		download.className = 'download';
 		download.src = 'img/download.svg';
-		download.title = language.reg[language.modrt()].download;
+		download.title = language.reg[language.mod].download;
 		ref.download = download;
 		download.onclick = function () {
 			let canvas = document.createElement('canvas');
@@ -249,7 +248,7 @@ var card = (function () {
 		let damagebt = new Image();
 		damagebt.className = 'damagebt';
 		damagebt.src = 'img/maskdamage.svg';
-		damagebt.title = language.reg[language.modrt()].maskdamage;
+		damagebt.title = language.reg[language.mod].maskdamage;
 		ref.damagebt = damagebt;
 		damagebt.onclick = function () {
 			if (ref.damage) {
@@ -257,13 +256,13 @@ var card = (function () {
 					ref.damage.style.zIndex = 2;
 					ref.damagemask = false;
 					ref.damagebt.src = 'img/maskdamage.svg';
-					ref.damagebt.title = language.reg[language.modrt()].maskdamage;
+					ref.damagebt.title = language.reg[language.mod].maskdamage;
 				} else {
 					if (ref.jobname != 'lab')
 						ref.damage.style.zIndex = 5;
 					ref.damagemask = true;
 					ref.damagebt.src = 'img/showdamage.svg';
-					ref.damagebt.title = language.reg[language.modrt()].showdamage;
+					ref.damagebt.title = language.reg[language.mod].showdamage;
 				}
 			}
 		};
@@ -279,7 +278,7 @@ var card = (function () {
 		let namebt = new Image();
 		namebt.className = 'namebt';
 		namebt.src = 'img/maskname.svg';
-		namebt.title = language.reg[language.modrt()].maskname;
+		namebt.title = language.reg[language.mod].maskname;
 		ref.namebt = namebt;
 		namebt.onclick = function () {
 			if (ref.name) {
@@ -288,13 +287,13 @@ var card = (function () {
 					ref.jobicon.style.zIndex = 2;
 					ref.namemask = false;
 					ref.namebt.src = 'img/maskname.svg';
-					ref.namebt.title = language.reg[language.modrt()].maskname;
+					ref.namebt.title = language.reg[language.mod].maskname;
 				} else {
 					ref.name.style.zIndex = 4;
 					ref.jobicon.style.zIndex = 5;
 					ref.namemask = true;
 					ref.namebt.src = 'img/showname.svg';
-					ref.namebt.title = language.reg[language.modrt()].showname;
+					ref.namebt.title = language.reg[language.mod].showname;
 				}
 			}
 		};
@@ -307,7 +306,7 @@ var card = (function () {
 
 		let jobchange = new Image();
 		jobchange.className = 'jobchange';
-		jobchange.title = language.reg[language.modrt()].jobchange;
+		jobchange.title = language.reg[language.mod].jobchange;
 		ref.jobchange = jobchange;
 		jobchange.oncontextmenu = function () {
 			return false;

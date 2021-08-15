@@ -93,6 +93,26 @@ function openfile(url, callback) {
 	oReq.send();
 }
 
+function openfilebinary(url, callback) {
+	if (typeof callback == "undefined") {
+		callback = function (str) { };
+	}
+	let oReq = new XMLHttpRequest();
+	oReq.responseType = "arraybuffer";
+	oReq.addEventListener("load", function () {
+		if (oReq.status != 404) {
+			callback(new Uint8Array(this.response));
+		} else {
+			callback('{}');
+		}
+	});
+	oReq.addEventListener("error", function () {
+		callback('{}');
+	});
+	oReq.open("GET", url);
+	oReq.send();
+}
+
 function text2xml(text) {
 	let parser = new DOMParser();
 	return parser.parseFromString(text, "text/xml");
@@ -279,13 +299,21 @@ function removeChild(node) {
 	}
 }
 
-function sentpost(url, obj) {
+function sentpost(url, obj, callback) {
 	obj = obj || {};
-
+	callback = callback || (() => { });
 	let oReq = new XMLHttpRequest();
 	oReq.open("POST", url, true);
 	oReq.setRequestHeader('Content-Type', 'application/json');
-	oReq.onreadystatechange = function () {
-	};
+	oReq.addEventListener("load", function () {
+		if (oReq.status != 404) {
+			callback(this.responseText);
+		} else {
+			callback('{}');
+		}
+	});
+	oReq.addEventListener("error", function () {
+		callback('{}');
+	});
 	oReq.send(JSON.stringify(obj));
 }

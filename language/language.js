@@ -6,7 +6,15 @@ var language = (() => {
 			'zh-Hans': "简体中文",
 			'en': "English"
 		};
-	function initial() {
+	function initial(slt) {
+		if (typeof slt != 'undefined') {
+			for (let key in list) {
+				let lo = document.createElement("option");
+				lo.value = key;
+				lo.innerHTML = list[key];
+				slt.appendChild(lo);
+			}
+		}
 		return setting('zh-Hant');
 	}
 	function setting(languagename) {
@@ -23,13 +31,15 @@ var language = (() => {
 			});
 		});
 	}
-	function modrt() {
-		return mod;
-	}
 	return {
 		reg: reg,
 		initial: initial,
 		setting: setting,
-		modrt: modrt
+		get mod() {
+			return mod;
+		},
+		set mod(m) {
+			mod = m;
+		}
 	}
 })();
