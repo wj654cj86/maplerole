@@ -289,10 +289,6 @@ Node.prototype.getElementsByAttributeValue = function (attribute, value) {
 	return match;
 };
 
-Node.prototype.getElementByIdSvg = function (value) {
-	return this.getElementsByAttributeValue('id', value)[0];
-};
-
 function removeChild(node) {
 	if (node.parentNode) {
 		node.parentNode.removeChild(node);

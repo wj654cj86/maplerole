@@ -1,6 +1,6 @@
 var root = document.documentElement;
 var geturl = url2array();
-var role = (function () {
+var role = (() => {
 	let linelen = 8,
 		line = 8,
 		id = [],
@@ -64,7 +64,7 @@ var role = (function () {
 			layout.appendChild(ref[cnt].main);
 		}
 
-		layout.onmousedown = function (event) {
+		layout.onmousedown = (event) => {
 			let mp = getclickpoint(event, layout);
 			let nowid = -1;
 			for (let i = 0; i < len; i++) {
@@ -81,7 +81,7 @@ var role = (function () {
 			let dp = { x: mp.x - addr[nowid].left, y: mp.y - addr[nowid].top };
 			ref[id[nowid]].main.style.transition = 'all 0s';
 			ref[id[nowid]].main.style.zIndex = 10;
-			window.onmousemove = function (event) {
+			window.onmousemove = (event) => {
 				let mp = getclickpoint(event, layout);
 				let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
 				for (let i = 0; i < len; i++) {
@@ -116,12 +116,12 @@ var role = (function () {
 				ref[id[nowid]].main.style.left = mp.x - dp.x + 'px';
 				ref[id[nowid]].main.style.top = mp.y - dp.y + 'px';
 			}
-			window.onmouseup = function () {
+			window.onmouseup = () => {
 				setseat(nowid);
 				ref[id[nowid]].main.style.transition = 'all 300ms';
 				ref[id[nowid]].main.style.zIndex = 3;
-				window.onmousemove = function () { };
-				window.onmouseup = function () { };
+				window.onmousemove = () => { };
+				window.onmouseup = () => { };
 			};
 		};
 	}
@@ -313,6 +313,7 @@ var role = (function () {
 			let r = ref[id[i]];
 			if (r.use) {
 				r.button.style.zIndex = -1;
+				r.button.style.opacity = 0;
 			}
 		}
 	}
@@ -321,19 +322,20 @@ var role = (function () {
 			let r = ref[id[i]];
 			if (r.use) {
 				r.button.style.zIndex = 7;
+				r.button.style.opacity = 1;
 			}
 		}
 	}
 	function downloadallpng() {
 		mergeimg(download);
-		download.toBlob(function (blob) {
+		download.toBlob((blob) => {
 			let url = URL.createObjectURL(blob);
 			startDownload(url, 'roleall.png');
 		});
 	}
 	function downloadalljpg() {
 		mergeimg(download);
-		download.toBlob(function (blob) {
+		download.toBlob((blob) => {
 			let url = URL.createObjectURL(blob);
 			startDownload(url, 'roleall.jpg');
 		}, 'image/jpeg', Number(jpgquality.value));
@@ -357,7 +359,7 @@ var role = (function () {
 	};
 })();
 
-window.onload = async function () {
+window.onload = async () => {
 	if (typeof geturl['fbclid'] != 'undefined') {
 		delete geturl['fbclid'];
 		array2url(geturl);
@@ -389,7 +391,7 @@ window.onload = async function () {
 
 	await card.initial();
 
-	layout.ondragstart = function () {
+	layout.ondragstart = () => {
 		return false;
 	};
 
