@@ -24,7 +24,7 @@ var role = (() => {
 		}
 
 		linelen = Number(cardlinelen.value);
-		if (typeof linelen != 'number') linelen = 8;
+		if (isNaN(linelen)) linelen = 8;
 		linelen = Math.floor(linelen);
 		if (linelen < 1) linelen = 1;
 		if (linelen > 20) linelen = 20;
@@ -360,12 +360,12 @@ var role = (() => {
 })();
 
 window.onload = async () => {
-	if (typeof geturl['fbclid'] != 'undefined') {
-		delete geturl['fbclid'];
+	if (geturl.fbclid !== undefined) {
+		delete geturl.fbclid;
 		array2url(geturl);
 	}
 	await language.initial();
-	let data = await language.setting(geturl['lang']);
+	let data = await language.setting(geturl.lang);
 	document.getElementsByTagName('html')[0].lang = language.mod;
 	document.title = data.title;
 	loadbtn.value = data.loadfile;

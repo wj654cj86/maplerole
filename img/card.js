@@ -137,7 +137,7 @@ var card = (function () {
 		}
 		for (let i = 0; i < hostfile.files.length; i++) {
 			let img = await refregpromise[i];
-			if (typeof refreg[i] != 'undefined') {
+			if (refreg[i] !== undefined) {
 				let node = refreg[i];
 				if (node.parentNode) {
 					node.parentNode.removeChild(node);

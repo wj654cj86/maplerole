@@ -7,7 +7,7 @@ var language = (() => {
 			'en': "English"
 		};
 	function initial(slt) {
-		if (typeof slt != 'undefined') {
+		if (slt !== undefined) {
 			for (let key in list) {
 				let lo = document.createElement("option");
 				lo.value = key;
