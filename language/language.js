@@ -12,7 +12,7 @@ var language = (() => {
 				let lo = document.createElement("option");
 				lo.value = key;
 				lo.innerHTML = list[key];
-				slt.appendChild(lo);
+				slt.append(lo);
 			}
 		}
 		return setting('zh-Hant');

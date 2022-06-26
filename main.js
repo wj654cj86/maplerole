@@ -54,14 +54,14 @@ var role = (() => {
 			for (let j = 0; j < 4; j++) {
 				ref[cnt] = card.style(i, j);
 				setseat(cnt);
-				layout.appendChild(ref[cnt].main);
+				layout.append(ref[cnt].main);
 				cnt++;
 			}
 		}
 		for (; cnt < len; cnt++) {
 			ref[cnt] = card.newnullstyle();
 			setseat(cnt);
-			layout.appendChild(ref[cnt].main);
+			layout.append(ref[cnt].main);
 		}
 
 		layout.onmousedown = (event) => {
@@ -214,7 +214,7 @@ var role = (() => {
 			for (let i = len - linelen; i < len; i++) {
 				ref[id[i]] = card.newnullstyle();
 				setseat(i);
-				layout.appendChild(ref[id[i]].main);
+				layout.append(ref[id[i]].main);
 			}
 		} else {
 			let cnt = len;
@@ -233,7 +233,7 @@ var role = (() => {
 			for (; cnt < len; cnt++) {
 				ref[cnt] = card.newnullstyle();
 				setseat(cnt);
-				layout.appendChild(ref[cnt].main);
+				layout.append(ref[cnt].main);
 			}
 		}
 	}
@@ -268,8 +268,8 @@ var role = (() => {
 	function mergeimg(canvas) {
 		if (len == 0) return;
 		let ctx = canvas.getContext('2d');
-		canvas.setAttribute('width', w);
-		canvas.setAttribute('height', h);
+		canvas.width = w;
+		canvas.height = h;
 		ctx.fillStyle = "#444";
 		ctx.fillRect(0, 0, w, h);
 		for (let i = 0; i < len; i++) {

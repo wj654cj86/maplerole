@@ -76,8 +76,8 @@ var card = (function () {
 			let img = await tmppromise[key];
 			let canvas = document.createElement('canvas');
 			let ctx = canvas.getContext('2d');
-			canvas.setAttribute('width', data.size.w);
-			canvas.setAttribute('height', data.size.h);
+			canvas.width = data.size.w;
+			canvas.height = data.size.h;
 			ctx.drawImage(img, 0, 0);
 			setcardangle(ctx, [0, 0, 0, 0]);
 			tmp[key] = canvas;
@@ -92,8 +92,8 @@ var card = (function () {
 		damage = document.createElement('canvas');
 		card.damage = damage;
 		let damagectx = damage.getContext('2d');
-		damage.setAttribute('width', data.size.w);
-		damage.setAttribute('height', data.size.h);
+		damage.width = data.size.w;
+		damage.height = data.size.h;
 		damagectx.drawImage(
 			tmp['card'],
 			0,
@@ -112,8 +112,8 @@ var card = (function () {
 		name = document.createElement('canvas');
 		card.name = name;
 		let namectx = name.getContext('2d');
-		name.setAttribute('width', data.size.w);
-		name.setAttribute('height', data.size.h);
+		name.width = data.size.w;
+		name.height = data.size.h;
 		namectx.drawImage(
 			tmp['card'],
 			0,
@@ -163,7 +163,7 @@ var card = (function () {
 		nullcard.className = 'null';
 		nullcard.src = 'img/card/null.png';
 		ref.nullcard = nullcard;
-		spanmain.appendChild(nullcard);
+		spanmain.append(nullcard);
 
 		let span = document.createElement('span');
 		ref.span = span;
@@ -171,8 +171,8 @@ var card = (function () {
 		let canvas = document.createElement('canvas');
 		ref.card = canvas;
 		let ctx = canvas.getContext('2d');
-		canvas.setAttribute('width', data.size.w);
-		canvas.setAttribute('height', data.size.h);
+		canvas.width = data.size.w;
+		canvas.height = data.size.h;
 		let imgsize = refreg[x].naturalWidth + 'x' + refreg[x].naturalHeight;
 		ctx.drawImage(
 			refreg[x],
@@ -187,12 +187,12 @@ var card = (function () {
 		);
 		setcardangle(ctx, [0, 0, 0, 0]);
 		canvas.style.zIndex = 3;
-		span.appendChild(canvas);
+		span.append(canvas);
 
 		let button = document.createElement('span');
 		button.className = 'button';
 		ref.button = button;
-		span.appendChild(button);
+		span.append(button);
 
 		let cross = new Image();
 		cross.className = 'cross';
@@ -203,7 +203,7 @@ var card = (function () {
 			span.style.opacity = 0;
 			ref.use = false;
 		};
-		button.appendChild(cross);
+		button.append(cross);
 
 		let download = new Image();
 		download.className = 'download';
@@ -213,8 +213,8 @@ var card = (function () {
 		download.onclick = function () {
 			let canvas = document.createElement('canvas');
 			let ctx = canvas.getContext('2d');
-			canvas.setAttribute('width', data.size.w);
-			canvas.setAttribute('height', data.size.h);
+			canvas.width = data.size.w;
+			canvas.height = data.size.h;
 			let cardimg;
 			if (ref.use) {
 				cardimg = ref.card;
@@ -236,14 +236,14 @@ var card = (function () {
 				startDownload(url, 'role.png');
 			});
 		};
-		button.appendChild(download);
+		button.append(download);
 
 		ref.damagemask = false;
 		let damage = new Image();
 		damage.className = 'damage';
 		damage.src = damagemaskurl;
 		ref.damage = damage;
-		span.appendChild(damage);
+		span.append(damage);
 
 		let damagebt = new Image();
 		damagebt.className = 'damagebt';
@@ -266,14 +266,14 @@ var card = (function () {
 				}
 			}
 		};
-		button.appendChild(damagebt);
+		button.append(damagebt);
 
 		ref.namemask = false;
 		let name = new Image();
 		name.className = 'name';
 		name.src = namemaskurl;
 		ref.name = name;
-		span.appendChild(name);
+		span.append(name);
 
 		let namebt = new Image();
 		namebt.className = 'namebt';
@@ -297,7 +297,7 @@ var card = (function () {
 				}
 			}
 		};
-		button.appendChild(namebt);
+		button.append(namebt);
 
 		ref.jobname = 'card';
 		let jobicon = new Image();
@@ -343,9 +343,9 @@ var card = (function () {
 			}
 		};
 		changejob(findjob(canvas));
-		button.appendChild(jobchange);
-		span.appendChild(jobicon);
-		spanmain.appendChild(span);
+		button.append(jobchange);
+		span.append(jobicon);
+		spanmain.append(span);
 		reg[x][y] = ref;
 		return reg[x][y];
 	}
@@ -358,7 +358,7 @@ var card = (function () {
 		nullcard.className = 'null';
 		nullcard.src = 'img/card/null.png';
 		ref.nullcard = nullcard;
-		spanmain.appendChild(nullcard);
+		spanmain.append(nullcard);
 		return ref;
 	}
 	return {
