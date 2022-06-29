@@ -27,6 +27,7 @@ var language = (() => {
 			openfile('language/' + mod + '.json', (str) => {
 				reg[mod] = {};
 				Object.assign(reg[mod], reg['zh-Hant'], JSON.parse(str));
+				document.getElementsByTagName('html')[0].lang = language.mod;
 				resolve(reg[mod]);
 			});
 		});
