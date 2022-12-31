@@ -1,4 +1,4 @@
-var card = (function () {
+let card = (function () {
 	let refreg = [],
 		reg = {},
 		tmp = {},
@@ -41,6 +41,18 @@ var card = (function () {
 			}
 		}
 	}
+	let arrsum = arr => arr.reduce((acc, v) => acc + Number(v), 0);
+	let arraverage = arr => arr.length != 0 ? (arrsum(arr) / arr.length) : 0;
+	function arrsd(arr) {
+		let sum = 0;
+		let average = arraverage(arr);
+		let len = arr.length;
+		for (let i = 0; i < len; i++) {
+			let k = arr[i] - average;
+			sum += k * k;
+		}
+		return Math.sqrt(sum / len);
+	}
 	function findjob(canvas) {
 		let ctx = canvas.getContext('2d');
 		let canvasjob = ctx.getImageData(15, 152, 6, 12);
@@ -67,10 +79,10 @@ var card = (function () {
 	async function initial() {
 		let tmppromise = {};
 		for (let i = 0; i < data.name.length; i++) {
-			tmppromise[data.name[i]] = promise(loadimg, 'img/card/' + data.name[i] + '.png');
+			tmppromise[data.name[i]] = loadimg('img/card/' + data.name[i] + '.png');
 		}
 		for (let i = 0; i < data.jobname.length; i++) {
-			tmppromise[data.jobname[i]] = promise(loadimg, 'img/card/' + data.jobname[i] + '.png');
+			tmppromise[data.jobname[i]] = loadimg('img/card/' + data.jobname[i] + '.png');
 		}
 		for (let key in tmppromise) {
 			let img = await tmppromise[key];
@@ -133,15 +145,12 @@ var card = (function () {
 		let refregpromise = []
 		for (let i = 0; i < hostfile.files.length; i++) {
 			let url = URL.createObjectURL(hostfile.files[i]);
-			refregpromise[i] = promise(loadimg, url);
+			refregpromise[i] = loadimg(url);
 		}
 		for (let i = 0; i < hostfile.files.length; i++) {
 			let img = await refregpromise[i];
 			if (refreg[i] !== undefined) {
-				let node = refreg[i];
-				if (node.parentNode) {
-					node.parentNode.removeChild(node);
-				}
+				refreg[i].remove();
 			}
 			refreg[i] = img;
 		}

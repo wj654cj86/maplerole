@@ -1,6 +1,6 @@
-var root = document.documentElement;
-var geturl = url2array();
-var role = (() => {
+let root = document.documentElement;
+let geturl = url2obj();
+let role = (() => {
 	let linelen = 8,
 		line = 8,
 		id = [],
@@ -15,12 +15,15 @@ var role = (() => {
 		ref[id[i]].main.style.left = addr[i].left + 'px';
 		ref[id[i]].main.style.top = addr[i].top + 'px';
 	}
+	function getclickpoint(event, element) {
+		return {
+			x: event.clientX - element.offsetLeft + root.scrollLeft + document.body.scrollLeft,
+			y: event.clientY - element.offsetTop + root.scrollTop + document.body.scrollTop
+		};
+	}
 	async function loadroleimg() {
 		for (let i = 0; i < len; i++) {
-			let node = ref[i].main;
-			if (node.parentNode) {
-				node.parentNode.removeChild(node);
-			}
+			ref[i].main.remove();
 		}
 
 		linelen = Number(cardlinelen.value);
@@ -194,10 +197,7 @@ var role = (() => {
 		}
 		if (!lineuse) {
 			for (let i = len - linelen; i < len; i++) {
-				let node = ref[id[i]].main;
-				if (node.parentNode) {
-					node.parentNode.removeChild(node);
-				}
+				ref[id[i]].main.remove();
 			}
 			line--;
 			len -= linelen;
@@ -362,7 +362,7 @@ var role = (() => {
 window.onload = async () => {
 	if (geturl.fbclid !== undefined) {
 		delete geturl.fbclid;
-		array2url(geturl);
+		obj2url(geturl);
 	}
 	await language.initial();
 	let data = await language.setting(geturl.lang);

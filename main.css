@@ -17,12 +17,14 @@ img {
 input[type="button"] {
 	width : 120px;
 	height: 25px;
+	cursor: pointer;
 }
 
 #hostfile {
 	left : 10px;
 	top  : 10px;
 	width: 240px;
+	cursor: pointer;
 }
 
 #loadbtn {
