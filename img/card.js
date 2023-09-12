@@ -117,9 +117,7 @@ damagectx.drawImage(
 	data.size.w,
 	17,
 );
-damage.toBlob(function (blob) {
-	damagemaskurl = URL.createObjectURL(blob);
-});
+damage.toBlob(blob => damagemaskurl = URL.createObjectURL(blob));
 
 name = document.createElement('canvas');
 let namectx = name.getContext('2d');
@@ -136,9 +134,7 @@ namectx.drawImage(
 	data.size.w,
 	data.size.h - 147 - 10,
 );
-name.toBlob(function (blob) {
-	namemaskurl = URL.createObjectURL(blob);
-});
+name.toBlob(blob => namemaskurl = URL.createObjectURL(blob));
 
 async function loadroleimg() {
 	let refregpromise = []
@@ -155,6 +151,15 @@ async function loadroleimg() {
 	}
 	reg = {};
 }
+
+function createimg(classname, src, title) {
+	let img = new Image();
+	img.className = classname;
+	if (src !== undefined) img.src = src;
+	if (title !== undefined) img.title = title;
+	return img;
+}
+
 function style(x, y) {
 	if (x in reg) {
 		if (y in reg[x]) {
@@ -165,16 +170,11 @@ function style(x, y) {
 	}
 	let ref = {};
 	ref.use = true;
-	let divmain = document.createElement('div');
-	ref.main = divmain;
-	let nullcard = new Image();
-	nullcard.className = 'null';
-	nullcard.src = 'img/card/null.png';
-	ref.nullcard = nullcard;
+	let divmain = ref.main = document.createElement('div');
+	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
 	divmain.append(nullcard);
 
-	let div = document.createElement('div');
-	ref.div = div;
+	let div = ref.div = document.createElement('div');
 
 	let canvas = document.createElement('canvas');
 	ref.card = canvas;
@@ -197,28 +197,20 @@ function style(x, y) {
 	canvas.style.zIndex = 3;
 	div.append(canvas);
 
-	let button = document.createElement('div');
+	let button = ref.button = document.createElement('div');
 	button.className = 'button';
-	ref.button = button;
 	div.append(button);
 
-	let cross = new Image();
-	cross.className = 'cross';
-	cross.src = 'img/cross.svg';
-	cross.title = language.reg[language.mod].cross;
-	ref.cross = cross;
-	cross.onclick = function () {
+	let cross = ref.cross = createimg('cross', 'img/cross.svg', language.reg[language.mod].cross);
+	cross.onclick = () => {
 		div.style.opacity = 0;
+		div.style.zIndex = -1;
 		ref.use = false;
 	};
 	button.append(cross);
 
-	let download = new Image();
-	download.className = 'download';
-	download.src = 'img/download.svg';
-	download.title = language.reg[language.mod].download;
-	ref.download = download;
-	download.onclick = function () {
+	let download = ref.download = createimg('download', 'img/download.svg', language.reg[language.mod].download);
+	download.onclick = () => {
 		let canvas = document.createElement('canvas');
 		let ctx = canvas.getContext('2d');
 		canvas.width = data.size.w;
@@ -247,18 +239,11 @@ function style(x, y) {
 	button.append(download);
 
 	ref.damagemask = false;
-	let damage = new Image();
-	damage.className = 'damage';
-	damage.src = damagemaskurl;
-	ref.damage = damage;
+	let damage = ref.damage = createimg('damage', damagemaskurl);
 	div.append(damage);
 
-	let damagebt = new Image();
-	damagebt.className = 'damagebt';
-	damagebt.src = 'img/maskdamage.svg';
-	damagebt.title = language.reg[language.mod].maskdamage;
-	ref.damagebt = damagebt;
-	damagebt.onclick = function () {
+	let damagebt = ref.damagebt = createimg('damagebt', 'img/maskdamage.svg', language.reg[language.mod].maskdamage);
+	damagebt.onclick = () => {
 		if (ref.damage) {
 			if (ref.damagemask) {
 				ref.damage.style.zIndex = 2;
@@ -277,18 +262,11 @@ function style(x, y) {
 	button.append(damagebt);
 
 	ref.namemask = false;
-	let name = new Image();
-	name.className = 'name';
-	name.src = namemaskurl;
-	ref.name = name;
+	let name = ref.name = createimg('name', namemaskurl);
 	div.append(name);
 
-	let namebt = new Image();
-	namebt.className = 'namebt';
-	namebt.src = 'img/maskname.svg';
-	namebt.title = language.reg[language.mod].maskname;
-	ref.namebt = namebt;
-	namebt.onclick = function () {
+	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', language.reg[language.mod].maskname);
+	namebt.onclick = () => {
 		if (ref.name) {
 			if (ref.namemask) {
 				ref.name.style.zIndex = 2;
@@ -308,23 +286,16 @@ function style(x, y) {
 	button.append(namebt);
 
 	ref.jobname = 'card';
-	let jobicon = new Image();
-	jobicon.className = 'jobicon';
-	ref.jobicon = jobicon;
+	let jobicon = ref.jobicon = createimg('jobicon');
 
-	let jobchange = new Image();
-	jobchange.className = 'jobchange';
-	jobchange.title = language.reg[language.mod].jobchange;
-	ref.jobchange = jobchange;
-	jobchange.oncontextmenu = function () {
-		return false;
-	};
-	let changejob = function (jobname) {
+	let jobchange = ref.jobchange = createimg('jobchange', undefined, language.reg[language.mod].jobchange);
+	jobchange.oncontextmenu = () => false;
+	let changejob = jobname => {
 		ref.jobname = jobname;
-		jobicon.src = 'img/minicon/' + jobname + '.png';
-		jobchange.src = 'img/icon/' + jobname + '.png';
+		jobicon.src = `img/minicon/${jobname}.png`;
+		jobchange.src = `img/icon/${jobname}.png`;
 	};
-	jobchange.onmousedown = function (event) {
+	jobchange.onmousedown = event => {
 		let i;
 		switch (event.button) {
 			case 0:
@@ -360,12 +331,8 @@ function style(x, y) {
 function newnullstyle() {
 	let ref = {};
 	ref.use = false;
-	let divmain = document.createElement('div');
-	ref.main = divmain;
-	let nullcard = new Image();
-	nullcard.className = 'null';
-	nullcard.src = 'img/card/null.png';
-	ref.nullcard = nullcard;
+	let divmain = ref.main = document.createElement('div');
+	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
 	divmain.append(nullcard);
 	return ref;
 }
