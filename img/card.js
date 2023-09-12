@@ -165,16 +165,16 @@ function style(x, y) {
 	}
 	let ref = {};
 	ref.use = true;
-	let spanmain = document.createElement('span');
-	ref.main = spanmain;
+	let divmain = document.createElement('div');
+	ref.main = divmain;
 	let nullcard = new Image();
 	nullcard.className = 'null';
 	nullcard.src = 'img/card/null.png';
 	ref.nullcard = nullcard;
-	spanmain.append(nullcard);
+	divmain.append(nullcard);
 
-	let span = document.createElement('span');
-	ref.span = span;
+	let div = document.createElement('div');
+	ref.div = div;
 
 	let canvas = document.createElement('canvas');
 	ref.card = canvas;
@@ -195,12 +195,12 @@ function style(x, y) {
 	);
 	setcardangle(ctx, [0, 0, 0, 0]);
 	canvas.style.zIndex = 3;
-	span.append(canvas);
+	div.append(canvas);
 
-	let button = document.createElement('span');
+	let button = document.createElement('div');
 	button.className = 'button';
 	ref.button = button;
-	span.append(button);
+	div.append(button);
 
 	let cross = new Image();
 	cross.className = 'cross';
@@ -208,7 +208,7 @@ function style(x, y) {
 	cross.title = language.reg[language.mod].cross;
 	ref.cross = cross;
 	cross.onclick = function () {
-		span.style.opacity = 0;
+		div.style.opacity = 0;
 		ref.use = false;
 	};
 	button.append(cross);
@@ -251,7 +251,7 @@ function style(x, y) {
 	damage.className = 'damage';
 	damage.src = damagemaskurl;
 	ref.damage = damage;
-	span.append(damage);
+	div.append(damage);
 
 	let damagebt = new Image();
 	damagebt.className = 'damagebt';
@@ -281,7 +281,7 @@ function style(x, y) {
 	name.className = 'name';
 	name.src = namemaskurl;
 	ref.name = name;
-	span.append(name);
+	div.append(name);
 
 	let namebt = new Image();
 	namebt.className = 'namebt';
@@ -352,21 +352,21 @@ function style(x, y) {
 	};
 	changejob(findjob(canvas));
 	button.append(jobchange);
-	span.append(jobicon);
-	spanmain.append(span);
+	div.append(jobicon);
+	divmain.append(div);
 	reg[x][y] = ref;
 	return reg[x][y];
 }
 function newnullstyle() {
 	let ref = {};
 	ref.use = false;
-	let spanmain = document.createElement('span');
-	ref.main = spanmain;
+	let divmain = document.createElement('div');
+	ref.main = divmain;
 	let nullcard = new Image();
 	nullcard.className = 'null';
 	nullcard.src = 'img/card/null.png';
 	ref.nullcard = nullcard;
-	spanmain.append(nullcard);
+	divmain.append(nullcard);
 	return ref;
 }
 export default {

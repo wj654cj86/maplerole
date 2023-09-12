@@ -18,17 +18,17 @@ sortcard.value = data.sortcard;
 delunknown.value = data.delunknown;
 forwardlab.value = data.forwardlab;
 backwardlab.value = data.backwardlab;
-cardlinelenspan.innerHTML = data.cardlinelen;
-jpgqualityspan.innerHTML = data.jpgquality;
+cardlinelendiv.innerHTML = data.cardlinelen;
+jpgqualitydiv.innerHTML = data.jpgquality;
 cardlinedec.value = data.cardlinedec;
 cardlineinc.value = data.cardlineinc;
 maskallicon.value = data.maskallicon;
 showallicon.value = data.showallicon;
 downloadallpng.value = data.downloadallpng;
 downloadalljpg.value = data.downloadalljpg;
-movemodespan.innerHTML = data.movemode;
-sortmovespan.innerHTML = data.sortmove;
-swapmovespan.innerHTML = data.swapmove;
+movemodediv.innerHTML = data.movemode;
+sortmovediv.innerHTML = data.sortmove;
+swapmovediv.innerHTML = data.swapmove;
 
 layout.ondragstart = () => false;
 

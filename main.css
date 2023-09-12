@@ -8,7 +8,7 @@ body {
 }
 
 input,
-span,
+div,
 canvas,
 img {
 	position: absolute;
@@ -32,7 +32,7 @@ input[type="button"] {
 	top : 10px;
 }
 
-#cardlinelenspan {
+#cardlinelendiv {
 	left      : 400px;
 	top       : 10px;
 	width     : 120px;
@@ -45,7 +45,7 @@ input[type="button"] {
 	width: 50px;
 }
 
-#jpgqualityspan {
+#jpgqualitydiv {
 	left      : 740px;
 	top       : 10px;
 	width     : 110px;
@@ -64,13 +64,13 @@ input[type="button"] {
 	top     : 10px;
 }
 
-#movemodespan {
+#movemodediv {
 	width: 150px;
 	left : 0px;
 }
 
-#sortmovespan,
-#swapmovespan {
+#sortmovediv,
+#swapmovediv {
 	width: 150px;
 	left : 20px;
 }
@@ -152,63 +152,63 @@ input[type="button"] {
 	z-index   : 3;
 }
 
-#layout span {
+#layout div {
 	transition: all 300ms;
 	z-index   : 3;
 }
 
-#layout span.move {
+#layout div.move {
 	transition: all 0ms;
 	z-index   : 10;
 }
 
-#layout span .null {
+#layout div .null {
 	z-index: 2;
 }
 
-#layout span .button {
+#layout div .button {
 	z-index: 7;
 }
 
-#layout.maskallicon span .button {
+#layout.maskallicon div .button {
 	z-index: -1;
 	opacity: 0;
 }
 
-#layout span .button img {
+#layout div .button img {
 	top: 0px;
 }
 
-#layout span .cross {
+#layout div .cross {
 	left: var(--cross-x);
 }
 
-#layout span .download {
+#layout div .download {
 	left: var(--download-x);
 }
 
-#layout span .jobchange {
+#layout div .jobchange {
 	left: var(--jobchange-x);
 }
 
-#layout span .damagebt {
+#layout div .damagebt {
 	left: var(--damagebt-x);
 }
 
-#layout span .namebt {
+#layout div .namebt {
 	left: var(--namebt-x);
 }
 
-#layout span .jobicon {
+#layout div .jobicon {
 	z-index: 2;
 	left   : 14px;
 	top    : 151px;
 }
 
-#layout span .damage {
+#layout div .damage {
 	z-index: 2;
 }
 
-#layout span .name {
+#layout div .name {
 	z-index: 2;
 }
