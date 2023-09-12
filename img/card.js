@@ -146,9 +146,15 @@ async function loadroleimg() {
 	reg = {};
 }
 
+function creatediv(classname) {
+	let div = document.createElement('div');
+	if (classname !== undefined) div.classList.add(classname);
+	return div;
+}
+
 function createimg(classname, src, title) {
 	let img = new Image();
-	if (classname !== undefined) img.className = classname;
+	if (classname !== undefined) img.classList.add(classname);
 	if (src !== undefined) img.src = src;
 	if (title !== undefined) img.title = title;
 	return img;
@@ -162,16 +168,14 @@ function style(x, y) {
 	} else {
 		reg[x] = {};
 	}
-	let ll = language.reg[language.mod];
+	let lang = language.reg[language.mod];
 	let ref = {};
 	ref.use = true;
-	let divmain = ref.main = document.createElement('div');
+	let main = ref.main = creatediv('main');
 	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
-	divmain.append(nullcard);
+	main.append(nullcard);
 
-	let role = ref.role = document.createElement('div');
-	role.className = 'role';
-
+	let role = ref.role = creatediv('role');
 	let canvas = ref.card = createcard();
 	canvas.classList.add('card');
 	let ctx = canvas.getContext('2d');
@@ -190,23 +194,21 @@ function style(x, y) {
 	setcardangle(ctx, [0, 0, 0, 0]);
 	role.append(canvas);
 
-	let button = ref.button = document.createElement('div');
-	button.className = 'button';
+	let button = ref.button = creatediv('button');
 	role.append(button);
 
-	let cross = ref.cross = createimg('cross', 'img/cross.svg', ll.cross);
+	let cross = ref.cross = createimg('cross', 'img/cross.svg', lang.cross);
 	cross.onclick = () => {
-		role.classList.add('mask');
 		ref.use = false;
+		role.classList.add('mask');
 	};
 	button.append(cross);
 
-	let tocanvas = ref.tocanvas = () => {
+	ref.tocanvas = () => {
 		let canvas = createcard();
 		let ctx = canvas.getContext('2d');
 		if (ref.use) {
-			let cardimg = ref.card;
-			ctx.drawImage(cardimg, 0, 0);
+			ctx.drawImage(ref.card, 0, 0);
 			if (ref.namemask) {
 				ctx.drawImage(name, 0, 0);
 				ctx.drawImage(ref.jobicon, 14, 151);
@@ -214,31 +216,30 @@ function style(x, y) {
 			if (ref.jobname != 'lab' && ref.damagemask) {
 				ctx.drawImage(damage, 0, 0);
 			}
-		} else { 
-			let cardimg = ref.nullcard;
-			ctx.drawImage(cardimg, 0, 0);
+		} else {
+			ctx.drawImage(ref.nullcard, 0, 0);
 		}
 		return canvas;
 	};
-	let download = ref.download = createimg('download', 'img/download.svg', ll.download);
-	download.onclick = () => tocanvas().toBlob(blob => startDownload(URL.createObjectURL(blob), 'role.png'));
+	let download = ref.download = createimg('download', 'img/download.svg', lang.download);
+	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(URL.createObjectURL(blob), 'role.png'));
 	button.append(download);
 
 	ref.damagemask = false;
 	let damage = ref.damage = createimg('damage', damagemaskurl);
 	role.append(damage);
-	let damagebt = ref.damagebt = createimg('damagebt', 'img/maskdamage.svg', ll.maskdamage);
+	let damagebt = ref.damagebt = createimg('damagebt', 'img/maskdamage.svg', lang.maskdamage);
 	damagebt.onclick = () => {
 		if (ref.damagemask) {
 			ref.damagemask = false;
-			ref.damage.classList.remove('use');
-			ref.damagebt.src = 'img/maskdamage.svg';
-			ref.damagebt.title = ll.maskdamage;
+			damage.classList.remove('use');
+			damagebt.src = 'img/maskdamage.svg';
+			damagebt.title = lang.maskdamage;
 		} else {
 			ref.damagemask = true;
-			ref.damage.classList.add('use');
-			ref.damagebt.src = 'img/showdamage.svg';
-			ref.damagebt.title = ll.showdamage;
+			damage.classList.add('use');
+			damagebt.src = 'img/showdamage.svg';
+			damagebt.title = lang.showdamage;
 		}
 	};
 	button.append(damagebt);
@@ -246,36 +247,36 @@ function style(x, y) {
 	ref.namemask = false;
 	let name = ref.name = createimg('name', namemaskurl);
 	role.append(name);
-	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', ll.maskname);
+	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', lang.maskname);
 	namebt.onclick = () => {
 		if (ref.namemask) {
 			ref.namemask = false;
-			ref.name.classList.remove('use');
-			ref.jobicon.classList.remove('use');
-			ref.namebt.src = 'img/maskname.svg';
-			ref.namebt.title = ll.maskname;
+			name.classList.remove('use');
+			jobicon.classList.remove('use');
+			namebt.src = 'img/maskname.svg';
+			namebt.title = lang.maskname;
 		} else {
 			ref.namemask = true;
-			ref.name.classList.add('use');
-			ref.jobicon.classList.add('use');
-			ref.namebt.src = 'img/showname.svg';
-			ref.namebt.title = ll.showname;
+			name.classList.add('use');
+			jobicon.classList.add('use');
+			namebt.src = 'img/showname.svg';
+			namebt.title = lang.showname;
 		}
 	};
 	button.append(namebt);
 
 	ref.jobname = 'card';
 	let jobicon = ref.jobicon = createimg('jobicon');
-	let jobchange = ref.jobchange = createimg('jobchange', undefined, ll.jobchange);
+	let jobchange = ref.jobchange = createimg('jobchange', undefined, lang.jobchange);
 	jobchange.oncontextmenu = () => false;
 	let changejob = jobname => {
 		ref.jobname = jobname;
 		jobicon.src = `img/minicon/${jobname}.png`;
 		jobchange.src = `img/icon/${jobname}.png`;
 		if (ref.jobname == 'lab') {
-			ref.damage.classList.add('lab');
+			damage.classList.add('lab');
 		} else {
-			ref.damage.classList.remove('lab');
+			damage.classList.remove('lab');
 		}
 	};
 	jobchange.onmousedown = event => {
@@ -297,23 +298,22 @@ function style(x, y) {
 	changejob(findjob(canvas));
 	button.append(jobchange);
 	role.append(jobicon);
-	divmain.append(role);
+	main.append(role);
 	reg[x][y] = ref;
 	return reg[x][y];
 }
 function newnullstyle() {
 	let ref = {};
 	ref.use = false;
-	let divmain = ref.main = document.createElement('div');
+	let main = ref.main = creatediv('main');
 	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
 	ref.tocanvas = () => {
 		let canvas = createcard();
 		let ctx = canvas.getContext('2d');
-		let cardimg = ref.nullcard;
-		ctx.drawImage(cardimg, 0, 0);
+		ctx.drawImage(ref.nullcard, 0, 0);
 		return canvas;
 	};
-	divmain.append(nullcard);
+	main.append(nullcard);
 	return ref;
 }
 export default {

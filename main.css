@@ -149,82 +149,81 @@ input[type="button"] {
 	background: #444;
 	left      : 10px;
 	top       : 110px;
-	z-index   : 3;
 }
 
-#layout div {
+#layout .main {
 	transition: all 300ms;
-	z-index   : 3;
+	z-index   : 1;
 }
 
-#layout div.move {
+#layout .main.move {
 	transition: all 0ms;
-	z-index   : 10;
+	z-index   : 9;
 }
 
-#layout div .role.mask {
-	z-index: -1;
-	opacity: 0;
-}
-
-#layout div .null {
-	z-index: 2;
-}
-
-#layout div .card {
-	z-index: 2;
-}
-
-#layout div .damage,
-#layout div .damage.use.lab,
-#layout div .name,
-#layout div .jobicon {
+#layout .null {
 	z-index: 1;
 }
 
-#layout div .damage.use,
-#layout div .name.use {
-	z-index: 3;
+#layout .role {
+	z-index: 2;
 }
 
-#layout div .jobicon.use {
-	z-index: 4;
-}
-
-#layout div .jobicon {
-	left   : 14px;
-	top    : 151px;
-}
-
-#layout div .button {
-	z-index: 7;
-}
-
-#layout.maskallicon div .button {
-	z-index: -1;
+#layout .role.mask {
+	z-index: 0;
 	opacity: 0;
 }
 
-#layout div .button img {
-	top: 0px;
+#layout .card {
+	z-index: 1;
 }
 
-#layout div .cross {
+#layout .button {
+	z-index: 9;
+}
+
+#layout.maskallicon .button {
+	z-index: 0;
+	opacity: 0;
+}
+
+#layout .damage,
+#layout .damage.use.lab,
+#layout .name,
+#layout .jobicon {
+	z-index: 0;
+}
+
+#layout .damage.use,
+#layout .name.use {
+	z-index: 2;
+}
+
+#layout .jobicon.use {
+	z-index: 3;
+}
+
+#layout .jobicon {
+	left: 14px;
+	top : 151px;
+}
+
+#layout .cross {
 	left: var(--cross-x);
 }
 
-#layout div .download {
+#layout .download {
 	left: var(--download-x);
 }
 
-#layout div .jobchange {
+#layout .jobchange {
 	left: var(--jobchange-x);
 }
 
-#layout div .damagebt {
+#layout .damagebt {
 	left: var(--damagebt-x);
 }
 
-#layout div .namebt {
+#layout .namebt {
 	left: var(--namebt-x);
 }
