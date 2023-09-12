@@ -66,7 +66,7 @@ async function loadroleimg() {
 		layout.append(ref[cnt].main);
 	}
 
-	layout.onmousedown = (event) => {
+	layout.onmousedown = event => {
 		let mp = getclickpoint(event, layout);
 		let nowid = -1;
 		for (let i = 0; i < len; i++) {
@@ -81,9 +81,8 @@ async function loadroleimg() {
 		}
 		if (nowid == -1) return;
 		let dp = { x: mp.x - addr[nowid].left, y: mp.y - addr[nowid].top };
-		ref[id[nowid]].main.style.transition = 'all 0s';
-		ref[id[nowid]].main.style.zIndex = 10;
-		window.onmousemove = (event) => {
+		ref[id[nowid]].main.classList.add('move');
+		window.onmousemove = event => {
 			let mp = getclickpoint(event, layout);
 			let sp = { x: mp.x - dp.x, y: mp.y - dp.y };
 			for (let i = 0; i < len; i++) {
@@ -120,8 +119,7 @@ async function loadroleimg() {
 		}
 		window.onmouseup = () => {
 			setseat(nowid);
-			ref[id[nowid]].main.style.transition = 'all 300ms';
-			ref[id[nowid]].main.style.zIndex = 3;
+			ref[id[nowid]].main.classList.remove('move');
 			window.onmousemove = () => { };
 			window.onmouseup = () => { };
 		};
@@ -307,24 +305,9 @@ function mergeimg(canvas) {
 		}
 	}
 }
-function maskallicon() {
-	for (let i = 0; i < len; i++) {
-		let r = ref[id[i]];
-		if (r.use) {
-			r.button.style.zIndex = -1;
-			r.button.style.opacity = 0;
-		}
-	}
-}
-function showallicon() {
-	for (let i = 0; i < len; i++) {
-		let r = ref[id[i]];
-		if (r.use) {
-			r.button.style.zIndex = 7;
-			r.button.style.opacity = 1;
-		}
-	}
-}
+let maskallicon = () => layout.classList.add('maskallicon');
+let showallicon = () => layout.classList.remove('maskallicon');
+
 function downloadallpng() {
 	mergeimg(download);
 	download.toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.png'));

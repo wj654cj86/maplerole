@@ -30,9 +30,7 @@ movemodespan.innerHTML = data.movemode;
 sortmovespan.innerHTML = data.sortmove;
 swapmovespan.innerHTML = data.swapmove;
 
-layout.ondragstart = () => {
-	return false;
-};
+layout.ondragstart = () => false;
 
 loadbtn.onclick = role.loadroleimg;
 maskalldamage.onclick = role.maskalldamage;

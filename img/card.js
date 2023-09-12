@@ -85,7 +85,7 @@ for (let i = 0; i < data.name.length; i++) {
 for (let i = 0; i < data.jobname.length; i++) {
 	tmppromise[data.jobname[i]] = loadimg('img/card/' + data.jobname[i] + '.png');
 }
-for (let key in tmppromise) {
+for (let [key] of tmppromise.entries()) {
 	let img = await tmppromise[key];
 	let canvas = document.createElement('canvas');
 	let ctx = canvas.getContext('2d');
