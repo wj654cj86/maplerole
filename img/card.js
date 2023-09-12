@@ -195,12 +195,13 @@ function style(x, y) {
 	role.append(canvas);
 
 	let button = ref.button = creatediv('button');
-	role.append(button);
+	main.append(button);
 
 	let cross = ref.cross = createimg('cross', 'img/cross.svg', lang.cross);
 	cross.onclick = () => {
 		ref.use = false;
 		role.classList.add('mask');
+		button.classList.add('mask');
 	};
 	button.append(cross);
 
