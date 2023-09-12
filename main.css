@@ -162,8 +162,38 @@ input[type="button"] {
 	z-index   : 10;
 }
 
+#layout div .role.mask {
+	z-index: -1;
+	opacity: 0;
+}
+
 #layout div .null {
 	z-index: 2;
+}
+
+#layout div .card {
+	z-index: 2;
+}
+
+#layout div .damage,
+#layout div .damage.use.lab,
+#layout div .name,
+#layout div .jobicon {
+	z-index: 1;
+}
+
+#layout div .damage.use,
+#layout div .name.use {
+	z-index: 3;
+}
+
+#layout div .jobicon.use {
+	z-index: 4;
+}
+
+#layout div .jobicon {
+	left   : 14px;
+	top    : 151px;
 }
 
 #layout div .button {
@@ -197,18 +227,4 @@ input[type="button"] {
 
 #layout div .namebt {
 	left: var(--namebt-x);
-}
-
-#layout div .jobicon {
-	z-index: 2;
-	left   : 14px;
-	top    : 151px;
-}
-
-#layout div .damage {
-	z-index: 2;
-}
-
-#layout div .name {
-	z-index: 2;
 }

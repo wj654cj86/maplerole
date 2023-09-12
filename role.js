@@ -21,9 +21,7 @@ function getclickpoint(event, element) {
 	};
 }
 async function loadroleimg() {
-	for (let i = 0; i < len; i++) {
-		ref[i].main.remove();
-	}
+	ref.forEach(v => v.main.remove());
 
 	linelen = Number(cardlinelen.value);
 	if (isNaN(linelen)) linelen = 8;
@@ -144,11 +142,7 @@ function sort() {
 	idreplace(used.concat(unused));
 }
 function delunknown() {
-	for (let i = 0; i < len; i++) {
-		if (ref[id[i]].jobname == 'card') {
-			ref[id[i]].cross.click();
-		}
-	}
+	ref.forEach(v => v.jobname == 'card' && v.cross.click());
 }
 function forwardlab() {
 	let unused = [];
@@ -234,34 +228,14 @@ function lineinc() {
 		}
 	}
 }
-function maskalldamage() {
-	for (let i = 0; i < len; i++) {
-		if (ref[i].damage && !ref[i].damagemask) {
-			ref[i].damagebt.click();
-		}
-	}
-}
-function showalldamage() {
-	for (let i = 0; i < len; i++) {
-		if (ref[i].damage && ref[i].damagemask) {
-			ref[i].damagebt.click();
-		}
-	}
-}
-function maskallname() {
-	for (let i = 0; i < len; i++) {
-		if (ref[i].name && !ref[i].namemask) {
-			ref[i].namebt.click();
-		}
-	}
-}
-function showallname() {
-	for (let i = 0; i < len; i++) {
-		if (ref[i].name && ref[i].namemask) {
-			ref[i].namebt.click();
-		}
-	}
-}
+
+let maskalldamage = () => ref.forEach(v => v.damage && !v.damagemask && v.damagebt.click());
+let showalldamage = () => ref.forEach(v => v.damage && v.damagemask && v.damagebt.click());
+let maskallname = () => ref.forEach(v => v.name && !v.namemask && v.namebt.click());
+let showallname = () => ref.forEach(v => v.name && v.namemask && v.namebt.click());
+let maskallicon = () => layout.classList.add('maskallicon');
+let showallicon = () => layout.classList.remove('maskallicon');
+
 function mergeimg(canvas) {
 	if (len == 0) return;
 	let ctx = canvas.getContext('2d');
@@ -270,44 +244,13 @@ function mergeimg(canvas) {
 	ctx.fillStyle = "#444";
 	ctx.fillRect(0, 0, w, h);
 	for (let i = 0; i < len; i++) {
-		let r = ref[id[i]];
-		let cardimg;
-		if (r.use) {
-			cardimg = r.card;
-		} else {
-			cardimg = r.nullcard;
-		}
 		ctx.drawImage(
-			cardimg,
+			ref[id[i]].tocanvas(),
 			addr[i].left,
 			addr[i].top
 		);
-		if (r.use) {
-			if (r.namemask) {
-				ctx.drawImage(
-					card.name,
-					addr[i].left,
-					addr[i].top
-				);
-				ctx.drawImage(
-					r.jobicon,
-					addr[i].left + 14,
-					addr[i].top + 151
-				);
-			}
-			if (r.jobname != 'lab' && r.damagemask) {
-				ctx.drawImage(
-					card.damage,
-					addr[i].left,
-					addr[i].top
-				);
-			}
-		}
 	}
 }
-let maskallicon = () => layout.classList.add('maskallicon');
-let showallicon = () => layout.classList.remove('maskallicon');
-
 function downloadallpng() {
 	mergeimg(download);
 	download.toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.png'));
