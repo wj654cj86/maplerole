@@ -23,11 +23,15 @@ let refreg = [],
 			'bowman',
 			'thief',
 			'pirate',
-			'xenon',
+			'xenon'
+		],
+		specialname: [
 			'lab',
-			'mobile'
+			'mobile',
+			'expedition'
 		]
 	};
+data.allname = data.jobname.concat(data.specialname);
 function setcardangle(ctx) {
 	let w = data.size.w,
 		h = data.size.h,
@@ -56,8 +60,8 @@ function findjob(canvas) {
 	let ctx = canvas.getContext('2d');
 	let canvasjob = ctx.getImageData(15, 152, 6, 12);
 	let sdarr = [];
-	for (let i = 0; i < data.jobname.length; i++) {
-		let refcanvas = tmp[data.jobname[i]];
+	for (let i = 0; i < data.allname.length; i++) {
+		let refcanvas = tmp[data.allname[i]];
 		let refctx = refcanvas.getContext('2d');
 		let refjob = refctx.getImageData(15, 152, 6, 12);
 		let differencearr = [];
@@ -71,7 +75,7 @@ function findjob(canvas) {
 	}
 	let minnum = Math.min(...sdarr);
 	if (minnum < 50)
-		return data.jobname[sdarr.indexOf(minnum)];
+		return data.allname[sdarr.indexOf(minnum)];
 	else
 		return 'card';
 }
@@ -84,7 +88,7 @@ function createcard(classname) {
 	return canvas;
 }
 
-let tmppromise = Object.fromEntries(data.name.concat(data.jobname).map(v => [v, loadimg(`img/card/${v}.png`)]));
+let tmppromise = Object.fromEntries(data.name.concat(data.allname).map(v => [v, loadimg(`img/card/${v}.png`)]));
 for (let [key] of tmppromise.entries()) {
 	let img = await tmppromise[key];
 	let canvas = tmp[key] = createcard();
@@ -240,7 +244,7 @@ function style(x, y) {
 		ref.jobname = jobname;
 		jobicon.src = `img/minicon/${jobname}.png`;
 		jobchange.src = `img/icon/${jobname}.png`;
-		if (ref.jobname == 'lab') {
+		if (data.specialname.includes(ref.jobname)) {
 			damage.classList.add('lab');
 		} else {
 			damage.classList.remove('lab');
@@ -250,10 +254,10 @@ function style(x, y) {
 		let i;
 		switch (event.button) {
 			case 0:
-				i = data.jobname.indexOf(ref.jobname);
+				i = data.allname.indexOf(ref.jobname);
 				i++;
-				if (i >= data.jobname.length) i = 0;
-				changejob(data.jobname[i]);
+				if (i >= data.allname.length) i = 0;
+				changejob(data.allname[i]);
 				break;
 			case 2:
 				changejob('card');
@@ -284,6 +288,7 @@ function newnullstyle() {
 	main.append(nullcard);
 	return ref;
 }
+
 export default {
 	data,
 	loadroleimg,

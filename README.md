@@ -34,8 +34,9 @@
 		5. ![海盜圖示](https://wj654cj86.github.io/maplerole/img/icon/pirate.png) 海盜
 		6. ![傑諾圖示](https://wj654cj86.github.io/maplerole/img/icon/xenon.png) 傑諾
 		7. ![Lab圖示](https://wj654cj86.github.io/maplerole/img/icon/lab.png) Lab：當要使用遮住傷害時，Lab方塊不會遮住傷害。
-		8. ![楓之谷M圖示](https://wj654cj86.github.io/maplerole/img/icon/mobile.png) 楓之谷M
-		9. ![無圖示](https://wj654cj86.github.io/maplerole/img/icon/card.png) 無圖示：需要用滑鼠右鍵來切換。
+		8. ![楓之谷M圖示](https://wj654cj86.github.io/maplerole/img/icon/mobile.png) 楓之谷M：當要使用遮住傷害時，楓之谷M方塊不會遮住傷害。
+		9. ![深淵遠征圖示](https://wj654cj86.github.io/maplerole/img/icon/expedition.png) 深淵遠征：當要使用遮住傷害時，深淵遠征方塊不會遮住傷害。
+		10. ![無圖示](https://wj654cj86.github.io/maplerole/img/icon/card.png) 無圖示：需要用滑鼠右鍵來切換。
 	2. ![下載圖示](https://wj654cj86.github.io/maplerole/img/download.png) 下載：下載單張角色卡。
 	3. ![刪除圖示](https://wj654cj86.github.io/maplerole/img/cross.png) 刪除：可以刪除掉不要顯示的角色。
 	4. ![遮住傷害圖示](https://wj654cj86.github.io/maplerole/img/maskdamage.png)![顯示傷害圖示](https://wj654cj86.github.io/maplerole/img/showdamage.png) 傷害顯示：可以選擇單張角色卡是否顯示戰地傷害。
