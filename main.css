@@ -35,20 +35,20 @@ input[type="button"] {
 #cardlinelendiv {
 	left      : 400px;
 	top       : 10px;
-	width     : 120px;
+	width     : 160px;
 	text-align: right;
 }
 
 #cardlinelen {
-	left : 520px;
+	left : 560px;
 	top  : 10px;
 	width: 50px;
 }
 
 #jpgqualitydiv {
-	left      : 740px;
+	left      : 720px;
 	top       : 10px;
-	width     : 110px;
+	width     : 130px;
 	text-align: right;
 }
 
@@ -151,7 +151,9 @@ input[type="button"] {
 	top       : 110px;
 }
 
-#layout div {
+#layout div,
+#layout img,
+#layout canvas {
 	transition: all 300ms;
 }
 
@@ -210,24 +212,4 @@ input[type="button"] {
 #layout .jobicon {
 	left: 14px;
 	top : 151px;
-}
-
-#layout .cross {
-	left: var(--cross-x);
-}
-
-#layout .download {
-	left: var(--download-x);
-}
-
-#layout .jobchange {
-	left: var(--jobchange-x);
-}
-
-#layout .damagebt {
-	left: var(--damagebt-x);
-}
-
-#layout .namebt {
-	left: var(--namebt-x);
 }

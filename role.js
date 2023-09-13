@@ -8,8 +8,7 @@ let linelen = 8,
 	len = 0,
 	hismaxlen = 0,
 	w = 0,
-	h = 0,
-	download = document.createElement('canvas');
+	h = 0;
 function setseat(i) {
 	ref[id[i]].main.style.left = addr[i].left + 'px';
 	ref[id[i]].main.style.top = addr[i].top + 'px';
@@ -116,8 +115,8 @@ async function loadroleimg() {
 			ref[id[nowid]].main.style.top = mp.y - dp.y + 'px';
 		}
 		window.onmouseup = () => {
-			setseat(nowid);
 			ref[id[nowid]].main.classList.remove('move');
+			setseat(nowid);
 			window.onmousemove = () => { };
 			window.onmouseup = () => { };
 		};
@@ -229,15 +228,16 @@ function lineinc() {
 	}
 }
 
-let maskalldamage = () => ref.forEach(v => v.damage && !v.damagemask && v.damagebt.click());
-let showalldamage = () => ref.forEach(v => v.damage && v.damagemask && v.damagebt.click());
-let maskallname = () => ref.forEach(v => v.name && !v.namemask && v.namebt.click());
-let showallname = () => ref.forEach(v => v.name && v.namemask && v.namebt.click());
+let maskalldamage = () => ref.forEach(v => v.use && !v.damagemask && v.damagebt.click());
+let showalldamage = () => ref.forEach(v => v.use && v.damagemask && v.damagebt.click());
+let maskallname = () => ref.forEach(v => v.use && !v.namemask && v.namebt.click());
+let showallname = () => ref.forEach(v => v.use && v.namemask && v.namebt.click());
 let maskallicon = () => layout.classList.add('maskallicon');
 let showallicon = () => layout.classList.remove('maskallicon');
 
-function mergeimg(canvas) {
-	if (len == 0) return;
+function mergeimg() {
+	let canvas = document.createElement('canvas');
+	if (len == 0) return canvas;
 	let ctx = canvas.getContext('2d');
 	canvas.width = w;
 	canvas.height = h;
@@ -250,15 +250,11 @@ function mergeimg(canvas) {
 			addr[i].top
 		);
 	}
+	return canvas;
 }
-function downloadallpng() {
-	mergeimg(download);
-	download.toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.png'));
-}
-function downloadalljpg() {
-	mergeimg(download);
-	download.toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.jpg'), 'image/jpeg', Number(jpgquality.value));
-}
+let downloadallpng = () => mergeimg().toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.png'));
+let downloadalljpg = () => mergeimg().toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.jpg'), 'image/jpeg', Number(jpgquality.value));
+
 export default {
 	loadroleimg,
 	maskalldamage,

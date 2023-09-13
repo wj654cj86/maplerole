@@ -1,10 +1,9 @@
 import language from '../language/language.js';
-let root = document.documentElement;
 let refreg = [],
 	reg = {},
 	tmp = {},
-	damage = {}, damagemaskurl = '',
-	name = {}, namemaskurl = '',
+	damagemaskurl = '',
+	namemaskurl = '',
 	data = {
 		size: { w: 116, h: 177 },
 		spacing: 122,
@@ -14,7 +13,6 @@ let refreg = [],
 			'1366x768': { x: 241, y: 563 },
 			'1920x1080': { x: 518, y: 719 }
 		},
-		angle: [5, 3, 2, 1, 1],
 		name: [
 			'null',
 			'card'
@@ -30,15 +28,17 @@ let refreg = [],
 			'mobile'
 		]
 	};
-function setcardangle(ctx, arr) {
-	let u8arr = new Uint8ClampedArray(arr);
-	let imageData = new ImageData(u8arr, 1, 1);
-	data.angle.forEach((v, i) => range_nl(0, v).forEach(j => {
-		ctx.putImageData(imageData, i, j);
-		ctx.putImageData(imageData, data.size.w - 1 - i, data.size.h - 1 - j);
-		ctx.putImageData(imageData, i, data.size.h - 1 - j);
-		ctx.putImageData(imageData, data.size.w - 1 - i, j);
-	}));
+function setcardangle(ctx) {
+	let w = data.size.w,
+		h = data.size.h,
+		r = 10;
+	ctx.beginPath();
+	ctx.moveTo(w - r, 0); ctx.quadraticCurveTo(w, 0, w, r);
+	ctx.lineTo(w, h - r); ctx.quadraticCurveTo(w, h, w - r, h);
+	ctx.lineTo(r, h); ctx.quadraticCurveTo(0, h, 0, h - r);
+	ctx.lineTo(0, r); ctx.quadraticCurveTo(0, 0, r, 0);
+	ctx.closePath();
+	ctx.clip();
 }
 let arrsum = arr => arr.reduce((acc, v) => acc + Number(v), 0);
 let arraverage = arr => arr.length != 0 ? (arrsum(arr) / arr.length) : 0;
@@ -76,73 +76,39 @@ function findjob(canvas) {
 		return 'card';
 }
 
-function createcard() {
+function createcard(classname) {
 	let canvas = document.createElement('canvas');
+	if (classname !== undefined) canvas.classList.add(classname);
 	canvas.width = data.size.w;
 	canvas.height = data.size.h;
 	return canvas;
 }
 
-let tmppromise = {};
-data.name.forEach(v => tmppromise[v] = loadimg(`img/card/${v}.png`));
-data.jobname.forEach(v => tmppromise[v] = loadimg(`img/card/${v}.png`));
+let tmppromise = Object.fromEntries(data.name.concat(data.jobname).map(v => [v, loadimg(`img/card/${v}.png`)]));
 for (let [key] of tmppromise.entries()) {
 	let img = await tmppromise[key];
 	let canvas = tmp[key] = createcard();
 	let ctx = canvas.getContext('2d');
+	setcardangle(ctx);
 	ctx.drawImage(img, 0, 0);
-	setcardangle(ctx, [0, 0, 0, 0]);
 }
+
 let gap = Math.floor((data.size.w - 20 * 5) / 4) + 20;
-root.style.setProperty('--cross-x', gap * 4 + 'px');
-root.style.setProperty('--download-x', gap * 3 + 'px');
-root.style.setProperty('--jobchange-x', gap * 2 + 'px');
-root.style.setProperty('--damagebt-x', gap + 'px');
-root.style.setProperty('--namebt-x', 0 + 'px');
+document.querySelector('style').innerHTML += ['cross', 'download', 'jobchange', 'damagebt', 'namebt']
+	.map((v, i) => `#layout .${v}{left:${gap * (4 - i)}px;}`).join('\n');
 
-damage = createcard();
-let damagectx = damage.getContext('2d');
-damagectx.drawImage(
-	tmp['card'],
-	0,
-	130,
-	data.size.w,
-	17,
-	0,
-	130,
-	data.size.w,
-	17,
-);
-damage.toBlob(blob => damagemaskurl = URL.createObjectURL(blob));
+function createmaskurl(x, y, w, h) {
+	let canvas = createcard();
+	canvas.getContext('2d').drawImage(tmp.card, x, y, w, h, x, y, w, h);
+	return new Promise(r => canvas.toBlob(blob => r(URL.createObjectURL(blob))));
+}
 
-name = createcard();
-let namectx = name.getContext('2d');
-namectx.drawImage(
-	tmp['card'],
-	0,
-	147,
-	data.size.w,
-	data.size.h - 147 - 10,
-	0,
-	147,
-	data.size.w,
-	data.size.h - 147 - 10,
-);
-name.toBlob(blob => namemaskurl = URL.createObjectURL(blob));
+damagemaskurl = await createmaskurl(0, 130, data.size.w, 17);
+namemaskurl = await createmaskurl(0, 147, data.size.w, data.size.h - 147 - 10);
 
 async function loadroleimg() {
-	let refregpromise = []
-	for (let i = 0; i < hostfile.files.length; i++) {
-		let url = URL.createObjectURL(hostfile.files[i]);
-		refregpromise[i] = loadimg(url);
-	}
-	for (let i = 0; i < hostfile.files.length; i++) {
-		let img = await refregpromise[i];
-		if (refreg[i] !== undefined) {
-			refreg[i].remove();
-		}
-		refreg[i] = img;
-	}
+	refreg.forEach(v => v.remove());
+	refreg = await Array.from(hostfile.files).promiseMap(v => loadimg(URL.createObjectURL(v)));
 	reg = {};
 }
 
@@ -169,18 +135,22 @@ function style(x, y) {
 		reg[x] = {};
 	}
 	let lang = language.reg[language.mod];
-	let ref = {};
-	ref.use = true;
+	let ref = {
+		use: true,
+		damagemask: false,
+		namemask: false,
+		jobname: 'card'
+	};
 	let main = ref.main = creatediv('main');
-	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
+	let nullcard = createimg('null', 'img/card/null.png');
 	main.append(nullcard);
 
-	let role = ref.role = creatediv('role');
-	let canvas = ref.card = createcard();
-	canvas.classList.add('card');
-	let ctx = canvas.getContext('2d');
+	let role = creatediv('role');
+	let card = createcard('card');
+	let cardctx = card.getContext('2d');
+	setcardangle(cardctx);
 	let imgsize = refreg[x].naturalWidth + 'x' + refreg[x].naturalHeight;
-	ctx.drawImage(
+	cardctx.drawImage(
 		refreg[x],
 		data.seat[imgsize].x + data.spacing * y,
 		data.seat[imgsize].y,
@@ -191,10 +161,9 @@ function style(x, y) {
 		data.size.w,
 		data.size.h
 	);
-	setcardangle(ctx, [0, 0, 0, 0]);
-	role.append(canvas);
+	role.append(card);
 
-	let button = ref.button = creatediv('button');
+	let button = creatediv('button');
 	main.append(button);
 
 	let cross = ref.cross = createimg('cross', 'img/cross.svg', lang.cross);
@@ -209,25 +178,24 @@ function style(x, y) {
 		let canvas = createcard();
 		let ctx = canvas.getContext('2d');
 		if (ref.use) {
-			ctx.drawImage(ref.card, 0, 0);
+			ctx.drawImage(card, 0, 0);
 			if (ref.namemask) {
 				ctx.drawImage(name, 0, 0);
-				ctx.drawImage(ref.jobicon, 14, 151);
+				ctx.drawImage(jobicon, 14, 151);
 			}
 			if (ref.jobname != 'lab' && ref.damagemask) {
 				ctx.drawImage(damage, 0, 0);
 			}
 		} else {
-			ctx.drawImage(ref.nullcard, 0, 0);
+			ctx.drawImage(nullcard, 0, 0);
 		}
 		return canvas;
 	};
-	let download = ref.download = createimg('download', 'img/download.svg', lang.download);
+	let download = createimg('download', 'img/download.svg', lang.download);
 	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(URL.createObjectURL(blob), 'role.png'));
 	button.append(download);
 
-	ref.damagemask = false;
-	let damage = ref.damage = createimg('damage', damagemaskurl);
+	let damage = createimg('damage', damagemaskurl);
 	role.append(damage);
 	let damagebt = ref.damagebt = createimg('damagebt', 'img/maskdamage.svg', lang.maskdamage);
 	damagebt.onclick = () => {
@@ -245,8 +213,7 @@ function style(x, y) {
 	};
 	button.append(damagebt);
 
-	ref.namemask = false;
-	let name = ref.name = createimg('name', namemaskurl);
+	let name = createimg('name', namemaskurl);
 	role.append(name);
 	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', lang.maskname);
 	namebt.onclick = () => {
@@ -266,8 +233,7 @@ function style(x, y) {
 	};
 	button.append(namebt);
 
-	ref.jobname = 'card';
-	let jobicon = ref.jobicon = createimg('jobicon');
+	let jobicon = createimg('jobicon');
 	let jobchange = ref.jobchange = createimg('jobchange', undefined, lang.jobchange);
 	jobchange.oncontextmenu = () => false;
 	let changejob = jobname => {
@@ -296,7 +262,7 @@ function style(x, y) {
 				break;
 		}
 	};
-	changejob(findjob(canvas));
+	changejob(findjob(card));
 	button.append(jobchange);
 	role.append(jobicon);
 	main.append(role);
@@ -304,22 +270,21 @@ function style(x, y) {
 	return reg[x][y];
 }
 function newnullstyle() {
-	let ref = {};
-	ref.use = false;
+	let ref = {
+		use: false
+	};
 	let main = ref.main = creatediv('main');
-	let nullcard = ref.nullcard = createimg('null', 'img/card/null.png');
+	let nullcard = createimg('null', 'img/card/null.png');
 	ref.tocanvas = () => {
 		let canvas = createcard();
 		let ctx = canvas.getContext('2d');
-		ctx.drawImage(ref.nullcard, 0, 0);
+		ctx.drawImage(nullcard, 0, 0);
 		return canvas;
 	};
 	main.append(nullcard);
 	return ref;
 }
 export default {
-	damage,
-	name,
 	data,
 	loadroleimg,
 	style,
