@@ -2,8 +2,8 @@ import language from '../language/language.js';
 let refreg = [],
 	reg = {},
 	tmp = {},
-	damagemaskurl = '',
-	namemaskurl = '',
+	damagepng = '',
+	namepng = '',
 	data = {
 		size: { w: 116, h: 177 },
 		spacing: 122,
@@ -25,13 +25,13 @@ let refreg = [],
 			'pirate',
 			'xenon'
 		],
-		specialname: [
+		labname: [
 			'lab',
 			'mobile',
 			'expedition'
 		]
 	};
-data.allname = data.jobname.concat(data.specialname);
+data.allname = data.jobname.concat(data.labname);
 function setcardangle(ctx) {
 	let w = data.size.w,
 		h = data.size.h,
@@ -58,20 +58,20 @@ function arrsd(arr) {
 }
 function findjob(canvas) {
 	let ctx = canvas.getContext('2d');
-	let canvasjob = ctx.getImageData(15, 152, 6, 12);
+	let job = ctx.getImageData(15, 152, 6, 12);
 	let sdarr = [];
 	for (let i = 0; i < data.allname.length; i++) {
-		let refcanvas = tmp[data.allname[i]];
-		let refctx = refcanvas.getContext('2d');
-		let refjob = refctx.getImageData(15, 152, 6, 12);
-		let differencearr = [];
-		for (let j = 0; j < refjob.data.length; j += 4) {
-			differencearr[j] = canvasjob.data[j] - refjob.data[j];
-			differencearr[j + 1] = canvasjob.data[j + 1] - refjob.data[j + 1];
-			differencearr[j + 2] = canvasjob.data[j + 2] - refjob.data[j + 2];
-			differencearr[j + 3] = (differencearr[j] + differencearr[j + 1] + differencearr[j + 2]) / 3;
+		let canvas2 = tmp[data.allname[i]];
+		let ctx2 = canvas2.getContext('2d');
+		let job2 = ctx2.getImageData(15, 152, 6, 12);
+		let d = [];
+		for (let j = 0; j < job2.data.length; j += 4) {
+			d[j] = job.data[j] - job2.data[j];
+			d[j + 1] = job.data[j + 1] - job2.data[j + 1];
+			d[j + 2] = job.data[j + 2] - job2.data[j + 2];
+			d[j + 3] = (d[j] + d[j + 1] + d[j + 2]) / 3;
 		}
-		sdarr[i] = Math.round(arrsd(differencearr));
+		sdarr[i] = Math.round(arrsd(d));
 	}
 	let minnum = Math.min(...sdarr);
 	if (minnum < 50)
@@ -107,8 +107,8 @@ function createmaskurl(x, y, w, h) {
 	return new Promise(r => canvas.toBlob(blob => r(URL.createObjectURL(blob))));
 }
 
-damagemaskurl = await createmaskurl(0, 130, data.size.w, 17);
-namemaskurl = await createmaskurl(0, 147, data.size.w, data.size.h - 147 - 10);
+damagepng = await createmaskurl(0, 130, data.size.w, 17);
+namepng = await createmaskurl(0, 147, data.size.w, data.size.h - 147 - 10);
 
 async function loadroleimg() {
 	refreg.forEach(v => v.remove());
@@ -187,7 +187,7 @@ function style(x, y) {
 				ctx.drawImage(name, 0, 0);
 				ctx.drawImage(jobicon, 14, 151);
 			}
-			if (ref.jobname != 'lab' && ref.damagemask) {
+			if (!ref.islab() && ref.damagemask) {
 				ctx.drawImage(damage, 0, 0);
 			}
 		} else {
@@ -199,7 +199,7 @@ function style(x, y) {
 	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(URL.createObjectURL(blob), 'role.png'));
 	button.append(download);
 
-	let damage = createimg('damage', damagemaskurl);
+	let damage = createimg('damage', damagepng);
 	role.append(damage);
 	let damagebt = ref.damagebt = createimg('damagebt', 'img/maskdamage.svg', lang.maskdamage);
 	damagebt.onclick = () => {
@@ -217,7 +217,7 @@ function style(x, y) {
 	};
 	button.append(damagebt);
 
-	let name = createimg('name', namemaskurl);
+	let name = createimg('name', namepng);
 	role.append(name);
 	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', lang.maskname);
 	namebt.onclick = () => {
@@ -240,11 +240,12 @@ function style(x, y) {
 	let jobicon = createimg('jobicon');
 	let jobchange = ref.jobchange = createimg('jobchange', undefined, lang.jobchange);
 	jobchange.oncontextmenu = () => false;
+	ref.islab = () => data.labname.includes(ref.jobname);
 	let changejob = jobname => {
 		ref.jobname = jobname;
 		jobicon.src = `img/minicon/${jobname}.png`;
 		jobchange.src = `img/icon/${jobname}.png`;
-		if (data.specialname.includes(ref.jobname)) {
+		if (ref.islab()) {
 			damage.classList.add('lab');
 		} else {
 			damage.classList.remove('lab');

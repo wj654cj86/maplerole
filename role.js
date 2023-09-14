@@ -149,7 +149,7 @@ function forwardlab() {
 	let lab = [];
 	for (let i = 0; i < len; i++) {
 		if (ref[id[i]].use) {
-			if (card.data.specialname.includes(ref[id[i]].jobname)) {
+			if (ref[id[i]].islab()) {
 				lab.push(id[i]);
 			} else {
 				other.push(id[i]);
@@ -166,7 +166,7 @@ function backwardlab() {
 	let lab = [];
 	for (let i = 0; i < len; i++) {
 		if (ref[id[i]].use) {
-			if (card.data.specialname.includes(ref[id[i]].jobname)) {
+			if (ref[id[i]].islab()) {
 				lab.push(id[i]);
 			} else {
 				other.push(id[i]);
