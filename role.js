@@ -252,8 +252,8 @@ function mergeimg() {
 	}
 	return canvas;
 }
-let downloadallpng = () => mergeimg().toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.png'));
-let downloadalljpg = () => mergeimg().toBlob(blob => startDownload(URL.createObjectURL(blob), 'roleall.jpg'), 'image/jpeg', Number(jpgquality.value));
+let downloadallpng = () => mergeimg().toBlob(blob => startDownload(blob2url(blob), 'roleall.png'));
+let downloadalljpg = () => mergeimg().toBlob(blob => startDownload(blob2url(blob), 'roleall.jpg'), 'image/jpeg', Number(jpgquality.value));
 
 export default {
 	loadroleimg,

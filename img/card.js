@@ -1,6 +1,5 @@
 import language from '../language/language.js';
-let refreg = [],
-	reg = {},
+let reg = [],
 	tmp = {},
 	damagepng = '',
 	namepng = '',
@@ -104,16 +103,15 @@ document.querySelector('style').innerHTML += ['cross', 'download', 'jobchange', 
 function createmaskurl(x, y, w, h) {
 	let canvas = createcard();
 	canvas.getContext('2d').drawImage(tmp.card, x, y, w, h, x, y, w, h);
-	return new Promise(r => canvas.toBlob(blob => r(URL.createObjectURL(blob))));
+	return new Promise(r => canvas.toBlob(blob => r(blob2url(blob))));
 }
 
 damagepng = await createmaskurl(0, 130, data.size.w, 17);
 namepng = await createmaskurl(0, 147, data.size.w, data.size.h - 147 - 10);
 
 async function loadroleimg() {
-	refreg.forEach(v => v.remove());
-	refreg = await Array.from(hostfile.files).promiseMap(v => loadimg(URL.createObjectURL(v)));
-	reg = {};
+	reg.forEach(v => v.remove());
+	reg = await Array.from(hostfile.files).promiseMap(v => loadimg(blob2url(v)));
 }
 
 function creatediv(classname) {
@@ -131,13 +129,6 @@ function createimg(classname, src, title) {
 }
 
 function style(x, y) {
-	if (x in reg) {
-		if (y in reg[x]) {
-			return reg[x][y];
-		}
-	} else {
-		reg[x] = {};
-	}
 	let lang = language.reg[language.mod];
 	let ref = {
 		use: true,
@@ -146,16 +137,20 @@ function style(x, y) {
 		jobname: 'card'
 	};
 	let main = ref.main = creatediv('main');
+
 	let nullcard = createimg('null', 'img/card/null.png');
 	main.append(nullcard);
-
 	let role = creatediv('role');
+	main.append(role);
+	let button = creatediv('button');
+	main.append(button);
+
 	let card = createcard('card');
 	let cardctx = card.getContext('2d');
 	setcardangle(cardctx);
-	let imgsize = refreg[x].naturalWidth + 'x' + refreg[x].naturalHeight;
+	let imgsize = reg[x].naturalWidth + 'x' + reg[x].naturalHeight;
 	cardctx.drawImage(
-		refreg[x],
+		reg[x],
 		data.seat[imgsize].x + data.spacing * y,
 		data.seat[imgsize].y,
 		data.size.w,
@@ -167,9 +162,6 @@ function style(x, y) {
 	);
 	role.append(card);
 
-	let button = creatediv('button');
-	main.append(button);
-
 	let cross = ref.cross = createimg('cross', 'img/cross.svg', lang.cross);
 	cross.onclick = () => {
 		ref.use = false;
@@ -177,27 +169,6 @@ function style(x, y) {
 		button.classList.add('mask');
 	};
 	button.append(cross);
-
-	ref.tocanvas = () => {
-		let canvas = createcard();
-		let ctx = canvas.getContext('2d');
-		if (ref.use) {
-			ctx.drawImage(card, 0, 0);
-			if (ref.namemask) {
-				ctx.drawImage(name, 0, 0);
-				ctx.drawImage(jobicon, 14, 151);
-			}
-			if (!ref.islab() && ref.damagemask) {
-				ctx.drawImage(damage, 0, 0);
-			}
-		} else {
-			ctx.drawImage(nullcard, 0, 0);
-		}
-		return canvas;
-	};
-	let download = createimg('download', 'img/download.svg', lang.download);
-	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(URL.createObjectURL(blob), 'role.png'));
-	button.append(download);
 
 	let damage = createimg('damage', damagepng);
 	role.append(damage);
@@ -219,6 +190,8 @@ function style(x, y) {
 
 	let name = createimg('name', namepng);
 	role.append(name);
+	let jobicon = createimg('jobicon');
+	role.append(jobicon);
 	let namebt = ref.namebt = createimg('namebt', 'img/maskname.svg', lang.maskname);
 	namebt.onclick = () => {
 		if (ref.namemask) {
@@ -237,9 +210,7 @@ function style(x, y) {
 	};
 	button.append(namebt);
 
-	let jobicon = createimg('jobicon');
 	let jobchange = ref.jobchange = createimg('jobchange', undefined, lang.jobchange);
-	jobchange.oncontextmenu = () => false;
 	ref.islab = () => data.labname.includes(ref.jobname);
 	let changejob = jobname => {
 		ref.jobname = jobname;
@@ -251,42 +222,44 @@ function style(x, y) {
 			damage.classList.remove('lab');
 		}
 	};
-	jobchange.onmousedown = event => {
-		let i;
-		switch (event.button) {
-			case 0:
-				i = data.allname.indexOf(ref.jobname);
-				i++;
-				if (i >= data.allname.length) i = 0;
-				changejob(data.allname[i]);
-				break;
-			case 2:
-				changejob('card');
-				break;
-			default:
-				break;
+	jobchange.oncontextmenu = () => changejob('card');
+	jobchange.onclick = () => {
+		let i = data.allname.indexOf(ref.jobname) + 1;
+		if (i >= data.allname.length) i = 0;
+		changejob(data.allname[i]);
+	};
+	button.append(jobchange);
+
+	ref.tocanvas = () => {
+		if (ref.use) {
+			let canvas = createcard();
+			let ctx = canvas.getContext('2d');
+			ctx.drawImage(card, 0, 0);
+			if (ref.namemask) {
+				ctx.drawImage(name, 0, 0);
+				ctx.drawImage(jobicon, 14, 151);
+			}
+			if (!ref.islab() && ref.damagemask) {
+				ctx.drawImage(damage, 0, 0);
+			}
+			return canvas;
+		} else {
+			return nullcard;
 		}
 	};
+	let download = createimg('download', 'img/download.svg', lang.download);
+	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(blob2url(blob), 'role.png'));
+	button.append(download);
+
 	changejob(findjob(card));
-	button.append(jobchange);
-	role.append(jobicon);
-	main.append(role);
-	reg[x][y] = ref;
-	return reg[x][y];
+	return ref;
 }
 function newnullstyle() {
-	let ref = {
-		use: false
-	};
+	let ref = { use: false };
 	let main = ref.main = creatediv('main');
 	let nullcard = createimg('null', 'img/card/null.png');
-	ref.tocanvas = () => {
-		let canvas = createcard();
-		let ctx = canvas.getContext('2d');
-		ctx.drawImage(nullcard, 0, 0);
-		return canvas;
-	};
 	main.append(nullcard);
+	ref.tocanvas = () => nullcard;
 	return ref;
 }
 

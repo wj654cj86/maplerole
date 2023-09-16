@@ -31,6 +31,7 @@ sortmovediv.innerHTML = data.sortmove;
 swapmovediv.innerHTML = data.swapmove;
 
 layout.ondragstart = () => false;
+layout.oncontextmenu = () => false;
 
 loadbtn.onclick = role.loadroleimg;
 maskalldamage.onclick = role.maskalldamage;
