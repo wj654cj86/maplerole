@@ -7,10 +7,10 @@ let reg = [],
 		size: { w: 116, h: 177 },
 		spacing: 122,
 		seat: {
-			'1024x768': { x: 70, y: 563 },
-			'1280x720': { x: 198, y: 539 },
-			'1366x768': { x: 241, y: 563 },
-			'1920x1080': { x: 518, y: 719 }
+			'1024x768': { x: 73, y: 548, m: 1 },
+			'1280x720': { x: 201, y: 524, m: 1 },
+			'1366x768': { x: 244, y: 548, m: 1 },
+			'1920x1080': { x: 344, y: 772, m: 0.7 }
 		},
 		name: [
 			'null',
@@ -88,7 +88,7 @@ function createcard(classname) {
 }
 
 let tmppromise = Object.fromEntries(data.name.concat(data.allname).map(v => [v, loadimg(`img/card/${v}.png`)]));
-for (let [key] of tmppromise.entries()) {
+for (let [key] of Object.entries(tmppromise)) {
 	let img = await tmppromise[key];
 	let canvas = tmp[key] = createcard();
 	let ctx = canvas.getContext('2d');
@@ -103,7 +103,7 @@ document.querySelector('style').innerHTML += ['cross', 'download', 'jobchange', 
 function createmaskurl(x, y, w, h) {
 	let canvas = createcard();
 	canvas.getContext('2d').drawImage(tmp.card, x, y, w, h, x, y, w, h);
-	return new Promise(r => canvas.toBlob(blob => r(blob2url(blob))));
+	return canvas2url(canvas);
 }
 
 damagepng = await createmaskurl(0, 130, data.size.w, 17);
@@ -248,7 +248,7 @@ function style(x, y) {
 		}
 	};
 	let download = createimg('download', 'img/download.svg', lang.download);
-	download.onclick = () => ref.tocanvas().toBlob(blob => startDownload(blob2url(blob), 'role.png'));
+	download.onclick = async () => startDownload(await canvas2url(ref.tocanvas()), 'role.png');
 	button.append(download);
 
 	changejob(findjob(card));
