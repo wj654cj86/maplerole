@@ -106,8 +106,8 @@ function createmaskurl(x, y, w, h) {
 	return canvas2url(canvas);
 }
 
-damagepng = await createmaskurl(0, 130, data.size.w, 17);
-namepng = await createmaskurl(0, 147, data.size.w, data.size.h - 147 - 10);
+damagepng = await createmaskurl(3, 130, data.size.w - 6, 17);
+namepng = await createmaskurl(3, 147, data.size.w - 6, data.size.h - 147 - 10);
 
 async function loadroleimg() {
 	reg.forEach(v => v.remove());
