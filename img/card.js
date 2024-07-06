@@ -10,7 +10,7 @@ let reg = [],
 			'1024x768': { x: 73, y: 548, m: 1 },
 			'1280x720': { x: 201, y: 524, m: 1 },
 			'1366x768': { x: 244, y: 548, m: 1 },
-			'1920x1080': { x: 344, y: 772, m: 0.7 }
+			'1920x1080': { x: 343, y: 771, m: 1.407 }
 		},
 		name: [
 			'null',
@@ -151,10 +151,10 @@ function style(x, y) {
 	let imgsize = reg[x].naturalWidth + 'x' + reg[x].naturalHeight;
 	cardctx.drawImage(
 		reg[x],
-		data.seat[imgsize].x + data.spacing * y,
+		data.seat[imgsize].x + Math.round(data.spacing * data.seat[imgsize].m * y),
 		data.seat[imgsize].y,
-		data.size.w,
-		data.size.h,
+		Math.round(data.size.w * data.seat[imgsize].m),
+		Math.round(data.size.h * data.seat[imgsize].m),
 		0,
 		0,
 		data.size.w,
