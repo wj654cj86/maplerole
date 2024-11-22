@@ -241,7 +241,7 @@ function mergeimg() {
 	let ctx = canvas.getContext('2d');
 	canvas.width = w;
 	canvas.height = h;
-	ctx.fillStyle = "#444";
+	ctx.fillStyle = "#456";
 	ctx.fillRect(0, 0, w, h);
 	for (let i = 0; i < len; i++) {
 		ctx.drawImage(
