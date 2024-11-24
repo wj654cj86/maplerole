@@ -7,10 +7,10 @@ let reg = [],
 		size: { w: 116, h: 177 },
 		spacing: 122,
 		seat: {
-			'1024x768': { x: 73, y: 548, m: 1 },
-			'1280x720': { x: 201, y: 524, m: 1 },
-			'1366x768': { x: 244, y: 548, m: 1 },
-			'1920x1080': { x: 343, y: 771, m: 1.407 }
+			'1024x768': { x: 73, y: 548 },
+			'1280x720': { x: 201, y: 524 },
+			'1229x768': { x: 175, y: 548 },
+			'1366x768': { x: 244, y: 548 }
 		},
 		name: [
 			'null',
@@ -111,7 +111,23 @@ namepng = await createmaskurl(3, 147, data.size.w - 6, data.size.h - 147 - 10);
 
 async function loadroleimg() {
 	reg.forEach(v => v.remove());
-	reg = await Array.from(hostfile.files).promiseMap(v => loadimg(blob2url(v)));
+	reg = (await Array.from(hostfile.files).promiseMap(v => loadimg(blob2url(v)))).map(img => {
+		let imgsize = img.naturalWidth + 'x' + img.naturalHeight;
+		if (imgsize in data.seat) {
+			return img2canvas(img);
+		} else {
+			let cw;
+			if (Math.abs(img.naturalWidth / img.naturalHeight - 1.6) < 0.01) {
+				cw = 1229;
+			} else {
+				cw = 1366;
+			}
+			let canvas = text2html(`<canvas width="${cw}" height="768"/>`);
+			let ctx = canvas.getContext("2d");
+			ctx.drawImage(img, 0, 0, cw, 768);
+			return canvas;
+		}
+	});
 }
 
 function creatediv(classname) {
@@ -148,13 +164,13 @@ function style(x, y) {
 	let card = createcard('card');
 	let cardctx = card.getContext('2d');
 	setcardangle(cardctx);
-	let imgsize = reg[x].naturalWidth + 'x' + reg[x].naturalHeight;
+	let imgsize = reg[x].width + 'x' + reg[x].height;
 	cardctx.drawImage(
 		reg[x],
-		data.seat[imgsize].x + Math.round(data.spacing * data.seat[imgsize].m * y),
+		data.seat[imgsize].x + Math.round(data.spacing * y),
 		data.seat[imgsize].y,
-		Math.round(data.size.w * data.seat[imgsize].m),
-		Math.round(data.size.h * data.seat[imgsize].m),
+		data.size.w,
+		data.size.h,
 		0,
 		0,
 		data.size.w,
